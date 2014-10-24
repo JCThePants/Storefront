@@ -11,7 +11,7 @@ import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
-import com.sun.istack.internal.Nullable;
+import javax.annotation.Nullable;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
