@@ -1,0 +1,14 @@
+name: Storefront
+author: JC The Pants
+main: com.jcwhatever.bukkit.storefront.Storefront
+version: 0.3
+depend: [jcGenerics]
+commands:
+    store:
+        description: Base command for Storefront
+        usage: |
+            ERROR!
+    stores:
+        description: Base command for Storefront
+        usage: |
+            ERROR!
