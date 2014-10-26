@@ -86,8 +86,8 @@ public class Storefront extends GenericsPlugin {
     @Override
     protected void onEnablePlugin() {
         _viewManager = new ViewManager(this);
-        _categoryManager = new CategoryManager(getSettings().getNode("categories"));
-        _storeManager = new StoreManager(getSettings().getNode("stores"));
+        _categoryManager = new CategoryManager(getDataNode().getNode("categories"));
+        _storeManager = new StoreManager(getDataNode().getNode("stores"));
 
         registerViews();
         registerPermissions();
