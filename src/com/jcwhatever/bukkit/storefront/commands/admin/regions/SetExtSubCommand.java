@@ -79,7 +79,7 @@ public class SetExtSubCommand extends AbstractCommand {
         Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(p.getLocation());
         
         if (regions.isEmpty()) {
-            tellError(sender, "No jcGenerics region was found where you are standing.");
+            tellError(sender, "No GenericsLib region was found where you are standing.");
             return; // finished
         }
         

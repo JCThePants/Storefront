@@ -1,8 +1,8 @@
 name: Storefront
 author: JC The Pants
 main: com.jcwhatever.bukkit.storefront.Storefront
-version: 0.3
-depend: [jcGenerics]
+version: 0.0-beta
+depend: [GenericsLib]
 commands:
     store:
         description: Base command for Storefront
