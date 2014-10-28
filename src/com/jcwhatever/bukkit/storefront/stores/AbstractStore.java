@@ -417,7 +417,7 @@ public abstract class AbstractStore implements IStore {
         getDataNode().runBatchOperation(new BatchOperation() {
 
             @Override
-            public void run (IDataNode config) {
+            public void run (IDataNode dataNode) {
 
                 List<ItemWrapper> originalItems = startSnapshot.getWrappers();
                 
@@ -462,7 +462,7 @@ public abstract class AbstractStore implements IStore {
         getDataNode().runBatchOperation(new BatchOperation() {
 
             @Override
-            public void run (IDataNode config) {
+            public void run (IDataNode dataNode) {
 
                 SaleItemSnapshot currentSnapshot = new SaleItemSnapshot(currentInventory);
 

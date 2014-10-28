@@ -176,7 +176,7 @@ public class PlayerStore extends AbstractStore {
         getDataNode().runBatchOperation(new BatchOperation() {
 
             @Override
-            public void run (IDataNode config) {
+            public void run (IDataNode dataNode) {
 
                 int newQty = saleItem.getQty() + qty;
 
@@ -278,7 +278,7 @@ public class PlayerStore extends AbstractStore {
         getDataNode().runBatchOperation(new BatchOperation() {
 
             @Override
-            public void run (IDataNode config) {
+            public void run (IDataNode dataNode) {
 
                 List<SaleItem> items = getSaleItems();
 
