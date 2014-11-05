@@ -1,5 +1,5 @@
 name: Storefront
-author: JC The Pants
+author: JCThePants
 main: com.jcwhatever.bukkit.storefront.Storefront
 version: 0.0-beta
 depend: [GenericsLib]
