@@ -151,6 +151,8 @@ public class ItemStackUtil {
     public static void setSellerLore (ItemStack stack, UUID sellerId) {
 
         String playerName = PlayerHelper.getPlayerName(sellerId);
+        if (playerName == null)
+            playerName = "?";
 
         addTempLore(stack, ChatColor.YELLOW + "Seller: " + ChatColor.GRAY + playerName);
     }
