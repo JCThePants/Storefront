@@ -53,7 +53,7 @@ public class ListSubCommand extends AbstractCommand {
     @Override
     public void execute (CommandSender sender, CommandArguments args) throws InvalidValueException {
 
-        int page = args.getInt("page");
+        int page = args.getInteger("page");
 
         CategoryManager manager = Storefront.getInstance().getCategoryManager();
 
