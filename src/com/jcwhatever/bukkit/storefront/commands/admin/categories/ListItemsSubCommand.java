@@ -29,8 +29,8 @@ import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
 import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
-import com.jcwhatever.bukkit.generic.items.ItemStackSerializer.SerializerOutputType;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
+import com.jcwhatever.bukkit.generic.items.serializer.ItemStackSerializer.SerializerOutputType;
 import com.jcwhatever.bukkit.generic.messaging.ChatPaginator;
 import com.jcwhatever.bukkit.generic.utils.TextUtils.FormatTemplate;
 import com.jcwhatever.bukkit.storefront.Category;
@@ -38,6 +38,7 @@ import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
+
 import org.bukkit.command.CommandSender;
 
 import java.util.Set;
