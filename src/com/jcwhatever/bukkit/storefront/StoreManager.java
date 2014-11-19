@@ -168,9 +168,9 @@ public class StoreManager {
             ItemBankManager.deposit(saleItem.getSellerId(), saleItem.getItemStack(), saleItem.getQty());
             saleItem.setQty(0);
         }
-        
-        store.getStoreRegion().setEntryMessage(Storefront.getInstance(), null);
-        store.getStoreRegion().setExitMessage(Storefront.getInstance(), null);
+
+        store.getStoreRegion().setEntryMessage(null);
+        store.getStoreRegion().setExitMessage(null);
 
         DataStorage.removeStorage(Storefront.getInstance(), new DataPath("stores." + name));
 

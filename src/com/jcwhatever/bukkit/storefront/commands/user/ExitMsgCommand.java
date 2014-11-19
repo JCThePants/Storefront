@@ -88,7 +88,7 @@ public class ExitMsgCommand extends AbstractCommand {
         }
         
         
-        store.getStoreRegion().setExitMessage(Storefront.getInstance(), message.isEmpty() ? null : message);
+        store.getStoreRegion().setExitMessage(message.isEmpty() ? null : message);
 
         if (message.isEmpty())
             tellSuccess(sender, "Store '{0}' exit message removed.", store.getName());

@@ -62,7 +62,7 @@ public class GlobalListener implements Listener {
         
         // find store with event region
         for (IStore store : stores) {
-            if (store.getStoreRegion().getHandleClass().equals(event.getRegion().getHandleClass())) {
+            if (store.getRegion().getHandleClass().equals(event.getRegion().getHandleClass())) {
 
                 // store must be player ownable
                 if (store.getStoreType() != StoreType.PLAYER_OWNABLE)
@@ -81,8 +81,8 @@ public class GlobalListener implements Listener {
 
                 if (event.getNewOwnerId() == null) {
                     // remove region entry and exit messages
-                    store.getStoreRegion().setEntryMessage(Storefront.getInstance(), null);
-                    store.getStoreRegion().setExitMessage(Storefront.getInstance(), null);
+                    store.getStoreRegion().setEntryMessage(null);
+                    store.getStoreRegion().setExitMessage(null);
                 }
                 
                 return;

@@ -86,7 +86,7 @@ public class EntryMsgCommand extends AbstractCommand {
             tell(sender, "Changing entry message as OP.");
         }
         
-        store.getStoreRegion().setEntryMessage(Storefront.getInstance(), message.isEmpty() ? null : message);
+        store.getStoreRegion().setEntryMessage(message.isEmpty() ? null : message);
 
         if (message.isEmpty())
             tellSuccess(sender, "Store '{0}' entry message removed.", store.getName());

@@ -29,9 +29,7 @@ import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
 import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
-import com.jcwhatever.bukkit.generic.regions.BasicRegion;
 import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
-import com.jcwhatever.bukkit.generic.regions.Region;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.utils.Utils;
@@ -46,7 +44,9 @@ import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
+import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -54,13 +54,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public abstract class AbstractStore implements IStore {
 
@@ -71,8 +71,7 @@ public abstract class AbstractStore implements IStore {
 
     private IDataNode _storeNode;
 
-    private ReadOnlyRegion _externalRegion;
-    private Region _internalRegion;
+    private StoreRegion _region;
 
     private WantedItems _wantedItems;
 
@@ -86,8 +85,7 @@ public abstract class AbstractStore implements IStore {
         _storeNode = storeNode;
         _categoryMap = new HashMap<Category, SaleItemCategoryMap>(25);
 
-        _internalRegion = new BasicRegion(Storefront.getInstance(), _name, _storeNode.getNode("region"));
-        _internalRegion.setMeta(IStore.class.getName(), this);
+        _region = new StoreRegion(this);
 
         onInit();
 
@@ -118,9 +116,10 @@ public abstract class AbstractStore implements IStore {
     }
 
     @Override
+    @Nullable
     public UUID getOwnerId () {
 
-        ReadOnlyRegion region = getStoreRegion();
+        ReadOnlyRegion region = getRegion();
         if (region == null)
             return null;
 
@@ -130,7 +129,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public void setOwnerId (UUID ownerId) {
-        ReadOnlyRegion region = getStoreRegion();
+        ReadOnlyRegion region = getRegion();
         if (region == null)
             throw new IllegalStateException("Cannot set owner on a store that has no region.");
 
@@ -144,14 +143,14 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public boolean hasOwner () {
-        ReadOnlyRegion region = getStoreRegion();
+        ReadOnlyRegion region = getRegion();
         return region != null && region.hasOwner();
     }
 
 
     @Override
     public boolean hasOwnRegion () {
-        return _externalRegion == null;
+        return _region.hasOwnRegion();
     }
 
 
@@ -159,14 +158,6 @@ public abstract class AbstractStore implements IStore {
     public void setExternalRegion (ReadOnlyRegion region) {
 
         IDataNode ownRegionNode = _storeNode.getNode("region");
-
-        disposeCurrentRegion();
-
-        if (region == null) {
-
-            clearExternalRegion();
-            return;
-        }
 
         boolean isOwn = region.getPlugin() == Storefront.getInstance();
 
@@ -182,8 +173,7 @@ public abstract class AbstractStore implements IStore {
 
         ownRegionNode.remove();
 
-        _externalRegion = region;
-        _externalRegion.setMeta(IStore.class.getName(), this);
+        _region.setRegion(region);
 
         _storeNode.saveAsync(null);
     }
@@ -191,63 +181,42 @@ public abstract class AbstractStore implements IStore {
 
 
     @Override
-    public final ReadOnlyRegion getStoreRegion () {
+    public final ReadOnlyRegion getRegion() {
 
-        if (!_internalRegion.isDefined()) {
+        ReadOnlyRegion currentRegion = _region.getRegion();
+
+        if (!currentRegion.isDefined()) {
 
             // check if an external region is set.
             if (_regionName != null && _regionP1 != null && _regionP2 != null) {
 
-                if (_externalRegion == null) {
+                // find external region
+                Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
 
-                    // find external region
-                    Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
+                for (ReadOnlyRegion region : regions) {
+                    //noinspection ConstantConditions
+                    if (region.getP1().equals(_regionP1) &&
+                            region.getP2().equals(_regionP2) &&
+                            region.getName().equals(_regionName)) {
 
-                    for (ReadOnlyRegion region : regions) {
-                        if (region.getP1().equals(_regionP1) &&
-                                region.getP2().equals(_regionP2) &&
-                                region.getName().equals(_regionName)) {
-
-                            _internalRegion.setMeta(IStore.class.getName(), null);
-                            _internalRegion.dispose();
-
-                            _externalRegion = region;
-                            _externalRegion.setMeta(IStore.class.getName(), this);
-                            break;
-                        }
+                        _region.setRegion(region);
+                        break;
                     }
-                }
-                else {
-                    return _externalRegion;
                 }
             }
         }
 
-        return new ReadOnlyRegion(_internalRegion);
+        return currentRegion;
     }
 
     @Override
-    @Nullable
-    public Region getInternalRegion() {
-
-        // load extenal region if any.
-        getStoreRegion();
-
-        if (_externalRegion != null)
-            return null;
-
-        return _internalRegion;
+    public final StoreRegion getStoreRegion() {
+        return _region;
     }
-
 
     @Override
     public void setRegionCoords(Location p1, Location p2) {
-
-        // remove external region
-        if (!hasOwnRegion())
-            clearExternalRegion();
-
-        _internalRegion.setCoords(p1, p2);
+        _region.setCoords(p1, p2);
     }
 
     @Override
@@ -262,6 +231,7 @@ public abstract class AbstractStore implements IStore {
 
 
     @Override
+    @Nullable
     public WantedItems getWantedItems () {
 
         if (getStoreType() == StoreType.SERVER) {
@@ -412,7 +382,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
-                                             final SaleItemSnapshot startSnapshot) {
+                                            final SaleItemSnapshot startSnapshot) {
 
         getDataNode().runBatchOperation(new BatchOperation() {
 
@@ -420,36 +390,36 @@ public abstract class AbstractStore implements IStore {
             public void run (IDataNode dataNode) {
 
                 List<ItemWrapper> originalItems = startSnapshot.getWrappers();
-                
+
                 Set<ItemWrapper> processed = new HashSet<ItemWrapper>(originalItems.size());
-                
+
                 // search for less than total amount items
                 for (ItemWrapper startWrapper : originalItems) {
-                    
+
                     if (processed.contains(startWrapper))
                         continue;
-                    
+
                     processed.add(startWrapper);
-                    
+
                     SaleItem saleItem = getSaleItem(seller.getUniqueId(), startWrapper.getItem());
 
                     if (saleItem == null)
                         continue;
-                    
+
                     int startQty = InventoryHelper.count(startSnapshot.getItemStacks(), startWrapper.getItem(), StoreStackComparer.getDefault());
-                    
+
                     int currQty = InventoryHelper.count(currentInventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
-                    
+
                     if (currQty >= startQty)
                         continue;
-                    
+
                     int delta = Math.abs(startQty - currQty);
-                    
+
                     int qty = saleItem.getQty();
                     qty -= delta;
                     saleItem.setQty(qty);
                 }
-              
+
             }
 
         });
@@ -476,33 +446,33 @@ public abstract class AbstractStore implements IStore {
 
                     SaleItem saleItem = isWanted
                             ? getWantedItems().get(wrapper.getItem())
-                                    : getSaleItem(seller.getUniqueId(), wrapper.getItem());
+                            : getSaleItem(seller.getUniqueId(), wrapper.getItem());
 
-                            if (saleItem == null)
-                                continue;
+                    if (saleItem == null)
+                        continue;
 
-                            int originalAmount = startSnapshot.getAmount(wrapper);
-                            int newAmount = currentSnapshot.getAmount(wrapper);
-                            int delta = newAmount - originalAmount;
+                    int originalAmount = startSnapshot.getAmount(wrapper);
+                    int newAmount = currentSnapshot.getAmount(wrapper);
+                    int delta = newAmount - originalAmount;
 
-                            Double price = priceMap.getPrice(wrapper);
-                            if (price != null) {
-                                saleItem.setPricePerUnit(price);
-                            }
-                            
-                            if (qtyMap != null) {
-                                Integer qty = qtyMap.getQty(wrapper);
-                                if (qty != null) {
-                                    saleItem.setQty(qty);
-                                }
-                            }
-                            else if (delta != 0) {
-                                int qty = saleItem.getQty();
-                                qty += delta;
-                                saleItem.setQty(qty);
-                            }
+                    Double price = priceMap.getPrice(wrapper);
+                    if (price != null) {
+                        saleItem.setPricePerUnit(price);
+                    }
 
-                            processed.add(wrapper);
+                    if (qtyMap != null) {
+                        Integer qty = qtyMap.getQty(wrapper);
+                        if (qty != null) {
+                            saleItem.setQty(qty);
+                        }
+                    }
+                    else if (delta != 0) {
+                        int qty = saleItem.getQty();
+                        qty += delta;
+                        saleItem.setQty(qty);
+                    }
+
+                    processed.add(wrapper);
                 }
 
                 // add new Items
@@ -521,13 +491,13 @@ public abstract class AbstractStore implements IStore {
 
                     // add new item
                     if (saleItem == null) {
-                        
+
                         Integer qty = qtyMap != null
                                 ? qtyMap.getQty(wrapper)
                                 : wrapper.getItem().getAmount();
-                                
-                       if (qty == null)
-                          throw new IllegalStateException(
+
+                        if (qty == null)
+                            throw new IllegalStateException(
                                     "Failed to get a quantity from the supplied quantity map.");
 
                         if (isWanted)
@@ -541,11 +511,11 @@ public abstract class AbstractStore implements IStore {
                         Integer qty = qtyMap != null
                                 ? qtyMap.getQty(wrapper)
                                 : currentSnapshot.getAmount(wrapper) + saleItem.getQty();
-                                
+
                         if (qty == null)
-                              throw new IllegalStateException(
-                                      "Failed to get quantity from the supplied quantity map.");  
-                                                
+                            throw new IllegalStateException(
+                                    "Failed to get quantity from the supplied quantity map.");
+
                         saleItem.setQty(qty);
                         saleItem.setPricePerUnit(price);
                     }
@@ -555,25 +525,12 @@ public abstract class AbstractStore implements IStore {
         });
     }
 
-
-    private void disposeCurrentRegion() {
-        if (_internalRegion != null) {
-            _internalRegion.setMeta(IStore.class.getName(), null);
-            
-            _internalRegion.setEntryMessage(Storefront.getInstance(), null);
-            _internalRegion.setExitMessage(Storefront.getInstance(), null);
-
-            _internalRegion.dispose();
-        }
-    }
-
     private void clearExternalRegion() {
 
         _storeNode.set("region-name", null);
         _storeNode.set("region-p1", null);
         _storeNode.set("region-p2", null);
 
-        _externalRegion = null;
         _regionName = null;
         _regionP1 = null;
         _regionP2 = null;
@@ -581,8 +538,7 @@ public abstract class AbstractStore implements IStore {
         IDataNode ownRegionNode = _storeNode.getNode("region");
         ownRegionNode.remove();
 
-        _internalRegion = new BasicRegion(Storefront.getInstance(), _name, _storeNode.getNode("region"));
-        _internalRegion.setMeta(IStore.class.getName(), this);
+        _region.setOwnRegion();
 
         _storeNode.saveAsync(null);
     }
@@ -595,7 +551,6 @@ public abstract class AbstractStore implements IStore {
         _regionName = _storeNode.getString("region-name");
         _regionP1 = _storeNode.getLocation("region-p1");
         _regionP2 = _storeNode.getLocation("region-p2");
-
 
         IDataNode itemsNode = _storeNode.getNode("sale-items");
 
@@ -632,7 +587,7 @@ public abstract class AbstractStore implements IStore {
             public void run () {
 
                 // load external region, if any
-                getStoreRegion();
+                getRegion();
             }
         }, 30);
 
