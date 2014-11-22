@@ -3,7 +3,7 @@ package com.jcwhatever.bukkit.storefront.regions;
 import com.jcwhatever.bukkit.generic.mixins.IDisposable;
 import com.jcwhatever.bukkit.generic.regions.BasicRegion;
 import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
-import com.jcwhatever.bukkit.generic.regions.RegionEventHandler;
+import com.jcwhatever.bukkit.generic.regions.IRegionEventHandler;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -127,7 +127,7 @@ public class StoreRegion implements IDisposable{
         }
     }
 
-    private class MessageHandler implements RegionEventHandler {
+    private class MessageHandler implements IRegionEventHandler {
 
         @Override
         public boolean canDoPlayerEnter(Player player) {

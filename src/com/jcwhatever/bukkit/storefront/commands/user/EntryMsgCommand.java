@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.commands.user;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
 import com.jcwhatever.bukkit.storefront.StoreManager;
@@ -38,7 +38,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import java.util.UUID;
 
-@ICommandInfo(
+@CommandInfo(
         command = "entrymsg",
         staticParams = {
                 "storeName", "message="

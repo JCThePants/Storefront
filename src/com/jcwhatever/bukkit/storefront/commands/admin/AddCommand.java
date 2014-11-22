@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.commands.admin;
 import org.bukkit.command.CommandSender;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
 import com.jcwhatever.bukkit.storefront.StoreManager;
@@ -35,7 +35,7 @@ import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
-@ICommandInfo(
+@CommandInfo(
         command = "add",
         staticParams = {
                 "storeName", "server|player_ownable"

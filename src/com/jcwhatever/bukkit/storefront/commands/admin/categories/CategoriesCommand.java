@@ -25,9 +25,9 @@
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 
-@ICommandInfo(
+@CommandInfo(
         command = "categories",
         description = "Manage item categories.")
 

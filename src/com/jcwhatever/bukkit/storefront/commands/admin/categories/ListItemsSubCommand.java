@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
 import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
@@ -43,7 +43,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Set;
 
-@ICommandInfo(
+@CommandInfo(
         parent = "categories",
         command = "listitems",
         staticParams = {

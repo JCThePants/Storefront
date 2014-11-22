@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.commands.admin.regions;
 
 import com.jcwhatever.bukkit.generic.GenericsLib;
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException.CommandSenderType;
@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 
 
-@ICommandInfo(
+@CommandInfo(
         parent = "regions",
         command = "setext",
         staticParams = {

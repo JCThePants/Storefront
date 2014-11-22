@@ -27,14 +27,14 @@ package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 import org.bukkit.command.CommandSender;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
-@ICommandInfo(
+@CommandInfo(
         parent = "categories",
         command = "setdesc",
         staticParams = {

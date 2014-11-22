@@ -25,9 +25,9 @@
 package com.jcwhatever.bukkit.storefront.commands.admin.regions;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 
-@ICommandInfo(
+@CommandInfo(
         command = "regions",
         description = "Manage store regions.")
 

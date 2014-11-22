@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.commands.admin;
 
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
-import com.jcwhatever.bukkit.generic.commands.ICommandInfo;
+import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
 import com.jcwhatever.bukkit.generic.player.PlayerHelper;
@@ -37,7 +37,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.UUID;
 
-@ICommandInfo(
+@CommandInfo(
         command = "setowner",
         staticParams = {
                 "storeName", "ownerName"
