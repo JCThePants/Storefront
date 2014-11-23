@@ -37,7 +37,7 @@ import com.jcwhatever.bukkit.generic.views.ViewMeta;
 import com.jcwhatever.bukkit.generic.views.ViewResult;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
-import com.jcwhatever.bukkit.storefront.data.IViewInfo;
+import com.jcwhatever.bukkit.storefront.data.ViewInfo;
 import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems;
 import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems.PaginatorPageType;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
@@ -95,7 +95,7 @@ public class PaginatorView extends AbstractMenuView {
         if (view == null)
             throw new NullPointerException("A view named " + viewName + " was not found.");
         
-        IViewInfo viewInfo = view.getClass().getAnnotation(IViewInfo.class);
+        ViewInfo viewInfo = view.getClass().getAnnotation(ViewInfo.class);
         
         return viewInfo != null 
             ? viewInfo.pageType() 

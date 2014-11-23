@@ -42,7 +42,7 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.IViewInfo;
+import com.jcwhatever.bukkit.storefront.data.ViewInfo;
 import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems;
 import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems.PaginatorPageType;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
@@ -65,7 +65,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
-@IViewInfo(pageType=PaginatorPageType.SALE_ITEM) 
+@ViewInfo(pageType=PaginatorPageType.SALE_ITEM)
 public class SellWantedView extends AbstractMenuView {
  
     @Override

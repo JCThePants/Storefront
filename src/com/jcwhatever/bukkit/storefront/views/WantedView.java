@@ -40,7 +40,7 @@ import com.jcwhatever.bukkit.generic.views.ViewResult;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.IViewInfo;
+import com.jcwhatever.bukkit.storefront.data.ViewInfo;
 import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems;
 import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems.PaginatorPageType;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
@@ -73,7 +73,7 @@ import java.util.List;
  * @author JC The Pants
  *
  */
-@IViewInfo(pageType=PaginatorPageType.SALE_ITEM) 
+@ViewInfo(pageType=PaginatorPageType.SALE_ITEM)
 public class WantedView extends AbstractMenuView {
 
     @Override
