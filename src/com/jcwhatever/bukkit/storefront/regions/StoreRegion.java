@@ -2,8 +2,10 @@ package com.jcwhatever.bukkit.storefront.regions;
 
 import com.jcwhatever.bukkit.generic.mixins.IDisposable;
 import com.jcwhatever.bukkit.generic.regions.BasicRegion;
-import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
 import com.jcwhatever.bukkit.generic.regions.IRegionEventHandler;
+import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
+import com.jcwhatever.bukkit.generic.regions.Region.EnterRegionReason;
+import com.jcwhatever.bukkit.generic.regions.Region.LeaveRegionReason;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -130,22 +132,22 @@ public class StoreRegion implements IDisposable{
     private class MessageHandler implements IRegionEventHandler {
 
         @Override
-        public boolean canDoPlayerEnter(Player player) {
+        public boolean canDoPlayerEnter(Player player, EnterRegionReason reason) {
             return _entryMessage != null;
         }
 
         @Override
-        public boolean canDoPlayerLeave(Player player) {
+        public boolean canDoPlayerLeave(Player player, LeaveRegionReason reason) {
             return _exitMessage != null;
         }
 
         @Override
-        public void onPlayerEnter(Player player) {
+        public void onPlayerEnter(Player player, EnterRegionReason reason) {
             Msg.tell(player, _entryMessage);
         }
 
         @Override
-        public void onPlayerLeave(Player player) {
+        public void onPlayerLeave(Player player, LeaveRegionReason reason) {
             Msg.tell(player, _exitMessage);
         }
     }
