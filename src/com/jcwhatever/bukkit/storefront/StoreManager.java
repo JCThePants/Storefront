@@ -37,6 +37,7 @@ import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.stores.PlayerStore;
 import com.jcwhatever.bukkit.storefront.stores.ServerStore;
+
 import org.bukkit.block.Block;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 
 public class StoreManager {
 
@@ -81,12 +83,13 @@ public class StoreManager {
     }
 
 
+    @Nullable
     public IStore getStore (Block block) {
 
         if (_blockCache.keyEquals(block))
             return _blockCache.getValue();
 
-        Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(block.getLocation());
+        List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(block.getLocation());
         IStore result = null;
 
         for (ReadOnlyRegion region : regions) {
@@ -124,7 +127,7 @@ public class StoreManager {
         return _playerStoreMap.get(name);
     }
 
-
+    @Nullable
     public IStore addStore (String name, StoreType type) {
 
         name = name.toLowerCase();

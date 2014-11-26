@@ -191,7 +191,7 @@ public abstract class AbstractStore implements IStore {
             if (_regionName != null && _regionP1 != null && _regionP2 != null) {
 
                 // find external region
-                Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
+                List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
 
                 for (ReadOnlyRegion region : regions) {
                     //noinspection ConstantConditions

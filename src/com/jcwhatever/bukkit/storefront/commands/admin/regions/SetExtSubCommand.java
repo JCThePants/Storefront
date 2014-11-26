@@ -36,12 +36,12 @@ import com.jcwhatever.bukkit.generic.utils.TextUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 @CommandInfo(
@@ -76,7 +76,7 @@ public class SetExtSubCommand extends AbstractCommand {
         }
         
         
-        Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(p.getLocation());
+        List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(p.getLocation());
         
         if (regions.isEmpty()) {
             tellError(sender, "No GenericsLib region was found where you are standing.");

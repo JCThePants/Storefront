@@ -34,6 +34,7 @@ import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,7 +42,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.List;
-import java.util.Set;
 
 public class GlobalListener implements Listener {
 
@@ -99,7 +99,7 @@ public class GlobalListener implements Listener {
         if (event.getClickedBlock().getType() != Material.CHEST)
             return;
 
-        Set<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(event.getClickedBlock().getLocation());
+        List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(event.getClickedBlock().getLocation());
 
         for (ReadOnlyRegion region : regions) {
             IStore store = region.getMeta(IStore.class.getName());
