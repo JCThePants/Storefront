@@ -2,6 +2,7 @@ package com.jcwhatever.bukkit.storefront.regions;
 
 import com.jcwhatever.bukkit.generic.mixins.IDisposable;
 import com.jcwhatever.bukkit.generic.regions.BasicRegion;
+import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.regions.IRegionEventHandler;
 import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
 import com.jcwhatever.bukkit.generic.regions.Region.EnterRegionReason;
@@ -24,7 +25,7 @@ public class StoreRegion implements IDisposable{
     private final IStore _store;
     private final MessageHandler _messageHandler;
 
-    private ReadOnlyRegion _region;
+    private IRegion _region;
     private String _entryMessage;
     private String _exitMessage;
     private boolean _hasOwnRegion;
@@ -53,11 +54,11 @@ public class StoreRegion implements IDisposable{
         return _hasOwnRegion;
     }
 
-    public ReadOnlyRegion getRegion() {
+    public IRegion getRegion() {
         return _region;
     }
 
-    public void setRegion(ReadOnlyRegion region) {
+    public void setRegion(IRegion region) {
         PreCon.notNull(region);
 
         if (_region != null) {

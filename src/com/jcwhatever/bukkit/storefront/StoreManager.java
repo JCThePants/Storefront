@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront;
 import com.jcwhatever.bukkit.generic.GenericsLib;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.performance.SingleCache;
-import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
+import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.storage.DataStorage;
 import com.jcwhatever.bukkit.generic.storage.DataStorage.DataPath;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
@@ -89,10 +89,10 @@ public class StoreManager {
         if (_blockCache.keyEquals(block))
             return _blockCache.getValue();
 
-        List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(block.getLocation());
+        List<IRegion> regions = GenericsLib.getRegionManager().getRegions(block.getLocation());
         IStore result = null;
 
-        for (ReadOnlyRegion region : regions) {
+        for (IRegion region : regions) {
             result = region.getMeta(IStore.class.getName());
             if (result != null) {
                 break;

@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
+import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -82,7 +82,7 @@ public interface IStore {
     /**
      * Get the stores region, external or internal.
      */
-    public ReadOnlyRegion getRegion();
+    public IRegion getRegion();
 
     /**
      * Get the stores region wrapper.
@@ -107,7 +107,7 @@ public interface IStore {
      * Set an external region for the store. Null to remove.
      * @param region  External region to set
      */
-    public void setExternalRegion(ReadOnlyRegion region);
+    public void setExternalRegion(IRegion region);
 
     /**
      * Get the type of store.

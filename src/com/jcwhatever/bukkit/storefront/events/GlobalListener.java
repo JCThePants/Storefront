@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.events;
 import com.jcwhatever.bukkit.generic.GenericsLib;
 import com.jcwhatever.bukkit.generic.events.bukkit.regions.RegionOwnerChangedEvent;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
-import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
+import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -62,7 +62,7 @@ public class GlobalListener implements Listener {
         
         // find store with event region
         for (IStore store : stores) {
-            if (store.getRegion().getHandleClass().equals(event.getRegion().getHandleClass())) {
+            if (store.getRegion().getRegionClass().equals(event.getRegion().getRegionClass())) {
 
                 // store must be player ownable
                 if (store.getStoreType() != StoreType.PLAYER_OWNABLE)
@@ -99,9 +99,9 @@ public class GlobalListener implements Listener {
         if (event.getClickedBlock().getType() != Material.CHEST)
             return;
 
-        List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(event.getClickedBlock().getLocation());
+        List<IRegion> regions = GenericsLib.getRegionManager().getRegions(event.getClickedBlock().getLocation());
 
-        for (ReadOnlyRegion region : regions) {
+        for (IRegion region : regions) {
             IStore store = region.getMeta(IStore.class.getName());
             if (store != null) {
                 event.setCancelled(true);

@@ -31,6 +31,7 @@ import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException.CommandSenderType;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
+import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
 import com.jcwhatever.bukkit.generic.utils.TextUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
@@ -76,7 +77,7 @@ public class SetExtSubCommand extends AbstractCommand {
         }
         
         
-        List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(p.getLocation());
+        List<IRegion> regions = GenericsLib.getRegionManager().getRegions(p.getLocation());
         
         if (regions.isEmpty()) {
             tellError(sender, "No GenericsLib region was found where you are standing.");
@@ -87,7 +88,7 @@ public class SetExtSubCommand extends AbstractCommand {
             tellError(sender, "More than one region was found. Please specify with one of the following region names:");
             
             List<String> regionNames = new ArrayList<String>(regions.size());
-            for (ReadOnlyRegion region : regions) {
+            for (IRegion region : regions) {
                 regionNames.add(region.getName() + '(' + region.getPlugin().getName() + ')');
             }
 
@@ -96,9 +97,9 @@ public class SetExtSubCommand extends AbstractCommand {
         }
         
         
-        ReadOnlyRegion extRegion = null;
+        IRegion extRegion = null;
         
-        for (ReadOnlyRegion region : regions) {
+        for (IRegion region : regions) {
             
             if ((regions.size() == 1 && regionName.isEmpty()) ||
                     region.getName().equalsIgnoreCase(regionName)) {

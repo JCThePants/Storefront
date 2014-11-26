@@ -29,6 +29,7 @@ import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
 import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
+import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
@@ -119,7 +120,7 @@ public abstract class AbstractStore implements IStore {
     @Nullable
     public UUID getOwnerId () {
 
-        ReadOnlyRegion region = getRegion();
+        IRegion region = getRegion();
         if (region == null)
             return null;
 
@@ -129,7 +130,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public void setOwnerId (UUID ownerId) {
-        ReadOnlyRegion region = getRegion();
+        IRegion region = getRegion();
         if (region == null)
             throw new IllegalStateException("Cannot set owner on a store that has no region.");
 
@@ -143,7 +144,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public boolean hasOwner () {
-        ReadOnlyRegion region = getRegion();
+        IRegion region = getRegion();
         return region != null && region.hasOwner();
     }
 
@@ -155,7 +156,7 @@ public abstract class AbstractStore implements IStore {
 
 
     @Override
-    public void setExternalRegion (ReadOnlyRegion region) {
+    public void setExternalRegion (IRegion region) {
 
         IDataNode ownRegionNode = _storeNode.getNode("region");
 
@@ -181,9 +182,9 @@ public abstract class AbstractStore implements IStore {
 
 
     @Override
-    public final ReadOnlyRegion getRegion() {
+    public final IRegion getRegion() {
 
-        ReadOnlyRegion currentRegion = _region.getRegion();
+        IRegion currentRegion = _region.getRegion();
 
         if (!currentRegion.isDefined()) {
 
@@ -191,9 +192,9 @@ public abstract class AbstractStore implements IStore {
             if (_regionName != null && _regionP1 != null && _regionP2 != null) {
 
                 // find external region
-                List<ReadOnlyRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
+                List<IRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
 
-                for (ReadOnlyRegion region : regions) {
+                for (IRegion region : regions) {
                     //noinspection ConstantConditions
                     if (region.getP1().equals(_regionP1) &&
                             region.getP2().equals(_regionP2) &&
