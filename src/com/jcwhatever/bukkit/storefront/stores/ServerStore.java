@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
+import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
 import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
@@ -310,12 +310,12 @@ public class ServerStore extends AbstractStore {
         }
 
         // make sure buyer can afford
-        if (EconomyHelper.getBalance(buyer) < price) {
+        if (EconomyUtils.getBalance(buyer) < price) {
             Msg.debug("Player sale rejected because player doesn't have enough money.");
             return false;
         }
 
-        if (!EconomyHelper.transferMoney(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
+        if (!EconomyUtils.transferMoney(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
             return false;
         }
 

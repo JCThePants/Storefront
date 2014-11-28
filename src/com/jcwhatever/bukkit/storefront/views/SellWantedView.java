@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
+import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
 import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
@@ -152,7 +152,7 @@ public class SellWantedView extends AbstractMenuView {
                     }
 
                     double totalCost = qtyResult.getQty() * saleItemStack.getPricePerUnit();
-                    double storeBalance = EconomyHelper.getBalance(_store.getOwnerId());
+                    double storeBalance = EconomyUtils.getBalance(_store.getOwnerId());
 
                     if (storeBalance < totalCost) {
                         Msg.tell(getPlayer(), "{RED}Problem: {WHITE}The store cannot afford to buy from you right now.");
@@ -177,7 +177,7 @@ public class SellWantedView extends AbstractMenuView {
                         Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Sold {0} {1} to the store for {GREEN}{2}{WHITE}.", 
                                 qtyResult.getQty(),
                                 ItemStackUtils.getDisplayName(menuItem.getItemStack(), DisplayNameResult.REQUIRED),
-                                EconomyHelper.formatAmount(totalCost));
+                                EconomyUtils.formatAmount(totalCost));
                     }
                     
                     
