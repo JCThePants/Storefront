@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.utils;
 import com.jcwhatever.bukkit.generic.extended.MaterialExt;
 import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
-import com.jcwhatever.bukkit.generic.player.PlayerHelper;
+import com.jcwhatever.bukkit.generic.utils.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import org.bukkit.Bukkit;
@@ -150,7 +150,7 @@ public class ItemStackUtil {
 
     public static void setSellerLore (ItemStack stack, UUID sellerId) {
 
-        String playerName = PlayerHelper.getPlayerName(sellerId);
+        String playerName = PlayerUtils.getPlayerName(sellerId);
         if (playerName == null)
             playerName = "?";
 

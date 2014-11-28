@@ -28,7 +28,7 @@ import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
-import com.jcwhatever.bukkit.generic.player.PlayerHelper;
+import com.jcwhatever.bukkit.generic.utils.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -66,7 +66,7 @@ public class SetOwnerCommand extends AbstractCommand {
             return; // finished
         }
 
-        UUID ownerId = PlayerHelper.getPlayerId(ownerName);
+        UUID ownerId = PlayerUtils.getPlayerId(ownerName);
         if (ownerId == null) {
             tellError(sender, "A player named '{0}' could not be found or has never logged into the server before.", ownerName);
             return; // finished
