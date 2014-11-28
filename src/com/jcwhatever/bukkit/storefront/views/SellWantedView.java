@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
-import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
@@ -143,7 +143,7 @@ public class SellWantedView extends AbstractMenuView {
                     }
 
                     // make sure player has the items they are trying to sell
-                    if (!InventoryHelper.has(getPlayer().getInventory(), saleItemStack.getItemStack(), 
+                    if (!InventoryUtils.has(getPlayer().getInventory(), saleItemStack.getItemStack(),
                             StoreStackComparer.getDefault(), qtyResult.getQty())) {
 
                         Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have the items you are trying to sell or do not have enough of them.");
@@ -204,7 +204,7 @@ public class SellWantedView extends AbstractMenuView {
             ItemStack itemStack = menuItem.getItemStack().clone();
             ItemStackUtil.removeTempLore(itemStack);
             
-            int playerQty = InventoryHelper.count(getPlayer().getInventory(), itemStack);
+            int playerQty = InventoryUtils.count(getPlayer().getInventory(), itemStack);
                         
             if (playerQty == 0) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have that item in your inventory.");

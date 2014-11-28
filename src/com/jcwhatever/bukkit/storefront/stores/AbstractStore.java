@@ -26,11 +26,10 @@ package com.jcwhatever.bukkit.storefront.stores;
 
 import com.jcwhatever.bukkit.generic.GenericsLib;
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
-import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.regions.IRegion;
-import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.utils.Utils;
@@ -294,7 +293,7 @@ public abstract class AbstractStore implements IStore {
 
         Inventory playerInventory = seller.getInventory();
 
-        if (!InventoryHelper.has(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty)) {
+        if (!InventoryUtils.has(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty)) {
             Msg.debug("Player doesn't have enough items to sell");
             return false;
         }
@@ -305,7 +304,7 @@ public abstract class AbstractStore implements IStore {
             return false;
         }
 
-        InventoryHelper.remove(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty);
+        InventoryUtils.remove(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty);
 
         ItemBankManager.deposit(getOwnerId(), saleItem.getItemStack(), qty);
 
@@ -328,7 +327,7 @@ public abstract class AbstractStore implements IStore {
         purchasedStack.setAmount(qty);
 
         // make sure player has room in inventory
-        if (!InventoryHelper.hasRoom(buyer.getInventory(), purchasedStack)) {
+        if (!InventoryUtils.hasRoom(buyer.getInventory(), purchasedStack)) {
             Msg.debug("Player sale rejected because not enough room in inventory.");
             return false;
         }
@@ -407,9 +406,9 @@ public abstract class AbstractStore implements IStore {
                     if (saleItem == null)
                         continue;
 
-                    int startQty = InventoryHelper.count(startSnapshot.getItemStacks(), startWrapper.getItem(), StoreStackComparer.getDefault());
+                    int startQty = InventoryUtils.count(startSnapshot.getItemStacks(), startWrapper.getItem(), StoreStackComparer.getDefault());
 
-                    int currQty = InventoryHelper.count(currentInventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
+                    int currQty = InventoryUtils.count(currentInventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
 
                     if (currQty >= startQty)
                         continue;

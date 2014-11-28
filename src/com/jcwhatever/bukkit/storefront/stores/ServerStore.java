@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.stores;
 
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
-import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
@@ -304,7 +304,7 @@ public class ServerStore extends AbstractStore {
         purchasedStack.setAmount(qty);
 
         // make sure player has room in inventory
-        if (!InventoryHelper.hasRoom(buyer.getInventory(), purchasedStack)) {
+        if (!InventoryUtils.hasRoom(buyer.getInventory(), purchasedStack)) {
             Msg.debug("Player sale rejected because not enough room in inventory.");
             return false;
         }

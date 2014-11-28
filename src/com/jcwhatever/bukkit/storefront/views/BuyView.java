@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper.CurrencyNoun;
-import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
@@ -196,7 +196,7 @@ public class BuyView extends AbstractMenuView {
                                 EconomyHelper.getCurrencyName(CurrencyNoun.PLURAL));
                     }
                     // check buyer available inventory room
-                    else if (!InventoryHelper.hasRoom(getPlayer().getInventory(), saleItemStack.getItemStack(), quantity)) {
+                    else if (!InventoryUtils.hasRoom(getPlayer().getInventory(), saleItemStack.getItemStack(), quantity)) {
                         Msg.tell(getPlayer(), "{RED}Problem: {WHITE}There isn't enough space in your inventory.");
                     }
                     // check item is available

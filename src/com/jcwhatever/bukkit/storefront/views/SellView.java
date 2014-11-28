@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.permissions.Permissions;
@@ -236,7 +236,7 @@ public class SellView extends AbstractView {
             ItemStack itemToAdd = actionInfo.getStack();
             int availableSpace = _store.getSpaceAvailable(getPlayer().getUniqueId(), itemToAdd);
 
-            int added = InventoryHelper.count(_inventory, itemToAdd, StoreStackComparer.getDefault());
+            int added = InventoryUtils.count(_inventory, itemToAdd, StoreStackComparer.getDefault());
 
             if (availableSpace - added < itemToAdd.getAmount()) {
 
@@ -343,23 +343,23 @@ public class SellView extends AbstractView {
 
                         if (saleItem == null) {
 
-                            int total = InventoryHelper.count(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault());
+                            int total = InventoryUtils.count(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault());
 
-                            InventoryHelper.remove(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), total);
+                            InventoryUtils.remove(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), total);
 
                             continue;
                         }
 
                         int currQty = saleItem.getQty();
 
-                        int inventoryQty = InventoryHelper.count(_inventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
+                        int inventoryQty = InventoryUtils.count(_inventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
 
                         if (inventoryQty <= currQty)
                             continue;
 
                         int delta = Math.abs(inventoryQty - currQty);
 
-                        InventoryHelper.remove(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), delta);
+                        InventoryUtils.remove(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), delta);
 
                     }
                 }
