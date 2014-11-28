@@ -30,7 +30,7 @@ import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
-import com.jcwhatever.bukkit.generic.items.ItemFilterManager.FilterMode;
+import com.jcwhatever.bukkit.generic.items.ItemFilterManager.FilterPolicy;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -50,7 +50,7 @@ public class SetFilterSubCommand extends AbstractCommand {
     public void execute (CommandSender sender, CommandArguments args) throws InvalidValueException {
 
         String categoryName = args.getName("categoryName");
-        FilterMode filter = args.getEnum("whitelist|blacklist", FilterMode.class);
+        FilterPolicy filter = args.getEnum("whitelist|blacklist", FilterPolicy.class);
 
         CategoryManager catManager = Storefront.getInstance().getCategoryManager();
 
