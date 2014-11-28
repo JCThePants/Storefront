@@ -26,8 +26,8 @@ package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
 import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper.DisplayNameResult;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.views.AbstractMenuInstance;
 import com.jcwhatever.bukkit.generic.views.AbstractMenuView;
@@ -176,7 +176,7 @@ public class SellWantedView extends AbstractMenuView {
                         
                         Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Sold {0} {1} to the store for {GREEN}{2}{WHITE}.", 
                                 qtyResult.getQty(),
-                                ItemStackHelper.getDisplayName(menuItem.getItemStack(), DisplayNameResult.REQUIRED),
+                                ItemStackUtils.getDisplayName(menuItem.getItemStack(), DisplayNameResult.REQUIRED),
                                 EconomyHelper.formatAmount(totalCost));
                     }
                     

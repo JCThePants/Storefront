@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.generic.extended.MaterialExt;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.views.AbstractMenuInstance;
 import com.jcwhatever.bukkit.generic.views.AbstractMenuView;
@@ -165,7 +165,7 @@ public class WantedView extends AbstractMenuView {
                 if (!itemResult.isCancelled()) {
 
                     if (itemResult.getQty() == 0) {
-                        _inventory.setItem(menuItem.getSlot(), ItemStackHelper.AIR);
+                        _inventory.setItem(menuItem.getSlot(), ItemStackUtils.AIR);
                     }
                     else {
 
@@ -249,7 +249,7 @@ public class WantedView extends AbstractMenuView {
             MaterialExt material = MaterialExt.from(selectedStack.getType());
             
             if (material.isRepairable()) {
-                ItemStackHelper.repair(selectedStack);
+                ItemStackUtils.repair(selectedStack);
             }
             
             SaleItemSnapshot snapshot = new SaleItemSnapshot(_inventory);

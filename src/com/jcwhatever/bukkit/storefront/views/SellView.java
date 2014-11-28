@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.permissions.Permissions;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
@@ -493,7 +493,7 @@ public class SellView extends AbstractView {
                     Category category = categoryManager.getCategory(stack);
                     if (category == null) {
                         ItemStackUtil.removeTempLore(stack);
-                        _inventory.setItem(i, ItemStackHelper.AIR);
+                        _inventory.setItem(i, ItemStackUtils.AIR);
                         getPlayer().getInventory().addItem(stack);
 
                         continue;

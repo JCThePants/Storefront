@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.utils;
 
 import com.jcwhatever.bukkit.generic.extended.MaterialExt;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.utils.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -58,7 +58,7 @@ public class ItemStackUtil {
 
     public static List<String> removeTempLore (ItemStack stack) {
 
-        List<String> lore = ItemStackHelper.getLore(stack);
+        List<String> lore = ItemStackUtils.getLore(stack);
         if (lore == null)
             return new ArrayList<String>(0);
 
@@ -74,7 +74,7 @@ public class ItemStackUtil {
             newLore.add(line);
         }
 
-        ItemStackHelper.setLore(stack, newLore);
+        ItemStackUtils.setLore(stack, newLore);
 
         return removed;
     }
@@ -110,7 +110,7 @@ public class ItemStackUtil {
 
     public static void addTempLore (ItemStack stack, String text) {
 
-        List<String> lore = ItemStackHelper.getLore(stack);
+        List<String> lore = ItemStackUtils.getLore(stack);
 
         if (lore == null)
             lore = new ArrayList<String>();
@@ -125,13 +125,13 @@ public class ItemStackUtil {
         }
         lore.add(insertAt, TEMP_INDICATOR + text);
 
-        ItemStackHelper.setLore(stack, lore);
+        ItemStackUtils.setLore(stack, lore);
     }
 
 
     public static void addTempLore (ItemStack stack, List<String> newLore) {
 
-        List<String> lore = ItemStackHelper.getLore(stack);
+        List<String> lore = ItemStackUtils.getLore(stack);
 
         if (lore == null)
             lore = new ArrayList<String>();
@@ -144,7 +144,7 @@ public class ItemStackUtil {
             lore.add(i, TEMP_INDICATOR + newLore.get(j));
         }
 
-        ItemStackHelper.setLore(stack, lore);
+        ItemStackUtils.setLore(stack, lore);
     }
 
 
@@ -160,7 +160,7 @@ public class ItemStackUtil {
 
     public static void setPriceLore (ItemStack itemStack, double price, PriceType priceType) {
 
-        List<String> lore = ItemStackHelper.getLore(itemStack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null) {
             lore = new ArrayList<String>();
         }
@@ -179,7 +179,7 @@ public class ItemStackUtil {
         lore.add(0, TEMP_INDICATOR + ChatColor.YELLOW + "Price: " + ChatColor.GREEN
                 + _format.format(price) + ChatColor.GRAY + suffix);
 
-        ItemStackHelper.setLore(itemStack, lore);
+        ItemStackUtils.setLore(itemStack, lore);
     }
     
     
@@ -241,7 +241,7 @@ public class ItemStackUtil {
 
     public static String getPriceLore (ItemStack itemStack) {
 
-        List<String> lore = ItemStackHelper.getLore(itemStack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null)
             return null;
 
@@ -259,7 +259,7 @@ public class ItemStackUtil {
 
     private static void setPriceLoreLine (ItemStack itemStack, String str) {
 
-        List<String> lore = ItemStackHelper.getLore(itemStack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null) {
             lore = new ArrayList<String>();
         }
@@ -274,13 +274,13 @@ public class ItemStackUtil {
             }
         }
 
-        ItemStackHelper.setLore(itemStack, lore);
+        ItemStackUtils.setLore(itemStack, lore);
     }
 
 
     public static boolean hasPriceLore (ItemStack itemStack) {
 
-        List<String> lore = ItemStackHelper.getLore(itemStack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null) {
             return false;
         }
@@ -296,7 +296,7 @@ public class ItemStackUtil {
 
     public static void removePriceLore (ItemStack itemStack) {
 
-        List<String> lore = ItemStackHelper.getLore(itemStack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null) {
             return;
         }
@@ -311,7 +311,7 @@ public class ItemStackUtil {
 
         lore.remove(0);
 
-        ItemStackHelper.setLore(itemStack, lore);
+        ItemStackUtils.setLore(itemStack, lore);
     }
 
 

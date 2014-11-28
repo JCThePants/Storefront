@@ -28,7 +28,7 @@ import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.items.serializer.ItemStackSerializer.SerializerOutputType;
 import com.jcwhatever.bukkit.generic.messaging.ChatPaginator;
@@ -79,7 +79,7 @@ public class ListItemsSubCommand extends AbstractCommand {
 
         for (ItemWrapper wrapper : wrappers) {
 
-            pagin.add(ItemStackHelper.serializeToString(wrapper.getItem(), SerializerOutputType.COLOR));
+            pagin.add(ItemStackUtils.serializeToString(wrapper.getItem(), SerializerOutputType.COLOR));
         }
 
         pagin.show(sender, page, FormatTemplate.RAW);

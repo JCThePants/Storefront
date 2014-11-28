@@ -27,8 +27,8 @@ package com.jcwhatever.bukkit.storefront.views;
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper;
 import com.jcwhatever.bukkit.generic.economy.EconomyHelper.CurrencyNoun;
 import com.jcwhatever.bukkit.generic.inventory.InventoryHelper;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper;
-import com.jcwhatever.bukkit.generic.items.ItemStackHelper.DisplayNameResult;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.generic.views.AbstractMenuInstance;
@@ -209,7 +209,7 @@ public class BuyView extends AbstractMenuView {
                     }
                     else {
                         Msg.tell(getPlayer(), "{GREEN}Sucess: {WHITE}Purchased {0} {1} for {2}.", quantity,
-                                ItemStackHelper.getDisplayName(saleItemStack.getItemStack(), DisplayNameResult.REQUIRED),
+                                ItemStackUtils.getDisplayName(saleItemStack.getItemStack(), DisplayNameResult.REQUIRED),
                                 EconomyHelper.formatAmount(amount));
                     }
                 }
