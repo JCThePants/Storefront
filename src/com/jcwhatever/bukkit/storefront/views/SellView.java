@@ -96,6 +96,11 @@ public class SellView extends AbstractView {
 
 
     @Override
+    public boolean isDisposed() {
+        return false;
+    }
+
+    @Override
     public void dispose () {
 
         // do nothing

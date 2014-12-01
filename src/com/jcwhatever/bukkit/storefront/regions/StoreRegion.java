@@ -29,6 +29,7 @@ public class StoreRegion implements IDisposable{
     private String _entryMessage;
     private String _exitMessage;
     private boolean _hasOwnRegion;
+    private boolean _isDisposed;
 
 
     /**
@@ -120,6 +121,11 @@ public class StoreRegion implements IDisposable{
     }
 
     @Override
+    public boolean isDisposed() {
+        return _isDisposed;
+    }
+
+    @Override
     public void dispose() {
         _region.removeEventHandler(_messageHandler);
         _region.setMeta(IStore.class.getName(), null);
@@ -128,6 +134,8 @@ public class StoreRegion implements IDisposable{
         if (internalRegion != null) {
             internalRegion.dispose();
         }
+
+        _isDisposed = true;
     }
 
     private class MessageHandler implements IRegionEventHandler {
