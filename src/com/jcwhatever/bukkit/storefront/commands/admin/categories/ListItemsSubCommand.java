@@ -75,7 +75,7 @@ public class ListItemsSubCommand extends AbstractCommand {
         ChatPaginator pagin = Msg.getPaginator(paginTitle);
 
         String filterLabel = Lang.get("FILTER MODE");
-        pagin.addFormatted(FormatTemplate.DEFINITION, filterLabel, category.getFilterManager().getFilterPolicy().name());
+        pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, filterLabel, category.getFilterManager().getFilterPolicy().name());
 
         for (ItemWrapper wrapper : wrappers) {
 

@@ -81,6 +81,6 @@ public class ListSubCommand extends AbstractCommand {
             pagin.add(category.getName(), desc);
         }
 
-        pagin.show(sender, page, FormatTemplate.ITEM_DESCRIPTION);
+        pagin.show(sender, page, FormatTemplate.LIST_ITEM_DESCRIPTION);
     }
 }
