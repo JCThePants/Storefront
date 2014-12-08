@@ -24,17 +24,17 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.bukkit.storefront.data.PaginatedSaleItems.PaginatorPageType;
+import com.jcwhatever.bukkit.generic.collections.ArrayListPaginator;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Collection;
 
-@Target({ElementType.TYPE}) 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ViewInfo {
-    
-    public PaginatorPageType pageType();
+public class PaginatedItems extends ArrayListPaginator<SaleItem> {
 
+    public PaginatedItems(int size) {
+        super(PageStartIndex.ONE, 6 * 9, size);
+    }
+
+    public PaginatedItems(Collection<? extends SaleItem> collection) {
+        super(PageStartIndex.ONE, 6 * 9, collection);
+    }
 }

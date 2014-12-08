@@ -25,11 +25,12 @@
 package com.jcwhatever.bukkit.storefront.utils;
 
 import com.jcwhatever.bukkit.generic.extended.MaterialExt;
-import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -41,6 +42,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class ItemStackUtil {
 
@@ -62,8 +64,8 @@ public class ItemStackUtil {
         if (lore == null)
             return new ArrayList<String>(0);
 
-        List<String> newLore = new ArrayList<String>();
-        List<String> removed = new ArrayList<String>();
+        List<String> newLore = new ArrayList<String>(5);
+        List<String> removed = new ArrayList<String>(5);
 
         for (String line : lore) {
             if (line.indexOf(TEMP_INDICATOR) == 0) {
@@ -113,7 +115,7 @@ public class ItemStackUtil {
         List<String> lore = ItemStackUtils.getLore(stack);
 
         if (lore == null)
-            lore = new ArrayList<String>();
+            lore = new ArrayList<>(5);
 
         int insertAt = 0;
 
@@ -134,7 +136,7 @@ public class ItemStackUtil {
         List<String> lore = ItemStackUtils.getLore(stack);
 
         if (lore == null)
-            lore = new ArrayList<String>();
+            lore = new ArrayList<>(5);
 
         int insertAt = hasPriceLore(stack)
                 ? 1
@@ -162,7 +164,7 @@ public class ItemStackUtil {
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null) {
-            lore = new ArrayList<String>();
+            lore = new ArrayList<>(5);
         }
 
         if (lore.size() > 0) {
@@ -186,8 +188,8 @@ public class ItemStackUtil {
 
 
     /**
-     * Change all item stacks in an inventory that match the provided item stack type to the specified price.
-     * Note: Only use in views that contain inventory for a single player
+     * Change all item stacks in an chest that match the provided item stack type to the specified price.
+     * Note: Only use in views that contain chest for a single player
      * @param inventory
      * @param itemStack
      * @param price
@@ -239,6 +241,7 @@ public class ItemStackUtil {
     }
 
 
+    @Nullable
     public static String getPriceLore (ItemStack itemStack) {
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
@@ -261,7 +264,7 @@ public class ItemStackUtil {
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null) {
-            lore = new ArrayList<String>();
+            lore = new ArrayList<>(5);
         }
 
         for (int i = 0; i < lore.size(); i++) {
@@ -486,7 +489,7 @@ public class ItemStackUtil {
     public static class AddToInventoryResult {
 
         private int _leftover;
-        private final List<SlotInfo> _slotsInfo = new ArrayList<SlotInfo>();
+        private final List<SlotInfo> _slotsInfo = new ArrayList<>(6 * 9);
 
 
         void setLeftOver (int leftover) {
@@ -512,7 +515,7 @@ public class ItemStackUtil {
             return _slotsInfo;
         }
 
-        public class SlotInfo {
+        public static class SlotInfo {
 
             private int _slot;
             private int _itemsAdded;

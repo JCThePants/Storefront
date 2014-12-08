@@ -24,26 +24,32 @@
 
 package com.jcwhatever.bukkit.storefront.meta;
 
+import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
+import com.jcwhatever.bukkit.storefront.Category;
+import com.jcwhatever.bukkit.storefront.stores.IStore;
+
 /**
- * Meta Keys for view instances persistent meta
- * 
- * @author JC The Pants
- *
+ * Session Meta Keys
  */
-public enum SessionMetaKey {
+public class SessionMetaKey {
+
+	private SessionMetaKey() {}
 	
 	/**
 	 * The current Task Mode whose value is a {@code ViewTaskMode} enum constant.
 	 */
-	TASK_MODE,
+	public static ViewArgumentKey<ViewTaskMode>
+			TASK_MODE = new ViewArgumentKey<ViewTaskMode>(ViewTaskMode.class);
 	
 	/**
 	 * The current store whose value is an an instance that implements {@code IStore}.
 	 */
-	STORE,
+	public static ViewArgumentKey<IStore>
+			STORE = new ViewArgumentKey<IStore>(IStore.class);
 	
 	/**
 	 * The current category
 	 */
-	CATEGORY
+	public static ViewArgumentKey<Category>
+			CATEGORY = new ViewArgumentKey<>(Category.class);
 }

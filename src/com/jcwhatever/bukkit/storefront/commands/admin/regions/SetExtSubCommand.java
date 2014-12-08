@@ -35,6 +35,7 @@ import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.utils.text.TextUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
 import org.bukkit.command.CommandSender;
@@ -117,7 +118,7 @@ public class SetExtSubCommand extends AbstractCommand {
             return; // finished
         }
         
-        IStore extStore = extRegion.getMeta(IStore.class.getName()); 
+        IStore extStore = extRegion.getMeta(StoreRegion.REGION_STORE);
         if (extStore != null) {
             tellError(sender, "Region '{0}' is already assigned to store named '{1}'.", extRegion.getName(), extStore.getName());
             return; // finished

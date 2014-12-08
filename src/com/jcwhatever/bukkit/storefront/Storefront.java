@@ -27,19 +27,20 @@ package com.jcwhatever.bukkit.storefront;
 import com.jcwhatever.bukkit.generic.GenericsPlugin;
 import com.jcwhatever.bukkit.generic.permissions.IPermission;
 import com.jcwhatever.bukkit.generic.permissions.Permissions;
-import com.jcwhatever.bukkit.generic.views.ViewManager;
+import com.jcwhatever.bukkit.generic.views.IViewFactory;
+import com.jcwhatever.bukkit.generic.views.menu.PaginatorViewFactory;
 import com.jcwhatever.bukkit.storefront.commands.CommandHandler;
 import com.jcwhatever.bukkit.storefront.events.GlobalListener;
-import com.jcwhatever.bukkit.storefront.views.BuyView;
-import com.jcwhatever.bukkit.storefront.views.CategoryView;
-import com.jcwhatever.bukkit.storefront.views.ItemTaskMenuView;
-import com.jcwhatever.bukkit.storefront.views.MainMenuView;
-import com.jcwhatever.bukkit.storefront.views.PaginatorView;
-import com.jcwhatever.bukkit.storefront.views.PriceView;
-import com.jcwhatever.bukkit.storefront.views.QuantityView;
-import com.jcwhatever.bukkit.storefront.views.SellView;
-import com.jcwhatever.bukkit.storefront.views.SellWantedView;
-import com.jcwhatever.bukkit.storefront.views.WantedView;
+import com.jcwhatever.bukkit.storefront.views.buy.BuyViewFactory;
+import com.jcwhatever.bukkit.storefront.views.category.CategoryViewFactory;
+import com.jcwhatever.bukkit.storefront.views.itemtask.ItemTaskViewFactory;
+import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuViewFactory;
+import com.jcwhatever.bukkit.storefront.views.price.PriceViewFactory;
+import com.jcwhatever.bukkit.storefront.views.quantity.QuantityViewFactory;
+import com.jcwhatever.bukkit.storefront.views.sell.SellViewFactory;
+import com.jcwhatever.bukkit.storefront.views.sellwanted.SellWantedViewFactory;
+import com.jcwhatever.bukkit.storefront.views.wanted.WantedViewFactory;
+
 import org.bukkit.ChatColor;
 import org.bukkit.permissions.PermissionDefault;
 
@@ -47,16 +48,16 @@ public class Storefront extends GenericsPlugin {
 
     private static final String CHAT_PREFIX = ChatColor.WHITE + "[" + ChatColor.BLUE + "Store" + ChatColor.WHITE + "] ";
     
-    public static final String VIEW_MAIN_MENU = "__view_main_menu__";
-    public static final String VIEW_CATEGORY = "__view_category__";
-    public static final String VIEW_SELL = "__view_sell__";
-    public static final String VIEW_PRICE = "__view_price__";
-    public static final String VIEW_PAGINATOR = "__view_paginator__";
-    public static final String VIEW_BUY = "__view_buy__";
-    public static final String VIEW_QUANTITY = "__view_quantity__";
-    public static final String VIEW_WANTED = "__view_wanted__";
-    public static final String VIEW_ITEM_TASK_MENU = "__view_item_task_menu__";
-    public static final String VIEW_SELL_WANTED = "__view_sell_wanted__";
+    public static final IViewFactory VIEW_MAIN_MENU = new MainMenuViewFactory("MainMenu");
+    public static final IViewFactory VIEW_CATEGORY = new CategoryViewFactory("Category");
+    public static final IViewFactory VIEW_SELL = new SellViewFactory("Sell");
+    public static final IViewFactory VIEW_PRICE = new PriceViewFactory("Price");
+    public static final IViewFactory VIEW_PAGINATOR = new PaginatorViewFactory("Paginator");
+    public static final IViewFactory VIEW_BUY = new BuyViewFactory("Buy");
+    public static final IViewFactory VIEW_QUANTITY = new QuantityViewFactory("Quantity");
+    public static final IViewFactory VIEW_WANTED = new WantedViewFactory("Wanted");
+    public static final IViewFactory VIEW_ITEM_TASK_MENU = new ItemTaskViewFactory("ItemTask");
+    public static final IViewFactory VIEW_SELL_WANTED = new SellWantedViewFactory("SellWanted");
     
     private static Storefront _singleton;
 
@@ -65,7 +66,6 @@ public class Storefront extends GenericsPlugin {
         return _singleton;
     }
 
-    private ViewManager _viewManager;
     private CategoryManager _categoryManager;
     private StoreManager _storeManager;
 
@@ -77,18 +77,10 @@ public class Storefront extends GenericsPlugin {
         _singleton = this;
     }
 
-
-    public ViewManager getViewManager () {
-
-        return _viewManager;
-    }
-
-
     public CategoryManager getCategoryManager () {
 
         return _categoryManager;
     }
-
 
     public StoreManager getStoreManager () {
 
@@ -109,11 +101,9 @@ public class Storefront extends GenericsPlugin {
 
     @Override
     protected void onEnablePlugin() {
-        _viewManager = new ViewManager(this);
         _categoryManager = new CategoryManager(getDataNode().getNode("categories"));
         _storeManager = new StoreManager(getDataNode().getNode("stores"));
 
-        registerViews();
         registerPermissions();
 
         this.registerCommands(new CommandHandler(this));
@@ -124,22 +114,6 @@ public class Storefront extends GenericsPlugin {
     protected void onDisablePlugin() {
 
     }
-
-
-    private void registerViews () {
-
-        _viewManager.addView(VIEW_MAIN_MENU, "Store", MainMenuView.class);
-        _viewManager.addView(VIEW_CATEGORY, "Item Categories", CategoryView.class);
-        _viewManager.addView(VIEW_SELL, "SELL Items", SellView.class);
-        _viewManager.addView(VIEW_PRICE, "Set Price", PriceView.class);
-        _viewManager.addView(VIEW_PAGINATOR, "Select Page", PaginatorView.class);
-        _viewManager.addView(VIEW_BUY, "Items", BuyView.class);
-        _viewManager.addView(VIEW_QUANTITY, "Select Quantity", QuantityView.class);
-        _viewManager.addView(VIEW_WANTED, "Wanted", WantedView.class);
-        _viewManager.addView(VIEW_ITEM_TASK_MENU, "Item Menu", ItemTaskMenuView.class);
-        _viewManager.addView(VIEW_SELL_WANTED, "Sell Items to Store", SellWantedView.class);
-    }
-
 
     private void registerPermissions () {
 

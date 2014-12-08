@@ -33,20 +33,20 @@ import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class WantedItems {
 
-    private Map<Category, SaleItemCategoryMap> _wantedCategoryMap = new HashMap<Category, SaleItemCategoryMap>();
-    private Map<UUID, WantedItem> _wantedIdMap = new HashMap<UUID, WantedItem>();
-    private Map<ItemWrapper, WantedItem> _wantedMap = new HashMap<ItemWrapper, WantedItem>();
+    private Map<Category, SaleItemCategoryMap> _wantedCategoryMap = new HashMap<Category, SaleItemCategoryMap>(25);
+    private Map<UUID, WantedItem> _wantedIdMap = new HashMap<UUID, WantedItem>(25);
+    private Map<ItemWrapper, WantedItem> _wantedMap = new HashMap<ItemWrapper, WantedItem>(25);
 
     private IDataNode _wantedNode;
     private IStore _store;
@@ -61,19 +61,19 @@ public class WantedItems {
     }
 
 
-    public List<SaleItem> getAll () {
+    public PaginatedItems getAll () {
 
-        return new ArrayList<SaleItem>(_wantedIdMap.values());
+        return new PaginatedItems(_wantedIdMap.values());
     }
 
 
-    public List<SaleItem> get (Category category) {
+    public PaginatedItems get (Category category) {
 
         SaleItemCategoryMap map = _wantedCategoryMap.get(category);
         if (map == null)
-            return new ArrayList<SaleItem>(0);
+            return new PaginatedItems(0);
 
-        return new ArrayList<SaleItem>(map.values());
+        return new PaginatedItems(map.values());
     }
 
 
@@ -93,6 +93,7 @@ public class WantedItems {
     }
 
 
+    @Nullable
     public SaleItem add (ItemStack itemStack, int qty, double pricePerUnit) {
 
         PreCon.notNull(itemStack);
@@ -124,7 +125,7 @@ public class WantedItems {
         return item;
     }
 
-
+    @Nullable
     public SaleItem remove (UUID itemId) {
 
         PreCon.notNull(itemId);

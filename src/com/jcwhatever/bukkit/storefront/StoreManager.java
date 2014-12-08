@@ -34,6 +34,7 @@ import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.storage.StorageLoadHandler;
 import com.jcwhatever.bukkit.generic.storage.StorageLoadResult;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
+import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.stores.PlayerStore;
 import com.jcwhatever.bukkit.storefront.stores.ServerStore;
@@ -93,7 +94,7 @@ public class StoreManager {
         IStore result = null;
 
         for (IRegion region : regions) {
-            result = region.getMeta(IStore.class.getName());
+            result = region.getMeta(StoreRegion.REGION_STORE);
             if (result != null) {
                 break;
             }

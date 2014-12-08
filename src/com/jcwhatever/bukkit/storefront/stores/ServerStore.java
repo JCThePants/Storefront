@@ -24,21 +24,25 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
-import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
+import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
+import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -49,6 +53,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public class ServerStore extends AbstractStore {
 
@@ -72,7 +77,9 @@ public class ServerStore extends AbstractStore {
     @Override
     public void view (Block sourceBlock, Player p) {
 
-        Storefront.getInstance().getViewManager().show(p, Storefront.VIEW_MAIN_MENU, sourceBlock, null);
+        ViewSession session = new ViewSession(Storefront.getInstance(), p, sourceBlock);
+
+        session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
     }
 
 
@@ -84,6 +91,7 @@ public class ServerStore extends AbstractStore {
 
 
     @Override
+    @Nullable
     public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack) {
 
         SaleItemMap map = _playerMap.get(sellerId);
@@ -95,35 +103,36 @@ public class ServerStore extends AbstractStore {
 
 
     @Override
-    public List<SaleItem> getSaleItems () {
+    public PaginatedItems getSaleItems () {
 
-        return new ArrayList<SaleItem>(_idMap.values());
+        return new PaginatedItems(_idMap.values());
     }
 
 
     @Override
-    public List<SaleItem> getSaleItems (Category category) {
+    public PaginatedItems getSaleItems (Category category) {
 
         SaleItemCategoryMap map = getCategoryMap(category);
         if (map == null)
-            return new ArrayList<SaleItem>(0);
+            return new PaginatedItems(0);
 
-        return new ArrayList<SaleItem>(map.values());
+        return new PaginatedItems(map.values());
     }
 
 
     @Override
-    public List<SaleItem> getSaleItems (UUID sellerId) {
+    public PaginatedItems getSaleItems (UUID sellerId) {
 
         SaleItemMap map = _playerMap.get(sellerId);
         if (map == null)
-            return new ArrayList<SaleItem>(0);
+            return new PaginatedItems(0);
 
-        return new ArrayList<SaleItem>(map.values());
+        return new PaginatedItems(map.values());
     }
 
 
     @Override
+    @Nullable
     public SaleItem addSaleItem (Player p, ItemStack itemStack, int qty, double pricePerUnit) {
 
         // make sure the item does not already exist
@@ -187,6 +196,7 @@ public class ServerStore extends AbstractStore {
 
 
     @Override
+    @Nullable
     public SaleItem removeSaleItem (UUID itemId) {
 
         SaleItem item = _idMap.remove(itemId);
@@ -212,6 +222,7 @@ public class ServerStore extends AbstractStore {
 
 
     @Override
+    @Nullable
     public SaleItem removeSaleItem (UUID playerId, ItemStack itemStack) {
 
         // get player item map
@@ -241,6 +252,7 @@ public class ServerStore extends AbstractStore {
 
 
     @Override
+    @Nullable
     public SaleItem removeSaleItem (UUID playerId, ItemStack itemStack, int qty) {
 
         // get player item map
@@ -303,9 +315,9 @@ public class ServerStore extends AbstractStore {
         ItemStack purchasedStack = saleItem.getItemStack().clone();
         purchasedStack.setAmount(qty);
 
-        // make sure player has room in inventory
+        // make sure player has room in chest
         if (!InventoryUtils.hasRoom(buyer.getInventory(), purchasedStack)) {
-            Msg.debug("Player sale rejected because not enough room in inventory.");
+            Msg.debug("Player sale rejected because not enough room in chest.");
             return false;
         }
 
@@ -409,8 +421,8 @@ public class ServerStore extends AbstractStore {
     @Override
     protected void onInit () {
 
-        _idMap = new HashMap<UUID, SaleItem>();
-        _playerMap = new HashMap<UUID, SaleItemMap>();
+        _idMap = new HashMap<UUID, SaleItem>(50);
+        _playerMap = new HashMap<UUID, SaleItemMap>(50);
     }
 
 

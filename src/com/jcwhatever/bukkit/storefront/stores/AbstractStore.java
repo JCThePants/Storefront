@@ -231,12 +231,10 @@ public abstract class AbstractStore implements IStore {
 
 
     @Override
-    @Nullable
     public WantedItems getWantedItems () {
 
         if (getStoreType() == StoreType.SERVER) {
-            Msg.debug("Attempted to get Wanted Items from a Server Store.");
-            return null;
+            throw new RuntimeException("Cannot get Wanted items from a server store.");
         }
 
         if (_wantedItems == null) {
@@ -326,9 +324,9 @@ public abstract class AbstractStore implements IStore {
         ItemStack purchasedStack = saleItem.getItemStack().clone();
         purchasedStack.setAmount(qty);
 
-        // make sure player has room in inventory
+        // make sure player has room in chest
         if (!InventoryUtils.hasRoom(buyer.getInventory(), purchasedStack)) {
-            Msg.debug("Player sale rejected because not enough room in inventory.");
+            Msg.debug("Player sale rejected because not enough room in chest.");
             return false;
         }
 
@@ -351,18 +349,18 @@ public abstract class AbstractStore implements IStore {
 
 
     @Override
-    public void updateWantedFromInventory (final Player seller, final PriceMap priceMap, QtyMap qtyMap,
-                                           final Inventory currentInventory,
-                                           final SaleItemSnapshot startSnapshot) {
+    public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
+                                           Inventory currentInventory,
+                                           SaleItemSnapshot startSnapshot) {
 
         updateFromInventory(true, seller, priceMap, qtyMap, currentInventory, startSnapshot);
     }
 
 
     @Override
-    public void updateFromInventory (final Player seller, final PriceMap priceMap,
-                                     final Inventory currentInventory,
-                                     final SaleItemSnapshot startSnapshot) {
+    public void updateFromInventory (Player seller, PriceMap priceMap,
+                                     Inventory currentInventory,
+                                     SaleItemSnapshot startSnapshot) {
 
         updateFromInventory(false, seller, priceMap, null, currentInventory, startSnapshot);
     }

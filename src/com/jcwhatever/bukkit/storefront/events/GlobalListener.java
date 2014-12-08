@@ -33,6 +33,7 @@ import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
+import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
 import org.bukkit.Material;
@@ -102,7 +103,7 @@ public class GlobalListener implements Listener {
         List<IRegion> regions = GenericsLib.getRegionManager().getRegions(event.getClickedBlock().getLocation());
 
         for (IRegion region : regions) {
-            IStore store = region.getMeta(IStore.class.getName());
+            IStore store = region.getMeta(StoreRegion.REGION_STORE);
             if (store != null) {
                 event.setCancelled(true);
                 store.view(event.getClickedBlock(), event.getPlayer());

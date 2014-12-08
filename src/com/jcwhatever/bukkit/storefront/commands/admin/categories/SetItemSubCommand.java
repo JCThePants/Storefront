@@ -24,9 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.ItemStack;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -35,6 +32,9 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
+
 @CommandInfo(
         parent = "categories",
         command = "setitem",
@@ -42,7 +42,7 @@ import com.jcwhatever.bukkit.storefront.Storefront;
                 "categoryName", "item"
         },
         usage = "/stores categories setitem <categoryName> <item>",
-        description = "Set item used to represent category in inventory menus.")
+        description = "Set item used to represent category in chest menus.")
 
 public class SetItemSubCommand extends AbstractCommand {
 

@@ -27,10 +27,13 @@ package com.jcwhatever.bukkit.storefront.stores;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.storage.BatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
+import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
@@ -61,12 +64,15 @@ public class PlayerStore extends AbstractStore {
 
     @Override
     public void view (Block sourceBlock, Player p) {
+
+        assert getOwnerId() != null;
         
         if (!hasOwner()) {
+
             Msg.tell(p, "This store is out of business.");
             return;
         }
-        
+
         if (!getOwnerId().equals(p.getUniqueId()) &&
                 getSaleItems().size() == 0 &&
                 getWantedItems().getAll().size() == 0) {
@@ -75,7 +81,8 @@ public class PlayerStore extends AbstractStore {
             return;
         }
 
-        Storefront.getInstance().getViewManager().show(p, Storefront.VIEW_MAIN_MENU, sourceBlock, null);
+        ViewSession session = new ViewSession(Storefront.getInstance(), p, sourceBlock);
+        session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
     }
 
 
@@ -90,7 +97,7 @@ public class PlayerStore extends AbstractStore {
     public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack) {
 
         if (!sellerId.equals(getOwnerId()))
-            return null;
+            throw new RuntimeException("The seller is not the owner of the store.");
 
         ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
 
@@ -99,34 +106,31 @@ public class PlayerStore extends AbstractStore {
 
 
     @Override
-    public List<SaleItem> getSaleItems () {
+    public PaginatedItems getSaleItems () {
 
-        return new ArrayList<SaleItem>(_idMap.values());
+        return new PaginatedItems(_idMap.values());
     }
 
 
     @Override
-    public List<SaleItem> getSaleItems (Category category) {
+    public PaginatedItems getSaleItems (Category category) {
 
         SaleItemCategoryMap map = getCategoryMap(category);
         if (map == null)
-            return new ArrayList<SaleItem>(0);
+            return new PaginatedItems(0);
 
-        return new ArrayList<SaleItem>(map.values());
+        return new PaginatedItems(map.values());
     }
 
 
     @Override
-    public List<SaleItem> getSaleItems (UUID sellerId) {
+    public PaginatedItems getSaleItems (UUID sellerId) {
 
         if (!sellerId.equals(getOwnerId()))
-            return new ArrayList<SaleItem>(0);
+            return new PaginatedItems(0);
 
-        return new ArrayList<SaleItem>(_idMap.values());
+        return new PaginatedItems(_idMap.values());
     }
-    
-
-    
 
 
     @Override

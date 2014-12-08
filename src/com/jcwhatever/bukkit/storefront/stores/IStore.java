@@ -29,6 +29,7 @@ import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
@@ -44,6 +45,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
 public interface IStore {
 
@@ -53,26 +55,29 @@ public interface IStore {
     public String getName ();
 
     /**
-     * Get the stores display title
+     * Get the stores display title.
      */
     public String getTitle ();
 
     /**
-     * Set the stores display title
-     * @param title  The title
+     * Set the stores display title.
+     *
+     * @param title  The title text.
      */
     public void setTitle (String title);
 
     /**
-     * Get the player owner of the store, if any
+     * Get the player owner of the store, if any.
      */
+    @Nullable
     public UUID getOwnerId ();
 
     /**
      * Set the id of the player that owns the store.
-     * @param ownerId
+     *
+     * @param ownerId The id of the player owner.
      */
-    public void setOwnerId (UUID ownerId);
+    public void setOwnerId (@Nullable UUID ownerId);
 
     /**
      * Determine if the store has an owner.
@@ -105,6 +110,7 @@ public interface IStore {
 
     /**
      * Set an external region for the store. Null to remove.
+     *
      * @param region  External region to set
      */
     public void setExternalRegion(IRegion region);
@@ -116,6 +122,7 @@ public interface IStore {
 
     /**
      * Open the stores main menu to a player.
+     *
      * @param sourceBlock  The block clicked on to open the store, if any.
      * @param player       The player to show the stores main menu to.
      */
@@ -123,6 +130,7 @@ public interface IStore {
 
     /**
      * Get a sale item from the store by item id.
+     *
      * @param itemId  The id of the sale item.
      */
     public SaleItem getSaleItem (UUID itemId);
@@ -139,26 +147,26 @@ public interface IStore {
     /**
      * Get all sale items from the store.
      */
-    public List<SaleItem> getSaleItems ();
-
+    public PaginatedItems getSaleItems ();
 
     /**
      * Get all sale items in the specified category from the store.
+     *
      * @param category  The category to search in
      */
-    public List<SaleItem> getSaleItems (Category category);
-
+    public PaginatedItems getSaleItems (Category category);
 
     /**
      * Get sale items to be viewed by the specified seller.
+     *
      * @param sellerId  The id of the seller
      */
-    public List<SaleItem> getSaleItems (UUID sellerId);
-
+    public PaginatedItems getSaleItems (UUID sellerId);
 
     /**
      * Determine if there is room to add a sale item represented by the 
      * provided item stack in the amount specified.
+     *
      * @param sellerId   The id of the seller trying to add the item.
      * @param itemStack  The item stack
      * @param qty        The amount that needs to fit
@@ -175,6 +183,7 @@ public interface IStore {
 
     /**
      * Add a sale item to the store.
+     *
      * @param seller        The player that is selling the item to/from the store. 
      * @param itemStack     The item stack that represents the item to be sold.
      * @param qty           The number of items that will be sold.
@@ -185,27 +194,27 @@ public interface IStore {
 
     /**
      * Remove a sale item from the store.
+     *
      * @param itemId  The id of the item to remove.
-     * @return
      */
     public SaleItem removeSaleItem (UUID itemId);
 
 
     /**
      * Remove a sale item from the store.
+     *
      * @param sellerId   The id of the seller whose item is being removed.
      * @param itemStack  An item stack that represents the sale item to be removed.
-     * @return
      */
     public SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack);
 
 
     /**
      * Remove a sale item from the store.
+     *
      * @param sellerId   The id of the seller whose item is being removed.   
      * @param itemStack  An item stack that represents the sale item to be removed.
      * @param qty        The number of items to remove.
-     * @return
      */
     public SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack, int qty);
 
@@ -217,46 +226,46 @@ public interface IStore {
      * @param stack   An item stack that represents the items to be sold.
      * @param qty     The number of items to sell.
      * @param price   The total price of the transaction.
-     * @return
      */
     public boolean sellToStore(Player seller, ISaleItem stack, int qty, double price);
 
 
     /**
      * Remove item from store and give to the specified buyer. Creates economy transaction
-     * between buyer and seller, and transfers items to buyers inventory.
+     * between buyer and seller, and transfers items to buyers chest.
      *
      * @param buyer  The player whose is buying the item
      * @param stack  The SaleItemStack that is being purchased.
      * @param qty    The number of items to be purchased.
      * @param price  The total price of the transaction.
+     *
      * @return  True if successful
      */
     public boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
 
 
     /**
-     * Update quantities and prices on items using a current inventory and a snapshot
-     * of the starting inventory.
+     * Update quantities and prices on items using a current chest and a snapshot
+     * of the starting chest.
      *
      * @param seller            The player who is selling the items
-     * @param priceMap          The price map containing prices for the inventory items.
-     * @param currentInventory  The current inventory.
-     * @param startSnapshot     A snapshot of the inventory before it was modified.
+     * @param priceMap          The price map containing prices for the chest items.
+     * @param currentInventory  The current chest.
+     * @param startSnapshot     A snapshot of the chest before it was modified.
      */
     public void updateFromInventory (Player seller, PriceMap priceMap, Inventory currentInventory,
                                      SaleItemSnapshot startSnapshot);
 
 
     /**
-     * Update quantities and prices on wanted items using a current inventory and a snapshot
-     * of the starting inventory.
+     * Update quantities and prices on wanted items using a current chest and a snapshot
+     * of the starting chest.
      *
      * @param seller            The player who is selling the items
-     * @param priceMap          The price map containing prices for the inventory items.
-     * @param qtyMap            The quantity map containing item quantities for the inventory items.
-     * @param currentInventory  The current inventory.
-     * @param startSnapshot     A snapshot of the inventory before it was modified.
+     * @param priceMap          The price map containing prices for the chest items.
+     * @param qtyMap            The quantity map containing item quantities for the chest items.
+     * @param currentInventory  The current chest.
+     * @param startSnapshot     A snapshot of the chest before it was modified.
      */
     public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
                                            Inventory currentInventory,
@@ -264,18 +273,21 @@ public interface IStore {
 
 
     /**
-     * update quantities of removed items using a current inventory and a snapshot of the 
-     * starting inventory.
+     * update quantities of removed items using a current chest and a snapshot of the
+     * starting chest.
+     *
      * @param seller            The player who is selling the items
-     * @param currentInventory  The current inventory.
-     * @param startSnapshot     A snapshot of the inventory begore it was modified.
+     * @param currentInventory  The current chest.
+     * @param startSnapshot     A snapshot of the chest begore it was modified.
      */
     public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
                                             final SaleItemSnapshot startSnapshot);
 
     /**
      * Remove all sale items from the specified seller.
+     *
      * @param sellerId  The id of the seller.
+     *
      * @return  True if successful
      */
     public boolean clearSaleItems (UUID sellerId);
@@ -283,28 +295,24 @@ public interface IStore {
 
     /**
      * Get Categories that players can sell to in the store.
-     * @return
      */
     public List<Category> getSellCategories ();
 
 
     /**
      * Get Categories that have items for sale in the store.
-     * @return
      */
     public List<Category> getBuyCategories ();
 
 
     /**
      * Get items the store owner wants to buy.
-     * @return
      */
     public WantedItems getWantedItems ();
 
 
     /**
      * Get the stores data storage node.
-     * @return
      */
     public IDataNode getDataNode ();
 

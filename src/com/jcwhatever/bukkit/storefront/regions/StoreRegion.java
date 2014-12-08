@@ -7,6 +7,7 @@ import com.jcwhatever.bukkit.generic.regions.IRegionEventHandler;
 import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
 import com.jcwhatever.bukkit.generic.regions.Region.EnterRegionReason;
 import com.jcwhatever.bukkit.generic.regions.Region.LeaveRegionReason;
+import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -22,6 +23,9 @@ import javax.annotation.Nullable;
  */
 public class StoreRegion implements IDisposable{
 
+    public static final MetaKey<IStore> REGION_STORE = new MetaKey<>(IStore.class);
+    public static final MetaKey<BasicRegion> REGION = new MetaKey<>(BasicRegion.class);
+
     private final IStore _store;
     private final MessageHandler _messageHandler;
 
@@ -30,7 +34,6 @@ public class StoreRegion implements IDisposable{
     private String _exitMessage;
     private boolean _hasOwnRegion;
     private boolean _isDisposed;
-
 
     /**
      * Constructor
@@ -70,7 +73,7 @@ public class StoreRegion implements IDisposable{
 
         _region = region;
         _region.addEventHandler(_messageHandler);
-        _region.setMeta(IStore.class.getName(), _store);
+        _region.setMeta(REGION_STORE, _store);
     }
 
     public void setOwnRegion() {
@@ -88,14 +91,14 @@ public class StoreRegion implements IDisposable{
 
         _region = new ReadOnlyRegion(region);
         _region.addEventHandler(_messageHandler);
-        _region.setMeta(IStore.class.getName(), _store);
+        _region.setMeta(REGION_STORE, _store);
     }
 
     public void setCoords(Location p1, Location p2) {
         if (!hasOwnRegion())
             setOwnRegion();
 
-        BasicRegion region = _region.getMeta(BasicRegion.class.getName() + ".Storefront");
+        BasicRegion region = _region.getMeta(REGION);
         if (region == null)
             throw new AssertionError();
 
@@ -128,9 +131,9 @@ public class StoreRegion implements IDisposable{
     @Override
     public void dispose() {
         _region.removeEventHandler(_messageHandler);
-        _region.setMeta(IStore.class.getName(), null);
+        _region.setMeta(REGION_STORE, null);
 
-        BasicRegion internalRegion = _region.getMeta(BasicRegion.class.getName() + ".Storefront");
+        BasicRegion internalRegion = _region.getMeta(REGION);
         if (internalRegion != null) {
             internalRegion.dispose();
         }
