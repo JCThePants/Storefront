@@ -160,7 +160,7 @@ public class MainMenuView extends AbstractMenuView {
                 sellItem.setViewFactory  (Storefront.VIEW_SELL);
                 sellItem.setTaskMode     (ViewTaskMode.SERVER_SELL);
                 sellItem.setCategorized  (true);
-                sellItem.setOnClick      (new Runnable() {
+                sellItem.onClick(new Runnable() {
                     @Override
                     public void run() {
                         sellItem.setSaleItems(_store.getSaleItems(getPlayer().getUniqueId()));
@@ -174,7 +174,7 @@ public class MainMenuView extends AbstractMenuView {
                     sellItem.setViewFactory (Storefront.VIEW_SELL);
                     sellItem.setTaskMode    (ViewTaskMode.OWNER_MANAGE_SELL);
                     sellItem.setSaleItems   (_store.getSaleItems());
-                    sellItem.setOnClick     (new Runnable() {
+                    sellItem.onClick(new Runnable() {
                         @Override
                         public void run() {
                             sellItem.setSaleItems(_store.getSaleItems());
@@ -186,7 +186,7 @@ public class MainMenuView extends AbstractMenuView {
                     sellItem.setViewFactory (Storefront.VIEW_SELL_WANTED);
                     sellItem.setTaskMode    (ViewTaskMode.PLAYER_SELL);
                     sellItem.setCategorized (true);
-                    sellItem.setOnClick     (new Runnable() {
+                    sellItem.onClick(new Runnable() {
                         @Override
                         public void run() {
                             sellItem.setSaleItems(_store.getWantedItems().getAll());
@@ -226,15 +226,14 @@ public class MainMenuView extends AbstractMenuView {
         item.setTaskMode    (ViewTaskMode.SERVER_BUY);
         item.setItemStack   (new ItemStack(Material.CHEST));
         item.setCategorized (true);
-        item.setOnClick     (new Runnable() {
+        item.onClick(new Runnable() {
             @Override
             public void run() {
 
                 if (_store.getSaleItems().size() == 0) {
                     Msg.tell(getPlayer(), "Out of Stock");
                     item.setCancelled(true);
-                }
-                else {
+                } else {
                     item.setSaleItems(new PaginatedItems(_store.getSaleItems()));
                 }
             }
@@ -252,7 +251,7 @@ public class MainMenuView extends AbstractMenuView {
             item.setDescription ("Click to manage items you're willing to buy.");
             item.setViewFactory (Storefront.VIEW_WANTED);
             item.setTaskMode    (ViewTaskMode.OWNER_MANAGE_BUY);
-            item.setOnClick     (new Runnable() {
+            item.onClick(new Runnable() {
                 @Override
                 public void run() {
                     item.setSaleItems(_store.getWantedItems().getAll());
@@ -265,7 +264,7 @@ public class MainMenuView extends AbstractMenuView {
             item.setViewFactory (Storefront.VIEW_BUY);
             item.setTaskMode    (ViewTaskMode.PLAYER_BUY);
             item.setCategorized (true);
-            item.setOnClick     (new Runnable() {
+            item.onClick(new Runnable() {
                 @Override
                 public void run() {
                     item.setSaleItems(_store.getSaleItems());
