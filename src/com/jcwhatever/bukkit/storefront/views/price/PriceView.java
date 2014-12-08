@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.views.price;
 import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
@@ -77,7 +77,7 @@ public class PriceView extends AbstractMenuView {
     private MenuItem _add10;
     private MenuItem _add1;
 
-    public PriceView(IViewSession session, IViewFactory factory, ViewArguments arguments) {
+    public PriceView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
     }
 

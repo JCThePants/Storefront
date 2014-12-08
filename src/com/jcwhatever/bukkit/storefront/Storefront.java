@@ -28,9 +28,9 @@ import com.jcwhatever.bukkit.generic.GenericsPlugin;
 import com.jcwhatever.bukkit.generic.permissions.IPermission;
 import com.jcwhatever.bukkit.generic.permissions.Permissions;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.menu.PaginatorViewFactory;
 import com.jcwhatever.bukkit.storefront.commands.CommandHandler;
 import com.jcwhatever.bukkit.storefront.events.GlobalListener;
+import com.jcwhatever.bukkit.storefront.views.StorePaginatorViewFactory;
 import com.jcwhatever.bukkit.storefront.views.buy.BuyViewFactory;
 import com.jcwhatever.bukkit.storefront.views.category.CategoryViewFactory;
 import com.jcwhatever.bukkit.storefront.views.itemtask.ItemTaskViewFactory;
@@ -52,7 +52,7 @@ public class Storefront extends GenericsPlugin {
     public static final IViewFactory VIEW_CATEGORY = new CategoryViewFactory("Category");
     public static final IViewFactory VIEW_SELL = new SellViewFactory("Sell");
     public static final IViewFactory VIEW_PRICE = new PriceViewFactory("Price");
-    public static final IViewFactory VIEW_PAGINATOR = new PaginatorViewFactory("Paginator");
+    public static final IViewFactory VIEW_PAGINATOR = new StorePaginatorViewFactory("Paginator");
     public static final IViewFactory VIEW_BUY = new BuyViewFactory("Buy");
     public static final IViewFactory VIEW_QUANTITY = new QuantityViewFactory("Quantity");
     public static final IViewFactory VIEW_WANTED = new WantedViewFactory("Wanted");
@@ -101,6 +101,8 @@ public class Storefront extends GenericsPlugin {
 
     @Override
     protected void onEnablePlugin() {
+
+
         _categoryManager = new CategoryManager(getDataNode().getNode("categories"));
         _storeManager = new StoreManager(getDataNode().getNode("stores"));
 

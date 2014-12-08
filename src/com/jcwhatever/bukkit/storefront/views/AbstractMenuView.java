@@ -1,7 +1,7 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments.ViewArgument;
@@ -35,7 +35,7 @@ public abstract class AbstractMenuView extends MenuView {
 
     private ViewResults _results;
 
-    protected AbstractMenuView(IViewSession session,
+    protected AbstractMenuView(ViewSession session,
                                IViewFactory factory, ViewArguments arguments) {
         super(null, session, factory, arguments);
     }
@@ -120,7 +120,7 @@ public abstract class AbstractMenuView extends MenuView {
 
     protected void showCategoryViewOrNext(IViewFactory nextFactory, ViewArguments arguments) {
 
-        IViewSession session = getViewSession();
+        ViewSession session = getViewSession();
         IStore store = session.getMeta(SessionMetaKey.STORE);
         if (store == null)
             throw new AssertionError();
@@ -152,7 +152,7 @@ public abstract class AbstractMenuView extends MenuView {
     protected void showPaginViewOrNext (IViewFactory nextView,
                              PaginatedItems pagin, ViewArguments nextArguments) {
 
-        IViewSession session = getViewSession();
+        ViewSession session = getViewSession();
 
         IStore store = session.getMeta(SessionMetaKey.STORE);
         if (store == null)

@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.views.itemtask;
 
 import com.jcwhatever.bukkit.generic.views.IView;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
@@ -81,7 +81,7 @@ public class ItemTaskView extends AbstractMenuView {
 
     private List<MenuItem> _menuItems;
 
-    protected ItemTaskView(IViewSession session,
+    protected ItemTaskView(ViewSession session,
                            IViewFactory factory, ViewArguments arguments) {
 
         super(session, factory, arguments);

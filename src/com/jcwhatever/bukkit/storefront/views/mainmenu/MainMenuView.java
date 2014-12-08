@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
@@ -53,7 +53,7 @@ public class MainMenuView extends AbstractMenuView {
     private boolean _isStoreOwner;
     private boolean _canSell;
 
-    public MainMenuView(IViewSession session, IViewFactory factory, ViewArguments arguments) {
+    public MainMenuView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
 
         _store = getStore();

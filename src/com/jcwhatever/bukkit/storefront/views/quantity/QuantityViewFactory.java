@@ -1,10 +1,13 @@
 package com.jcwhatever.bukkit.storefront.views.quantity;
 
 import com.jcwhatever.bukkit.generic.views.IView;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
 import com.jcwhatever.bukkit.generic.views.ViewFactory;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
+import com.jcwhatever.bukkit.storefront.Storefront;
+
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +17,12 @@ import javax.annotation.Nullable;
 public class QuantityViewFactory extends ViewFactory<QuantityView> {
 
     public QuantityViewFactory(String name) {
-        super(name, QuantityView.class);
+        super(null, name, QuantityView.class);
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return Storefront.getInstance();
     }
 
     @Override
@@ -29,7 +37,7 @@ public class QuantityViewFactory extends ViewFactory<QuantityView> {
     }
 
     @Override
-    public IView create(@Nullable String title, IViewSession session, ViewArguments arguments) {
+    public IView create(@Nullable String title, ViewSession session, ViewArguments arguments) {
         return new QuantityView(session, this, arguments);
     }
 }

@@ -29,7 +29,7 @@ import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.chest.ChestEventInfo;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
@@ -75,7 +75,7 @@ public class WantedView extends AbstractMenuView {
     private PriceMap _priceMap;
     private QtyMap _qtyMap;
 
-    protected WantedView(IViewSession session,
+    protected WantedView(ViewSession session,
                          IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
     }

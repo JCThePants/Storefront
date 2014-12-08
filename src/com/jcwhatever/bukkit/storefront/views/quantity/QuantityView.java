@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.views.quantity;
 import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
@@ -83,7 +83,7 @@ public class QuantityView extends AbstractMenuView {
 
     private List<MenuItem> _menuItems;
 
-    protected QuantityView(IViewSession session,
+    protected QuantityView(ViewSession session,
                            IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
 

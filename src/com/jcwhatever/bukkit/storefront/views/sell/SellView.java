@@ -33,7 +33,7 @@ import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.generic.utils.Scheduler;
 import com.jcwhatever.bukkit.generic.views.IView;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.chest.ChestEventAction;
 import com.jcwhatever.bukkit.generic.views.chest.ChestEventInfo;
 import com.jcwhatever.bukkit.generic.views.chest.ChestView;
@@ -84,7 +84,7 @@ public class SellView extends ChestView {
     private SaleItemSnapshot _snapshot;
     private Inventory _inventory;
 
-    protected SellView(@Nullable String title, IViewSession session, IViewFactory factory, ViewArguments arguments) {
+    protected SellView(@Nullable String title, ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(title, session, factory, arguments);
     }
 

@@ -1,10 +1,13 @@
 package com.jcwhatever.bukkit.storefront.views.itemtask;
 
 import com.jcwhatever.bukkit.generic.views.IView;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
 import com.jcwhatever.bukkit.generic.views.ViewFactory;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
+import com.jcwhatever.bukkit.storefront.Storefront;
+
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nullable;
 
@@ -14,7 +17,12 @@ import javax.annotation.Nullable;
 public class ItemTaskViewFactory extends ViewFactory<ItemTaskView> {
 
     public ItemTaskViewFactory(String name) {
-        super(name, ItemTaskView.class);
+        super(null, name, ItemTaskView.class);
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return Storefront.getInstance();
     }
 
     @Override
@@ -29,7 +37,7 @@ public class ItemTaskViewFactory extends ViewFactory<ItemTaskView> {
     }
 
     @Override
-    public IView create(@Nullable String title, IViewSession session, ViewArguments arguments) {
+    public IView create(@Nullable String title, ViewSession session, ViewArguments arguments) {
 
         return new ItemTaskView(session, this, arguments);
     }

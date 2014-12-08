@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.views.buy;
 
 import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
@@ -51,7 +51,7 @@ public class BuyView extends AbstractMenuView {
     private static final MetaKey<SaleItem>
             SALE_ITEM = new MetaKey<>(SaleItem.class);
 
-    public BuyView(IViewSession session, IViewFactory factory, ViewArguments arguments) {
+    public BuyView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
     }
 

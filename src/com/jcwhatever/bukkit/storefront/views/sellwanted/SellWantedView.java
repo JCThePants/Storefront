@@ -32,7 +32,7 @@ import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
@@ -73,7 +73,7 @@ public class SellWantedView extends AbstractMenuView {
     private MenuItem _selectedMenuItem;
 
 
-    protected SellWantedView(IViewSession session, IViewFactory factory, ViewArguments arguments) {
+    protected SellWantedView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
 
         _store = getStore();

@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.views.category;
 
 import com.jcwhatever.bukkit.generic.utils.text.TextUtils;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.IViewSession;
+import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
@@ -62,7 +62,7 @@ public class CategoryView extends AbstractMenuView {
     private Category _previousCategory;
 
 
-    public CategoryView(IViewSession session, IViewFactory factory, ViewArguments arguments) {
+    public CategoryView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
 
         _store = getStore();

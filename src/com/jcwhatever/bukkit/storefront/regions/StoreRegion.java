@@ -87,7 +87,7 @@ public class StoreRegion implements IDisposable{
         BasicRegion region = new BasicRegion(Storefront.getInstance(), _store.getName(),
                 _store.getDataNode().getNode("region"));
 
-        region.setMeta(BasicRegion.class.getName() + ".Storefront", region);
+        region.setMeta(REGION, region);
 
         _region = new ReadOnlyRegion(region);
         _region.addEventHandler(_messageHandler);
