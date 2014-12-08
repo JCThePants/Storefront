@@ -77,7 +77,7 @@ public class ServerStore extends AbstractStore {
     @Override
     public void view (Block sourceBlock, Player p) {
 
-        ViewSession session = new ViewSession(Storefront.getInstance(), p, sourceBlock);
+        ViewSession session = ViewSession.get(p, sourceBlock);
 
         session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
     }

@@ -201,7 +201,7 @@ public class SellWantedView extends AbstractMenuView {
 
                 if (menuItem != null) {
                     updateItem(menuItem.getItemStack(), saleItemStack.getQty(), saleItemStack.getPricePerUnit());
-                    menuItem.set();
+                    menuItem.set(this);
                     //_inventory.setItem(menuItem.getSlot(), menuItem.getItemStack());
 
                     Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Sold {0} {1} to the store for {GREEN}{2}{WHITE}.",

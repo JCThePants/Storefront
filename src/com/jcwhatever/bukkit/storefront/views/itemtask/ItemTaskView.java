@@ -214,7 +214,7 @@ public class ItemTaskView extends AbstractMenuView {
 
         setLore(_menuItem.getItemStack());
 
-        _menuItem.set();
+        _menuItem.set(this);
     }
 
     @Override

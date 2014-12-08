@@ -189,7 +189,7 @@ public class PriceView extends AbstractMenuView {
 
         setLore(_itemToPrice.getItemStack());
 
-        _itemToPrice.set();
+        _itemToPrice.set(this);
 
         _result.setPrice(_price);
 
@@ -202,22 +202,22 @@ public class PriceView extends AbstractMenuView {
     }
 
     private boolean setItemVisible(MenuItem item, boolean isVisible) {
-        if (item.isVisible() == isVisible)
+        if (item.isVisible(this) == isVisible)
             return false;
 
-        item.setVisible(isVisible);
+        item.setVisible(this, isVisible);
         return true;
     }
 
     private void updateItemVisibility() {
 
-        _minus1.setVisible(_price > 1);
-        _minus10.setVisible(_price > 1);
-        _minus50.setVisible(_price > 1);
+        _minus1.setVisible(this, _price > 1);
+        _minus10.setVisible(this, _price > 1);
+        _minus50.setVisible(this, _price > 1);
 
-        _add1.setVisible(true);
-        _add10.setVisible(true);
-        _add50.setVisible(true);
+        _add1.setVisible(this, true);
+        _add10.setVisible(this, true);
+        _add50.setVisible(this, true);
     }
 
     private void setLore(ItemStack itemStack) {

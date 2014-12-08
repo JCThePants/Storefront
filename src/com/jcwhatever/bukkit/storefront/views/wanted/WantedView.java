@@ -158,7 +158,7 @@ public class WantedView extends AbstractMenuView {
         ItemStackUtil.setPriceLore(itemStack, price, PriceType.PER_ITEM);
         ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Wanted: " + ChatColor.GRAY + qty);
 
-        menuItem.set();
+        menuItem.set(this);
     }
 
 

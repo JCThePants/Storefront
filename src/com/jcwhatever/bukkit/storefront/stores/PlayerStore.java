@@ -81,7 +81,7 @@ public class PlayerStore extends AbstractStore {
             return;
         }
 
-        ViewSession session = new ViewSession(Storefront.getInstance(), p, sourceBlock);
+        ViewSession session = ViewSession.get(p, sourceBlock);
         session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
     }
 
@@ -329,7 +329,7 @@ public class PlayerStore extends AbstractStore {
         WantedItems wantedItems = getWantedItems();
         List<SaleItem> saleItems = wantedItems.getAll();
 
-        Set<Category> categories = new HashSet<Category>();
+        Set<Category> categories = new HashSet<>(20);
 
         for (SaleItem saleItem : saleItems) {
             categories.add(saleItem.getCategory());
@@ -344,7 +344,7 @@ public class PlayerStore extends AbstractStore {
 
         List<SaleItem> saleItems = this.getSaleItems();
 
-        Set<Category> categories = new HashSet<Category>();
+        Set<Category> categories = new HashSet<>(20);
 
         for (SaleItem saleItem : saleItems) {
             categories.add(saleItem.getCategory());
@@ -357,8 +357,8 @@ public class PlayerStore extends AbstractStore {
     @Override
     protected void onInit () {
 
-        _idMap = new HashMap<UUID, SaleItem>();
-        _stackMap = new HashMap<ItemWrapper, SaleItem>();
+        _idMap = new HashMap<>(100);
+        _stackMap = new HashMap<>(100);
     }
 
 

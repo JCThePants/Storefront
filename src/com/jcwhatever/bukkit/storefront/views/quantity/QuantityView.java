@@ -213,11 +213,11 @@ public class QuantityView extends AbstractMenuView {
 
         int qty = item.getAmount();
 
-        _menuSubtract1.setVisible(qty > 1);
-        _menuSubtract10.setVisible(qty > 1);
+        _menuSubtract1.setVisible(this, qty > 1);
+        _menuSubtract10.setVisible(this, qty > 1);
 
-        _menuAdd1.setVisible(qty < _maxQty);
-        _menuAdd10.setVisible(qty < _maxQty);
+        _menuAdd1.setVisible(this, qty < _maxQty);
+        _menuAdd10.setVisible(this, qty < _maxQty);
     }
 
     private void setLore(ItemStack itemStack) {
