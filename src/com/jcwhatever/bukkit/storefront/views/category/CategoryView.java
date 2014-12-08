@@ -108,7 +108,7 @@ public class CategoryView extends AbstractMenuView {
             for (SaleItem saleItem : saleItems)
                 totalInCategory += saleItem.getQty();
 
-            MenuItem item = new MenuItem(i, this)
+            MenuItem item = new MenuItem(i)
                     .setItemStack(category.getMenuItem())
                     .setDescription(category.getDescription())
                     .setTitle(TextUtils.format("{YELLOW}{ITALIC}" + category.getTitle().toUpperCase() +

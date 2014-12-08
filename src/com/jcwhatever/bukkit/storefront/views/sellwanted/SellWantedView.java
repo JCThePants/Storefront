@@ -115,7 +115,7 @@ public class SellWantedView extends AbstractMenuView {
 
             SaleItem saleItemStack = saleItemStacks.get(i);
 
-            MenuItem menuItem = new MenuItem(i, this);
+            MenuItem menuItem = new MenuItem(i);
             menuItem.setItemStack(saleItemStack.getItemStack().clone());
             menuItem.getItemStack().setAmount(saleItemStack.getQty());
             menuItem.setMeta(SALE_ITEM, saleItemStack);

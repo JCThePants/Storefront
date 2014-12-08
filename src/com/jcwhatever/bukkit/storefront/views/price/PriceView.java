@@ -87,7 +87,7 @@ public class PriceView extends AbstractMenuView {
         List<MenuItem> menuItems = new ArrayList<>(10);
 
         // -1 btn
-        _minus1 = new MenuItem(SLOT_SUBTRACT_1, this);
+        _minus1 = new MenuItem(SLOT_SUBTRACT_1);
         _minus1.setItemStack(new ItemStack(Material.STONE));
         _minus1.setTitle(ChatColor.RED + "Subtract 1");
         _minus1.setDescription("Subtract 1.00 from the price of the item.");
@@ -95,7 +95,7 @@ public class PriceView extends AbstractMenuView {
         menuItems.add(_minus1);
 
         // -10 btn
-        _minus10 = new MenuItem(SLOT_SUBTRACT_10, this);
+        _minus10 = new MenuItem(SLOT_SUBTRACT_10);
         _minus10.setItemStack(new ItemStack(Material.DIRT));
         _minus10.setTitle(ChatColor.RED + "Subtract 10");
         _minus10.setDescription("Subtract 10.00 from the price of the item.");
@@ -103,7 +103,7 @@ public class PriceView extends AbstractMenuView {
         menuItems.add(_minus10);
 
         // -50 btn
-        _minus50 = new MenuItem(SLOT_SUBTRACT_50, this);
+        _minus50 = new MenuItem(SLOT_SUBTRACT_50);
         _minus50.setItemStack(new ItemStack(Material.GRASS));
         _minus50.setTitle(ChatColor.RED + "Subtract 50");
         _minus50.setDescription("Subtract 50.00 from the price of the item.");
@@ -111,7 +111,7 @@ public class PriceView extends AbstractMenuView {
         menuItems.add(_minus50);
 
         // +50 btn
-        _add50 = new MenuItem(SLOT_ADD_50, this);
+        _add50 = new MenuItem(SLOT_ADD_50);
         _add50.setItemStack(new ItemStack(Material.DIAMOND_BLOCK));
         _add50.setTitle(ChatColor.GREEN + "Add 50");
         _add50.setDescription("Add 50.00 to the price of the item.");
@@ -119,7 +119,7 @@ public class PriceView extends AbstractMenuView {
         menuItems.add(_add50);
 
         // +10 btn
-        _add10 = new MenuItem(SLOT_ADD_10, this);
+        _add10 = new MenuItem(SLOT_ADD_10);
         _add10.setItemStack(new ItemStack(Material.GOLD_BLOCK));
         _add10.setTitle(ChatColor.GREEN + "Add 10");
         _add10.setDescription("Add 10.00 to the price of the item.");
@@ -127,7 +127,7 @@ public class PriceView extends AbstractMenuView {
         menuItems.add(_add10);
 
         // +1 btn
-        _add1 = new MenuItem(SLOT_ADD_1, this);
+        _add1 = new MenuItem(SLOT_ADD_1);
         _add1.setItemStack(new ItemStack(Material.IRON_BLOCK));
         _add1.setTitle(ChatColor.GREEN + "Add 1");
         _add1.setDescription("Add 1.00 to the price of the item.");
@@ -148,7 +148,7 @@ public class PriceView extends AbstractMenuView {
         if (price != null)
             _price = price;
 
-        _itemToPrice = new MenuItem(SLOT_ITEM, this);
+        _itemToPrice = new MenuItem(SLOT_ITEM);
         _itemToPrice.setItemStack(itemToPrice.clone());
         _itemToPrice.getItemStack().setAmount(1);
         menuItems.add(_itemToPrice);

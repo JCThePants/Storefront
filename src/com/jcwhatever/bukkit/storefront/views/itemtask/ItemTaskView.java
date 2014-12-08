@@ -120,25 +120,25 @@ public class ItemTaskView extends AbstractMenuView {
 
         _menuItems = new ArrayList<>(5);
 
-        _qtyMenuItem = new MenuItem(SLOT_QTY, this);
+        _qtyMenuItem = new MenuItem(SLOT_QTY);
         _qtyMenuItem.setItemStack(new ItemStack(Material.CHEST));
         _qtyMenuItem.setTitle(ChatColor.LIGHT_PURPLE + "QUANTITY");
         _qtyMenuItem.setDescription("Set the number of items in the stack.");
         _menuItems.add(_qtyMenuItem);
 
-        _priceMenuItem = new MenuItem(SLOT_PRICE, this);
+        _priceMenuItem = new MenuItem(SLOT_PRICE);
         _priceMenuItem.setItemStack(new ItemStack(Material.GOLD_NUGGET));
         _priceMenuItem.setTitle(ChatColor.YELLOW + "PRICE");
         _priceMenuItem.setDescription("Set the price per item in the stack.");
         _menuItems.add(_priceMenuItem);
 
-        _removeMenuItem = new MenuItem(SLOT_REMOVE, this);
+        _removeMenuItem = new MenuItem(SLOT_REMOVE);
         _removeMenuItem.setItemStack(new ItemStack(Material.SHEARS));
         _removeMenuItem.setTitle(ChatColor.DARK_RED + "REMOVE");
         _removeMenuItem.setDescription(ChatColor.RED + "Click to remove item.");
         _menuItems.add(_removeMenuItem);
 
-        _cancelMenuItem = new MenuItem(SLOT_CANCEL, this);
+        _cancelMenuItem = new MenuItem(SLOT_CANCEL);
         _cancelMenuItem.setItemStack(new ItemStack(Material.REDSTONE_BLOCK));
         _cancelMenuItem.setTitle(ChatColor.RED + "CANCEL");
         _cancelMenuItem.setDescription(ChatColor.RED + "Click to cancel changes and return.");
@@ -148,7 +148,7 @@ public class ItemTaskView extends AbstractMenuView {
         ItemStack itemClone = _itemStack.clone();
         itemClone.setAmount(_qty);
 
-        _menuItem = new MenuItem(SLOT_ITEM, this);
+        _menuItem = new MenuItem(SLOT_ITEM);
         _menuItem.setItemStack(itemClone);
         _menuItems.add(_menuItem);
 

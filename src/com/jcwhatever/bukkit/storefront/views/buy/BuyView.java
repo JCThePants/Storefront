@@ -89,7 +89,7 @@ public class BuyView extends AbstractMenuView {
 
             SaleItem item = saleItemStacks.get(i);
 
-            MenuItem menuItem = new MenuItem(i, this);
+            MenuItem menuItem = new MenuItem(i);
             menuItem.setMeta(SALE_ITEM, item);
 
             ItemStack stack = item.getItemStack();

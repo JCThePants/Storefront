@@ -142,7 +142,7 @@ public class MainMenuView extends AbstractMenuView {
      */
     private MenuItem getSellItem() {
 
-        final MainMenuItem sellItem = new MainMenuItem(1, this);
+        final MainMenuItem sellItem = new MainMenuItem(1);
 
         sellItem.setItemStack(new ItemStack(Material.GOLD_BLOCK));
         sellItem.setTitle(ChatColor.BLUE + "SELL");
@@ -218,7 +218,7 @@ public class MainMenuView extends AbstractMenuView {
     }
 
     private MenuItem getServerBuyItem() {
-        final MainMenuItem item = new MainMenuItem(0, this);
+        final MainMenuItem item = new MainMenuItem(0);
 
         item.setTitle       ("BUY");
         item.setDescription ("Click to buy from the store.");
@@ -244,7 +244,7 @@ public class MainMenuView extends AbstractMenuView {
     }
 
     private MenuItem getPlayerBuyItem() {
-        final MainMenuItem item = new MainMenuItem(0, this);
+        final MainMenuItem item = new MainMenuItem(0);
         item.setItemStack(new ItemStack(Material.CHEST));
 
         if (_isStoreOwner) {

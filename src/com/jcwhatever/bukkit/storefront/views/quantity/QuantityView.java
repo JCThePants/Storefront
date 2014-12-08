@@ -122,41 +122,41 @@ public class QuantityView extends AbstractMenuView {
 
         _menuItems = new ArrayList<>(6);
 
-        _menuCancel = new MenuItem(SLOT_CANCEL, this);
+        _menuCancel = new MenuItem(SLOT_CANCEL);
         _menuCancel.setItemStack(new ItemStack(Material.REDSTONE_BLOCK));
         _menuCancel.setTitle(ChatColor.RED + "Cancel");
         _menuCancel.setDescription(ChatColor.RED + "Click to cancel and return.");
         _menuItems.add(_menuCancel);
 
-        _menuSubtract1 = new MenuItem(SLOT_SUBTRACT_1, this);
+        _menuSubtract1 = new MenuItem(SLOT_SUBTRACT_1);
         _menuSubtract1.setItemStack(new ItemStack(Material.STONE));
         _menuSubtract1.setTitle(ChatColor.RED + "Subtract 1");
         _menuSubtract1.setDescription("Click to Subtract 1 item from the quantity.");
         _menuSubtract1.setMeta(QUANTITY_INCREMENT, -1);
         _menuItems.add(_menuSubtract1);
 
-        _menuSubtract10 = new MenuItem(SLOT_SUBTRACT_10, this);
+        _menuSubtract10 = new MenuItem(SLOT_SUBTRACT_10);
         _menuSubtract10.setItemStack(new ItemStack(Material.DIRT));
         _menuSubtract10.setTitle(ChatColor.RED + "Subtract 10");
         _menuSubtract10.setDescription("Click to Subtract 10 items from the quantity.");
         _menuSubtract10.setMeta(QUANTITY_INCREMENT, -10);
         _menuItems.add(_menuSubtract10);
 
-        _menuAdd1 = new MenuItem(SLOT_ADD_1, this);
+        _menuAdd1 = new MenuItem(SLOT_ADD_1);
         _menuAdd1.setItemStack(new ItemStack(Material.IRON_BLOCK));
         _menuAdd1.setTitle(ChatColor.GREEN + "Add 1");
         _menuAdd1.setDescription("Click to Add 1 item to the quantity.");
         _menuAdd1.setMeta(QUANTITY_INCREMENT, 1);
         _menuItems.add(_menuAdd1);
 
-        _menuAdd10 = new MenuItem(SLOT_ADD_10, this);
+        _menuAdd10 = new MenuItem(SLOT_ADD_10);
         _menuAdd10.setItemStack(new ItemStack(Material.GOLD_BLOCK));
         _menuAdd10.setTitle(ChatColor.GREEN + "Add 10");
         _menuAdd10.setDescription("Click to Add 10 item to the quantity.");
         _menuAdd10.setMeta(QUANTITY_INCREMENT, 10);
         _menuItems.add(_menuAdd10);
 
-        _itemToQuantify = new MenuItem(SLOT_ITEM, this);
+        _itemToQuantify = new MenuItem(SLOT_ITEM);
         _itemToQuantify.setItemStack(itemStack.clone());
         _itemToQuantify.getItemStack().setAmount(qty);
         _menuItems.add(_itemToQuantify);

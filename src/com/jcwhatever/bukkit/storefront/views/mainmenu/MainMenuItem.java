@@ -3,7 +3,6 @@ package com.jcwhatever.bukkit.storefront.views.mainmenu;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
-import com.jcwhatever.bukkit.generic.views.menu.MenuView;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.sun.istack.internal.Nullable;
@@ -19,8 +18,8 @@ public class MainMenuItem extends MenuItem {
     private ViewArguments _arguments;
     private boolean _isCategorized;
 
-    public MainMenuItem(int slot, MenuView menuView) {
-        super(slot, menuView);
+    public MainMenuItem(int slot) {
+        super(slot);
     }
 
     public ViewTaskMode getTaskMode() {

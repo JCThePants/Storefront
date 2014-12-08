@@ -118,7 +118,7 @@ public class WantedView extends AbstractMenuView {
 
             ItemStack clone = item.getItemStack();
 
-            MenuItem menuItem = new MenuItem(i, this);
+            MenuItem menuItem = new MenuItem(i);
             menuItem.setItemStack(clone);
 
             updateItem(menuItem, item.getQty(), item.getPricePerUnit());
@@ -196,7 +196,7 @@ public class WantedView extends AbstractMenuView {
         itemStack.setAmount(1);
 
         // open price view
-        MenuItem menuItem = new MenuItem(slotInfo.getSlot(), this);
+        MenuItem menuItem = new MenuItem(slotInfo.getSlot());
         menuItem.setItemStack(itemStack);
         if (!hasItem) {
             _priceMap.setPrice(selectedStack, 1.0D);
