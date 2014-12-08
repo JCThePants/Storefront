@@ -25,8 +25,9 @@
 package com.jcwhatever.bukkit.storefront;
 
 import com.jcwhatever.bukkit.generic.messaging.ChatPaginator;
-import com.jcwhatever.bukkit.generic.messaging.Messenger;
+import com.jcwhatever.bukkit.generic.messaging.IMessenger;
 import com.jcwhatever.bukkit.generic.utils.text.TextUtils;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,73 +38,57 @@ public class Msg {
 
     private Msg() {}
 
-
     public static void tell (CommandSender sender, String message, Object... params) {
-
-        Messenger.tell(Storefront.getInstance(), sender, message, params);
+        msg().tell(sender, message, params);
     }
-
 
     public static void tell (Player p, String message, Object... params) {
-
-        Messenger.tell(Storefront.getInstance(), p, message, params);
+        msg().tell(p, message, params);
     }
-
 
     public static void tellNoSpam (Player p, String message, Object... params) {
-
-        Messenger.tellNoSpam(Storefront.getInstance(), p, message, params);
+        msg().tellNoSpam(p, message, params);
     }
-
 
     public static void tellImportant (UUID playerId, String context, String message,
                                       Object... params) {
 
-        Messenger.tellImportant(Storefront.getInstance(), playerId, context, message, params);
+        msg().tellImportant(playerId, context, message, params);
     }
-
 
     public static void info (String message, Object... params) {
-
-        Messenger.info(Storefront.getInstance(), message, params);
+        msg().info(message, params);
     }
-
 
     public static void debug (String message, Object... params) {
+        if (!Storefront.getInstance().isDebugging())
+            return;
 
-        // if (!Storefront.getInstance().isDebugging())
-        // return;
-        Messenger.debug(Storefront.getInstance(), message, params);
+        msg().debug(message, params);
     }
-
 
     public static void warning (String message, Object... params) {
-
-        Messenger.warning(Storefront.getInstance(), message, params);
+        msg().warning(message, params);
     }
-
 
     public static void severe (String message, Object... params) {
-
-        Messenger.severe(Storefront.getInstance(), message, params);
+        msg().severe(message, params);
     }
-
 
     public static void broadcast (String message, Object... params) {
-
-        Messenger.broadcast(Storefront.getInstance(), message, params);
+        msg().broadcast(message, params);
     }
-
 
     public static void broadcast (String message, Collection<Player> exclude, Object... params) {
-
-        Messenger.broadcast(Storefront.getInstance(), message, exclude, params);
+        msg().broadcast(exclude, message, params);
     }
 
-
     public static ChatPaginator getPaginator (String title, Object... params) {
-
         return new ChatPaginator(Storefront.getInstance(), 6, TextUtils.format(title, params));
+    }
+
+    private static IMessenger msg() {
+        return Storefront.getInstance().getMessenger();
     }
 
 }
