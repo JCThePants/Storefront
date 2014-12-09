@@ -5,18 +5,18 @@ import com.jcwhatever.bukkit.generic.views.IView;
 import com.jcwhatever.bukkit.generic.views.ViewFactory;
 import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
 import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 
 import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nullable;
 
-public class StorePaginatorViewFactory extends ViewFactory<PaginatorView> {
+public class StorePaginatorViewFactory extends ViewFactory {
 
     public StorePaginatorViewFactory(String name) {
-        super(null, name, PaginatorView.class);
+        super(null, name);
     }
 
     @Override
@@ -29,13 +29,7 @@ public class StorePaginatorViewFactory extends ViewFactory<PaginatorView> {
         PreCon.notNull(session);
         PreCon.notNull(arguments);
 
-        return new PaginatorView(title, session, this, arguments);
-    }
-
-    @Override
-    protected boolean onOpen(ViewOpenReason reason, PaginatorView view) {
-        view.show(reason);
-        return true;
+        return new PaginatorView(title, session, this, arguments, StoreStackComparer.getDefault());
     }
 
     @Override

@@ -32,7 +32,7 @@ import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
@@ -70,9 +70,9 @@ public class GlobalListener implements Listener {
                     return;
 
                 // deposit items into bank of old owner
-                List<SaleItem> saleItems = store.getSaleItems();
+                List<ISaleItem> saleItems = store.getSaleItems();
 
-                for (SaleItem saleItem : saleItems) {
+                for (ISaleItem saleItem : saleItems) {
                     ItemBankManager.deposit(event.getOldOwnerId(), saleItem.getItemStack(), saleItem.getQty());
                 }
 

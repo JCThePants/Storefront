@@ -33,11 +33,12 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
-import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -52,8 +53,8 @@ import java.util.UUID;
 
 public class PlayerStore extends AbstractStore {
 
-    private Map<UUID, SaleItem> _idMap;
-    private Map<ItemWrapper, SaleItem> _stackMap;
+    private Map<UUID, ISaleItem> _idMap;
+    private Map<ItemWrapper, ISaleItem> _stackMap;
 
 
     public PlayerStore(String name, IDataNode storeNode) {
@@ -61,6 +62,10 @@ public class PlayerStore extends AbstractStore {
         super(name, storeNode);
     }
 
+    @Override
+    public StoreType getStoreType () {
+        return StoreType.PLAYER_OWNABLE;
+    }
 
     @Override
     public void view (Block sourceBlock, Player p) {
@@ -85,13 +90,10 @@ public class PlayerStore extends AbstractStore {
         session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
     }
 
-
     @Override
     public SaleItem getSaleItem (UUID itemId) {
-
-        return _idMap.get(itemId);
+        return (SaleItem)_idMap.get(itemId);
     }
-
 
     @Override
     public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack) {
@@ -101,37 +103,32 @@ public class PlayerStore extends AbstractStore {
 
         ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
 
-        return _stackMap.get(wrapper);
+        return (SaleItem)_stackMap.get(wrapper);
     }
 
-
     @Override
-    public PaginatedItems getSaleItems () {
-
-        return new PaginatedItems(_idMap.values());
+    public List<ISaleItem> getSaleItems () {
+        return new ArrayList<>(_idMap.values());
     }
 
-
     @Override
-    public PaginatedItems getSaleItems (Category category) {
+    public List<ISaleItem> getSaleItems (Category category) {
 
         SaleItemCategoryMap map = getCategoryMap(category);
         if (map == null)
-            return new PaginatedItems(0);
+            return new ArrayList<>(0);
 
-        return new PaginatedItems(map.values());
+        return new ArrayList<>(map.values());
     }
-
 
     @Override
-    public PaginatedItems getSaleItems (UUID sellerId) {
+    public List<ISaleItem> getSaleItems (UUID sellerId) {
 
         if (!sellerId.equals(getOwnerId()))
-            return new PaginatedItems(0);
+            return new ArrayList<>(0);
 
-        return new PaginatedItems(_idMap.values());
+        return new ArrayList<>(_idMap.values());
     }
-
 
     @Override
     public SaleItem addSaleItem (Player seller, ItemStack itemStack, int qty, double pricePerUnit) {
@@ -173,7 +170,6 @@ public class PlayerStore extends AbstractStore {
         return item;
     }
 
-
     private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
                                         final double pricePerUnit) {
 
@@ -193,11 +189,10 @@ public class PlayerStore extends AbstractStore {
         return saleItem;
     }
 
-
     @Override
     public SaleItem removeSaleItem (UUID itemId) {
 
-        SaleItem item = _idMap.remove(itemId);
+        SaleItem item = (SaleItem)_idMap.remove(itemId);
         if (item == null)
             return null;
 
@@ -227,7 +222,7 @@ public class PlayerStore extends AbstractStore {
         ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
 
         // remove from map
-        SaleItem saleItem = _stackMap.remove(wrapper);
+        SaleItem saleItem = (SaleItem)_stackMap.remove(wrapper);
         if (saleItem == null)
             return null;
 
@@ -256,7 +251,7 @@ public class PlayerStore extends AbstractStore {
         ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
 
         // get sale item from map
-        SaleItem saleItem = _stackMap.get(wrapper);
+        SaleItem saleItem = (SaleItem)_stackMap.get(wrapper);
         if (saleItem == null)
             return null;
 
@@ -284,9 +279,9 @@ public class PlayerStore extends AbstractStore {
             @Override
             public void run (IDataNode dataNode) {
 
-                List<SaleItem> items = getSaleItems();
+                List<ISaleItem> items = getSaleItems();
 
-                for (SaleItem item : items) {
+                for (ISaleItem item : items) {
                     removeSaleItem(getOwnerId(), item.getItemStack());
                 }
             }
@@ -296,26 +291,6 @@ public class PlayerStore extends AbstractStore {
         return true;
 
     }
-
-
-    /*
-     * public SaleItem sellItem(Player p, ItemStack item, double amount) {
-     * 
-     * Category category = _categoryManager.getCategory(item); if (category ==
-     * null) return null;
-     * 
-     * IDataNode catNode = _sellNode.getNode(category.getName());
-     * 
-     * 
-     * //sale-items.categoryName.ItemId }
-     */
-
-    @Override
-    public StoreType getStoreType () {
-
-        return StoreType.PLAYER_OWNABLE;
-    }
-
 
     @Override
     protected void onLoadSettings (IDataNode storeNode) {
@@ -327,11 +302,11 @@ public class PlayerStore extends AbstractStore {
     public List<Category> getSellCategories () {
 
         WantedItems wantedItems = getWantedItems();
-        List<SaleItem> saleItems = wantedItems.getAll();
+        List<ISaleItem> saleItems = wantedItems.getAll();
 
         Set<Category> categories = new HashSet<>(20);
 
-        for (SaleItem saleItem : saleItems) {
+        for (ISaleItem saleItem : saleItems) {
             categories.add(saleItem.getCategory());
         }
 
@@ -342,11 +317,11 @@ public class PlayerStore extends AbstractStore {
     @Override
     public List<Category> getBuyCategories () {
 
-        List<SaleItem> saleItems = this.getSaleItems();
+        List<ISaleItem> saleItems = this.getSaleItems();
 
         Set<Category> categories = new HashSet<>(20);
 
-        for (SaleItem saleItem : saleItems) {
+        for (ISaleItem saleItem : saleItems) {
             categories.add(saleItem.getCategory());
         }
 

@@ -24,22 +24,30 @@
 
 package com.jcwhatever.bukkit.storefront.views.buy;
 
+import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
+import com.jcwhatever.bukkit.generic.utils.EconomyUtils.CurrencyNoun;
+import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
+import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
 import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
+import com.jcwhatever.bukkit.generic.views.data.ViewResults;
 import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
+import com.jcwhatever.bukkit.storefront.Msg;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
+import com.jcwhatever.bukkit.storefront.views.quantity.QuantityViewResult;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -48,19 +56,21 @@ import java.util.List;
 
 public class BuyView extends AbstractMenuView {
 
-    private static final MetaKey<SaleItem>
-            SALE_ITEM = new MetaKey<>(SaleItem.class);
+    private static final MetaKey<ISaleItem>
+            SALE_ITEM = new MetaKey<>(ISaleItem.class);
+
+    private IStore _store;
 
     public BuyView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
         super(session, factory, arguments);
+
+        _store = getStore();
     }
 
     @Override
     protected List<MenuItem> createMenuItems() {
 
         ViewTaskMode taskMode = getTaskMode();
-        IStore store = getStore();
-        Category category = getCategory();
 
         Integer page = getArguments().get(PaginatorView.SELECTED_PAGE);
 
@@ -71,8 +81,8 @@ public class BuyView extends AbstractMenuView {
         }
 
         if (pagin == null) {
-            List<SaleItem> saleItems = store.getSaleItems(category);
-            pagin = new PaginatedItems(saleItems);
+            Category category = getCategory();
+            pagin = new PaginatedItems(_store, category);
         }
 
         int totalPages = pagin.getTotalPages();
@@ -81,13 +91,13 @@ public class BuyView extends AbstractMenuView {
 
         setTitle(taskMode.getChatColor() + "Buy Items (Page " + page + ')');
 
-        List<SaleItem> saleItemStacks = pagin.getPage(page);
+        List<ISaleItem> saleItemStacks = pagin.getPage(page);
 
         List<MenuItem> menuItems = new ArrayList<>(saleItemStacks.size());
 
         for (int i = 0; i < saleItemStacks.size(); i++) {
 
-            SaleItem item = saleItemStacks.get(i);
+            ISaleItem item = saleItemStacks.get(i);
 
             MenuItem menuItem = new MenuItem(i);
             menuItem.setMeta(SALE_ITEM, item);
@@ -108,7 +118,7 @@ public class BuyView extends AbstractMenuView {
     @Override
     protected void onItemSelect(MenuItem menuItem) {
 
-        SaleItem saleItemStack = menuItem.getMeta(SALE_ITEM);
+        ISaleItem saleItemStack = menuItem.getMeta(SALE_ITEM);
         if (saleItemStack == null)
             return;
 
@@ -117,11 +127,60 @@ public class BuyView extends AbstractMenuView {
 
     @Override
     protected void onShow(ViewOpenReason reason) {
+        // do nothing
+    }
 
+    @Override
+    protected void onPreShow(ViewOpenReason reason) {
+        if (reason != ViewOpenReason.PREV)
+            return;
+
+        ViewResults viewResults = getViewSession().getNextView().getResults();
+        if (!(viewResults instanceof QuantityViewResult))
+            return;
+
+        QuantityViewResult qtyResult = (QuantityViewResult) viewResults;
+
+        ISaleItem saleItemStack = qtyResult.getSaleItem();
+        if (saleItemStack == null)
+            throw new IllegalStateException("SALE_ITEM in QuantityViewResult cannot be null.");
+
+        int quantity = qtyResult.getQty();
+        double amount = saleItemStack.getPricePerUnit() * quantity;
+
+        double balance = EconomyUtils.getBalance(getPlayer());
+
+        // check buyer balance
+        if (balance < amount) {
+            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have enough {0}.",
+                    EconomyUtils.getCurrencyName(CurrencyNoun.PLURAL));
+        }
+        // check buyer available inventory room
+        else if (!InventoryUtils.hasRoom(getPlayer().getInventory(), saleItemStack.getItemStack(), quantity)) {
+            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}There isn't enough space in your inventory.");
+        }
+        // check item is available
+        else if (saleItemStack.getParent().getQty() < quantity) {
+            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Not enough inventory. Someone may have purchased the item already.");
+        }
+        // buy items
+        else if (!_store.buySaleItem(getPlayer(), saleItemStack, quantity, amount)) {
+            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Failed to buy items. They may have been purchased by someone else already.");
+        }
+        else {
+            Msg.tell(getPlayer(), "{GREEN}Sucess: {WHITE}Purchased {0} {1} for {2}.", quantity,
+                    ItemStackUtils.getDisplayName(saleItemStack.getItemStack(), DisplayNameResult.REQUIRED),
+                    EconomyUtils.formatAmount(amount));
+        }
     }
 
     @Override
     protected void onClose(ViewCloseReason reason) {
+        // do nothing
+    }
 
+    @Override
+    protected int getSlotsRequired() {
+        return MAX_SLOTS;
     }
 }

@@ -282,7 +282,7 @@ public abstract class AbstractStore implements IStore {
         }
 
 
-        SaleItem saleItem = getWantedItems().get(stack.getItemId());
+        ISaleItem saleItem = getWantedItems().get(stack.getItemId());
         if (saleItem == null || saleItem.getQty() < qty) {
             Msg.debug("Tried to sell item to the store that it's not willing to accept.");
             return false;
@@ -442,9 +442,9 @@ public abstract class AbstractStore implements IStore {
                 // modify original items
                 for (ItemWrapper wrapper : originalItems) {
 
-                    SaleItem saleItem = isWanted
+                    SaleItem saleItem = (SaleItem)(isWanted
                             ? getWantedItems().get(wrapper.getItem())
-                            : getSaleItem(seller.getUniqueId(), wrapper.getItem());
+                            : getSaleItem(seller.getUniqueId(), wrapper.getItem()));
 
                     if (saleItem == null)
                         continue;
@@ -483,9 +483,9 @@ public abstract class AbstractStore implements IStore {
                         throw new IllegalStateException(
                                 "Failed to get a price from the supplied price map.");
 
-                    SaleItem saleItem = isWanted
+                    SaleItem saleItem = (SaleItem)(isWanted
                             ? getWantedItems().get(wrapper.getItem())
-                            : getSaleItem(seller.getUniqueId(), wrapper.getItem());
+                            : getSaleItem(seller.getUniqueId(), wrapper.getItem()));
 
                     // add new item
                     if (saleItem == null) {

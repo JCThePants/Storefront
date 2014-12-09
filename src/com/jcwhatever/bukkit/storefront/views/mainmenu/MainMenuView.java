@@ -33,7 +33,8 @@ import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
-import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -106,7 +107,7 @@ public class MainMenuView extends AbstractMenuView {
         getViewSession().setMeta(SessionMetaKey.TASK_MODE, taskMode);
 
         if (menuItem.isCategorized()) {
-            showCategoryViewOrNext(factory, new ViewArguments());
+            showCategoryViewOrNext(factory, menuItem.getSaleItems(), arguments);
         }
         else {
             showPaginViewOrNext(factory, menuItem.getSaleItems(), arguments);
@@ -115,12 +116,12 @@ public class MainMenuView extends AbstractMenuView {
 
     @Override
     protected void onShow(ViewOpenReason reason) {
-
+        // do nothing
     }
 
     @Override
     protected void onClose(ViewCloseReason reason) {
-
+        // do nothing
     }
 
     @Override
@@ -163,7 +164,12 @@ public class MainMenuView extends AbstractMenuView {
                 sellItem.onClick(new Runnable() {
                     @Override
                     public void run() {
-                        sellItem.setSaleItems(_store.getSaleItems(getPlayer().getUniqueId()));
+                        sellItem.setSaleItems(new ISaleItemGetter() {
+                            @Override
+                            public List<ISaleItem> getSaleItems() {
+                                return _store.getSaleItems(getPlayer().getUniqueId());
+                            }
+                        });
                     }
                 });
                 break;
@@ -173,11 +179,15 @@ public class MainMenuView extends AbstractMenuView {
                 if (_isStoreOwner) {
                     sellItem.setViewFactory (Storefront.VIEW_SELL);
                     sellItem.setTaskMode    (ViewTaskMode.OWNER_MANAGE_SELL);
-                    sellItem.setSaleItems   (_store.getSaleItems());
                     sellItem.onClick(new Runnable() {
                         @Override
                         public void run() {
-                            sellItem.setSaleItems(_store.getSaleItems());
+                            sellItem.setSaleItems(new ISaleItemGetter() {
+                                @Override
+                                public List<ISaleItem> getSaleItems() {
+                                    return _store.getSaleItems();
+                                }
+                            });
                         }
                     });
                 }
@@ -189,7 +199,12 @@ public class MainMenuView extends AbstractMenuView {
                     sellItem.onClick(new Runnable() {
                         @Override
                         public void run() {
-                            sellItem.setSaleItems(_store.getWantedItems().getAll());
+                            sellItem.setSaleItems(new ISaleItemGetter() {
+                                @Override
+                                public List<ISaleItem> getSaleItems() {
+                                    return _store.getWantedItems().getAll();
+                                }
+                            });
                         }
                     });
                 }
@@ -234,7 +249,22 @@ public class MainMenuView extends AbstractMenuView {
                     Msg.tell(getPlayer(), "Out of Stock");
                     item.setCancelled(true);
                 } else {
-                    item.setSaleItems(new PaginatedItems(_store.getSaleItems()));
+                    item.setSaleItems(new ISaleItemGetter() {
+                        @Override
+                        public List<ISaleItem> getSaleItems() {
+                            List<ISaleItem> items = _store.getSaleItems();
+
+                            // remove players items from the list
+                            List<ISaleItem> results = new ArrayList<ISaleItem>(items.size());
+                            for (ISaleItem item : items) {
+                                if (!item.getSellerId().equals(getPlayer().getUniqueId())) {
+                                    results.add(item);
+                                }
+                            }
+
+                            return results;
+                        }
+                    });
                 }
             }
         });
@@ -254,7 +284,13 @@ public class MainMenuView extends AbstractMenuView {
             item.onClick(new Runnable() {
                 @Override
                 public void run() {
-                    item.setSaleItems(_store.getWantedItems().getAll());
+                    item.setSaleItems(new ISaleItemGetter() {
+
+                        @Override
+                        public List<ISaleItem> getSaleItems() {
+                            return _store.getWantedItems().getAll();
+                        }
+                    });
                 }
             });
         }
@@ -263,11 +299,16 @@ public class MainMenuView extends AbstractMenuView {
             item.setDescription ("Click to buy from the store.");
             item.setViewFactory (Storefront.VIEW_BUY);
             item.setTaskMode    (ViewTaskMode.PLAYER_BUY);
-            item.setCategorized (true);
+            item.setCategorized(true);
             item.onClick(new Runnable() {
                 @Override
                 public void run() {
-                    item.setSaleItems(_store.getSaleItems());
+                    item.setSaleItems(new ISaleItemGetter() {
+                        @Override
+                        public List<ISaleItem> getSaleItems() {
+                            return _store.getSaleItems();
+                        }
+                    });
                 }
             });
         }

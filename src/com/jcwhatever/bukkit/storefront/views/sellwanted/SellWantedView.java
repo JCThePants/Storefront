@@ -42,9 +42,9 @@ import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
@@ -62,14 +62,14 @@ import java.util.List;
 //@ViewInfo(pageType=PaginatorPageType.SALE_ITEM)
 public class SellWantedView extends AbstractMenuView {
 
-    private static final MetaKey<SaleItem> SALE_ITEM = new MetaKey<>(SaleItem.class);
+    private static final MetaKey<ISaleItem> SALE_ITEM = new MetaKey<>(ISaleItem.class);
 
     private IStore _store;
     private Category _category;
     private IPaginator _pagin;
     private PriceMap _priceMap;
 
-    private SaleItem _selectedItem;
+    private ISaleItem _selectedItem;
     private MenuItem _selectedMenuItem;
 
 
@@ -91,15 +91,14 @@ public class SellWantedView extends AbstractMenuView {
 
         _pagin = getArguments().get(PaginatorView.PAGINATOR);
         if (_pagin == null) {
-
-            List<SaleItem> saleItems = _category != null
-                    ? _store.getWantedItems().get(_category)
-                    : _store.getWantedItems().getAll();
-
-            Msg.debug("Total Items: {0}", saleItems.size());
-
-
-            _pagin = new PaginatedItems(saleItems);
+            _pagin = new PaginatedItems(new ISaleItemGetter() {
+                @Override
+                public List<ISaleItem> getSaleItems() {
+                    return _category != null
+                            ? _store.getWantedItems().get(_category)
+                            : _store.getWantedItems().getAll();
+                }
+            });
         }
 
         Integer page = getArguments().get(PaginatorView.SELECTED_PAGE);
@@ -107,13 +106,13 @@ public class SellWantedView extends AbstractMenuView {
             page = 1;
         }
 
-        List<SaleItem> saleItemStacks = _pagin.getPage(page);//, PaginatorPageType.SALE_ITEM);
+        List<ISaleItem> saleItemStacks = _pagin.getPage(page);//, PaginatorPageType.SALE_ITEM);
 
         List<MenuItem> menuItems = new ArrayList<>(saleItemStacks.size());
 
         for (int i=0; i < saleItemStacks.size(); i++) {
 
-            SaleItem saleItemStack = saleItemStacks.get(i);
+            ISaleItem saleItemStack = saleItemStacks.get(i);
 
             MenuItem menuItem = new MenuItem(i);
             menuItem.setItemStack(saleItemStack.getItemStack().clone());

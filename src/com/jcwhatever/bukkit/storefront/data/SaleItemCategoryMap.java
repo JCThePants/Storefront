@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("serial")
-public class SaleItemCategoryMap extends HashMap<UUID, SaleItem> {
+public class SaleItemCategoryMap extends HashMap<UUID, ISaleItem> {
     
     private static final int MAX_SLOTS = 2916; // (6 *9) * (6 * 9)
         
@@ -57,12 +57,12 @@ public class SaleItemCategoryMap extends HashMap<UUID, SaleItem> {
 
         MaterialExt materialExt = MaterialExt.from(itemStack.getType());
         
-        List<SaleItem> saleItems = new ArrayList<SaleItem>(this.values());
+        List<ISaleItem> saleItems = new ArrayList<>(this.values());
         
         int slotsUsed = 0;
         int partialStackSpace = 0;
                         
-        for (SaleItem saleItem : saleItems) {
+        for (ISaleItem saleItem : saleItems) {
             
             MaterialExt saleMaterial = MaterialExt.from(saleItem.getItemStack().getType());
             

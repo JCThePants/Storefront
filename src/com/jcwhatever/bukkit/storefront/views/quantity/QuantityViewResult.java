@@ -4,6 +4,7 @@ import com.jcwhatever.bukkit.generic.mixins.ICancellable;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewResultKey;
 import com.jcwhatever.bukkit.generic.views.data.ViewResults;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -14,6 +15,9 @@ import javax.annotation.Nullable;
  */
 public class QuantityViewResult extends ViewResults implements ICancellable {
 
+    public static final ViewResultKey<ISaleItem>
+            SALE_ITEM = new ViewResultKey<>(ISaleItem.class);
+
     public static final ViewResultKey<ItemStack>
             ITEM_STACK = new ViewResultKey<>(ItemStack.class);
 
@@ -23,14 +27,20 @@ public class QuantityViewResult extends ViewResults implements ICancellable {
     public static final ViewResultKey<Boolean>
             IS_CANCELLED = new ViewResultKey<>(Boolean.class);
 
-    public QuantityViewResult(ItemStack itemStack, int qty) {
-        super(new ViewResult(ITEM_STACK, itemStack),
-              new ViewResult(QUANTITY, qty));
+    public QuantityViewResult(@Nullable ISaleItem item, ItemStack itemStack, int qty) {
+        super(new ViewResult(SALE_ITEM, item),
+                new ViewResult(ITEM_STACK, item.getItemStack()),
+                new ViewResult(QUANTITY, qty));
     }
 
-    public QuantityViewResult(ViewArguments merge, ItemStack itemStack, int qty) {
-        super(merge, new ViewResult(ITEM_STACK, itemStack),
-                     new ViewResult(QUANTITY, qty));
+    public QuantityViewResult(ViewArguments merge, @Nullable ISaleItem item, ItemStack itemStack, int qty) {
+        super(merge, new ViewResult(SALE_ITEM, item),
+                new ViewResult(ITEM_STACK, itemStack),
+                new ViewResult(QUANTITY, qty));
+    }
+
+    public ISaleItem getSaleItem() {
+        return get(SALE_ITEM);
     }
 
     @Nullable

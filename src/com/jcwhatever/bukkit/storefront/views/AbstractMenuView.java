@@ -11,13 +11,14 @@ import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.meta.GlobalArgumentKey;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode.BasicTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 import com.jcwhatever.bukkit.storefront.views.category.CategoryView;
 import com.jcwhatever.bukkit.storefront.views.itemtask.ItemTaskView;
 import com.jcwhatever.bukkit.storefront.views.price.PriceView;
@@ -37,7 +38,7 @@ public abstract class AbstractMenuView extends MenuView {
 
     protected AbstractMenuView(ViewSession session,
                                IViewFactory factory, ViewArguments arguments) {
-        super(null, session, factory, arguments);
+        super(null, session, factory, arguments, StoreStackComparer.getDefault());
     }
 
     @Nullable
@@ -88,25 +89,50 @@ public abstract class AbstractMenuView extends MenuView {
         return category != null;
     }
 
-    protected void showQuantityView(SaleItem saleItem) {
-        showQuantityView(saleItem.getItemStack(), 1, saleItem.getQty(), saleItem.getPricePerUnit());
+    protected void showQuantityView(ISaleItem saleItem) {
+        showQuantityView(saleItem, 1, saleItem.getQty(),
+                saleItem.getPricePerUnit(), new ViewArguments());
     }
 
-    protected void showQuantityView(SaleItem saleItem, int initialQty) {
-        showQuantityView(saleItem.getItemStack(), initialQty, saleItem.getQty(), saleItem.getPricePerUnit());
+    protected void showQuantityView(ISaleItem saleItem, ViewArguments merge) {
+        showQuantityView(saleItem, 1, saleItem.getQty(),
+                saleItem.getPricePerUnit(), merge);
+    }
+
+    protected void showQuantityView(ISaleItem saleItem, int initialQty) {
+        showQuantityView(saleItem, initialQty, saleItem.getQty(),
+                saleItem.getPricePerUnit(), new ViewArguments());
+    }
+
+    protected void showQuantityView(ISaleItem saleItem, int initialQty, ViewArguments merge) {
+        showQuantityView(saleItem, initialQty, saleItem.getQty(),
+                saleItem.getPricePerUnit(), merge);
+    }
+
+    protected void showQuantityView(ISaleItem saleItem, int initialQty,
+                                    int maxQty, double pricePerUnit, ViewArguments merge) {
+
+        ViewArguments qtyArgs = new ViewArguments(merge,
+                new ViewArgument(QuantityView.SALE_ITEM, saleItem),
+                new ViewArgument(QuantityView.MAX_QUANTITY, maxQty),
+                new ViewArgument(QuantityView.INITIAL_QUANTITY, initialQty),
+                new ViewArgument(QuantityView.PRICE, pricePerUnit)
+        );
+
+        getViewSession().next(Storefront.VIEW_QUANTITY, qtyArgs);
     }
 
     protected void showQuantityView(ItemStack itemStack, int initialQty,
                                     int maxQty, double pricePerUnit) {
 
-        ViewArguments arguments = new ViewArguments(
+        ViewArguments qtyArgs = new ViewArguments(
                 new ViewArgument(QuantityView.ITEM_STACK, itemStack),
                 new ViewArgument(QuantityView.MAX_QUANTITY, maxQty),
                 new ViewArgument(QuantityView.INITIAL_QUANTITY, initialQty),
                 new ViewArgument(QuantityView.PRICE, pricePerUnit)
         );
 
-        getViewSession().next(Storefront.VIEW_QUANTITY, arguments);
+        getViewSession().next(Storefront.VIEW_QUANTITY, qtyArgs);
     }
 
     protected void showPriceView (ItemStack itemToPrice, double initialPrice) {
@@ -118,7 +144,7 @@ public abstract class AbstractMenuView extends MenuView {
         getViewSession().next(Storefront.VIEW_PRICE, arguments);
     }
 
-    protected void showCategoryViewOrNext(IViewFactory nextFactory, ViewArguments arguments) {
+    protected void showCategoryViewOrNext(IViewFactory nextFactory, PaginatedItems pagin, ViewArguments arguments) {
 
         ViewSession session = getViewSession();
         IStore store = session.getMeta(SessionMetaKey.STORE);
@@ -127,19 +153,15 @@ public abstract class AbstractMenuView extends MenuView {
 
         List<Category> categories = getCategories();
 
-        // if there are less than a certain number of items
-        List<SaleItem> saleItems = getTaskMode() == ViewTaskMode.PLAYER_SELL
-                ? store.getWantedItems().getAll()
-                : store.getSaleItems();
-
-        PaginatedItems pagin = new PaginatedItems(saleItems);
-
-        int totalSlots = 0;
-        for (SaleItem saleItem : saleItems)
-            totalSlots += saleItem.getTotalSlots();
+        int totalSlots = pagin.getTotalItems();
 
         if (totalSlots <= 6 * 9 * 3 || categories.size() <= 1) {
-            showPaginViewOrNext(nextFactory, pagin, arguments);
+
+            ViewArguments paginArguments = new ViewArguments(arguments,
+                    new ViewArgument(PaginatorView.PAGINATOR, pagin),
+                    new ViewArgument(PaginatorView.NEXT_VIEW, nextFactory));
+
+            showPaginViewOrNext(nextFactory, pagin, paginArguments);
             return;
         }
 

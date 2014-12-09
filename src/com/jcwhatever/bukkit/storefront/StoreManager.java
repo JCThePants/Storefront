@@ -33,6 +33,7 @@ import com.jcwhatever.bukkit.generic.storage.DataStorage.DataPath;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.storage.StorageLoadHandler;
 import com.jcwhatever.bukkit.generic.storage.StorageLoadResult;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -166,11 +167,11 @@ public class StoreManager {
             return false;
 
         // return items to sellers
-        List<SaleItem> saleItems = store.getSaleItems();
-        for (SaleItem saleItem : saleItems) {
+        List<ISaleItem> saleItems = store.getSaleItems();
+        for (ISaleItem saleItem : saleItems) {
 
             ItemBankManager.deposit(saleItem.getSellerId(), saleItem.getItemStack(), saleItem.getQty());
-            saleItem.setQty(0);
+            ((SaleItem)saleItem).setQty(0);
         }
 
         store.getStoreRegion().setEntryMessage(null);

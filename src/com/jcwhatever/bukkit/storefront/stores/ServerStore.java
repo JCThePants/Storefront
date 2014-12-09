@@ -37,7 +37,6 @@ import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
@@ -59,7 +58,7 @@ public class ServerStore extends AbstractStore {
 
     private static ExpireChecker _expireChecker;
 
-    private Map<UUID, SaleItem> _idMap;
+    private Map<UUID, ISaleItem> _idMap;
     private Map<UUID, SaleItemMap> _playerMap;
 
     public ServerStore(String name, IDataNode storeNode) {
@@ -73,6 +72,10 @@ public class ServerStore extends AbstractStore {
         }
     }
 
+    @Override
+    public StoreType getStoreType () {
+        return StoreType.SERVER;
+    }
 
     @Override
     public void view (Block sourceBlock, Player p) {
@@ -82,13 +85,11 @@ public class ServerStore extends AbstractStore {
         session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
     }
 
-
     @Override
     public SaleItem getSaleItem (UUID itemId) {
 
-        return _idMap.get(itemId);
+        return (SaleItem)_idMap.get(itemId);
     }
-
 
     @Override
     @Nullable
@@ -98,38 +99,33 @@ public class ServerStore extends AbstractStore {
         if (map == null)
             return null;
 
-        return map.get(itemStack);
+        return (SaleItem)map.get(itemStack);
     }
 
-
     @Override
-    public PaginatedItems getSaleItems () {
-
-        return new PaginatedItems(_idMap.values());
+    public List<ISaleItem> getSaleItems () {
+        return new ArrayList<>(_idMap.values());
     }
 
-
     @Override
-    public PaginatedItems getSaleItems (Category category) {
+    public List<ISaleItem> getSaleItems (Category category) {
 
         SaleItemCategoryMap map = getCategoryMap(category);
         if (map == null)
-            return new PaginatedItems(0);
+            return new ArrayList<>(0);
 
-        return new PaginatedItems(map.values());
+        return new ArrayList<>(map.values());
     }
 
-
     @Override
-    public PaginatedItems getSaleItems (UUID sellerId) {
+    public List<ISaleItem> getSaleItems (UUID sellerId) {
 
         SaleItemMap map = _playerMap.get(sellerId);
         if (map == null)
-            return new PaginatedItems(0);
+            return new ArrayList<>(0);
 
-        return new PaginatedItems(map.values());
+        return new ArrayList<>(map.values());
     }
-
 
     @Override
     @Nullable
@@ -174,7 +170,6 @@ public class ServerStore extends AbstractStore {
         return item;
     }
 
-
     private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
                                         final double pricePerUnit) {
 
@@ -194,12 +189,11 @@ public class ServerStore extends AbstractStore {
         return saleItem;
     }
 
-
     @Override
     @Nullable
     public SaleItem removeSaleItem (UUID itemId) {
 
-        SaleItem item = _idMap.remove(itemId);
+        SaleItem item = (SaleItem)_idMap.remove(itemId);
         if (item == null)
             return null;
 
@@ -215,11 +209,10 @@ public class ServerStore extends AbstractStore {
         categoryMap.remove(itemId);
 
         SaleItemMap playerMap = getPlayerMap(item.getSellerId());
-        playerMap.remove(itemId);
+        playerMap.remove(item.getItemStack());
 
         return item;
     }
-
 
     @Override
     @Nullable
@@ -231,7 +224,7 @@ public class ServerStore extends AbstractStore {
             return null;
 
         // remove from map
-        SaleItem saleItem = map.remove(itemStack, StoreStackComparer.getDurability());
+        SaleItem saleItem = (SaleItem)map.remove(itemStack, StoreStackComparer.getDurability());
         if (saleItem == null)
             return null;
 
@@ -250,7 +243,6 @@ public class ServerStore extends AbstractStore {
         return saleItem;
     }
 
-
     @Override
     @Nullable
     public SaleItem removeSaleItem (UUID playerId, ItemStack itemStack, int qty) {
@@ -261,7 +253,7 @@ public class ServerStore extends AbstractStore {
             return null;
 
         // get sale item from map
-        SaleItem saleItem = map.get(itemStack, StoreStackComparer.getDurability());
+        SaleItem saleItem = (SaleItem)map.get(itemStack, StoreStackComparer.getDurability());
         if (saleItem == null)
             return null;
 
@@ -333,11 +325,14 @@ public class ServerStore extends AbstractStore {
 
         stack.increment(-qty);
 
+        if (stack.getParent().getQty() == 0) {
+            removeSaleItem(stack.getItemId());
+        }
+
         buyer.getInventory().addItem(purchasedStack);
 
         return true;
     }
-
 
     @Override
     public boolean clearSaleItems (final UUID playerId) {
@@ -352,9 +347,9 @@ public class ServerStore extends AbstractStore {
             @Override
             public void run (IDataNode dataNode) {
 
-                List<SaleItem> items = new ArrayList<SaleItem>(map.values());
+                List<ISaleItem> items = new ArrayList<>(map.values());
 
-                for (SaleItem item : items) {
+                for (ISaleItem item : items) {
                     removeSaleItem(playerId, item.getItemStack());
                 }
             }
@@ -362,47 +357,7 @@ public class ServerStore extends AbstractStore {
         });
 
         return true;
-
     }
-
-
-    /*
-     * public SaleItem sellItem(Player p, ItemStack item, double amount) {
-     * 
-     * Category category = _categoryManager.getCategory(item); if (category ==
-     * null) return null;
-     * 
-     * IDataNode catNode = _sellNode.getNode(category.getName());
-     * 
-     * 
-     * //sale-items.categoryName.ItemId }
-     */
-
-    @Override
-    public StoreType getStoreType () {
-
-        return StoreType.SERVER;
-    }
-
-
-    @Override
-    protected void onLoadSettings (IDataNode storeNode) {
-
-        // do nothing
-    }
-
-
-    private SaleItemMap getPlayerMap (UUID playerId) {
-
-        SaleItemMap saleItems = _playerMap.get(playerId);
-        if (saleItems == null) {
-            saleItems = new SaleItemMap();
-            _playerMap.put(playerId, saleItems);
-        }
-
-        return saleItems;
-    }
-
 
     @Override
     public List<Category> getSellCategories () {
@@ -410,21 +365,18 @@ public class ServerStore extends AbstractStore {
         return Storefront.getInstance().getCategoryManager().getCategories();
     }
 
-
     @Override
     public List<Category> getBuyCategories () {
 
         return Storefront.getInstance().getCategoryManager().getCategories();
     }
 
-
     @Override
     protected void onInit () {
 
-        _idMap = new HashMap<UUID, SaleItem>(50);
+        _idMap = new HashMap<UUID, ISaleItem>(50);
         _playerMap = new HashMap<UUID, SaleItemMap>(50);
     }
-
 
     @Override
     protected void onSaleItemLoaded (SaleItem saleItem) {
@@ -438,6 +390,21 @@ public class ServerStore extends AbstractStore {
         playerMap.put(saleItem.getItemStack(), saleItem);
     }
 
+    @Override
+    protected void onLoadSettings (IDataNode storeNode) {
+        // do nothing
+    }
+
+    private SaleItemMap getPlayerMap (UUID playerId) {
+
+        SaleItemMap saleItems = _playerMap.get(playerId);
+        if (saleItems == null) {
+            saleItems = new SaleItemMap();
+            _playerMap.put(playerId, saleItems);
+        }
+
+        return saleItems;
+    }
 
     private static class ExpireChecker implements Runnable {
 
@@ -456,11 +423,11 @@ public class ServerStore extends AbstractStore {
                 
                 ServerStore serverStore = (ServerStore)store;
 
-                List<SaleItem> saleItems = serverStore.getSaleItems();
+                List<ISaleItem> saleItems = serverStore.getSaleItems();
 
-                for (SaleItem saleItem : saleItems) {
+                for (ISaleItem saleItem : saleItems) {
                     if (saleItem.isExpired()) {
-                        serverStore.removeExpired(saleItem);
+                        serverStore.removeExpired((SaleItem)saleItem);
                     }
                     else if (saleItem.isRemoved()) {
                         serverStore.removeSaleItem(saleItem.getItemId());
@@ -470,5 +437,4 @@ public class ServerStore extends AbstractStore {
         }
 
     }
-
 }

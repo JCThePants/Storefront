@@ -35,8 +35,9 @@ import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
 import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode.BasicTask;
@@ -78,12 +79,12 @@ public class CategoryView extends AbstractMenuView {
 
     @Override
     protected void onClose(ViewCloseReason reason) {
-
+        // do nothing
     }
 
     @Override
     protected void onShow(ViewOpenReason reason) {
-
+        // do nothing
     }
 
     @Override
@@ -103,9 +104,9 @@ public class CategoryView extends AbstractMenuView {
 
             Category category = categories.get(i);
 
-            List<SaleItem> saleItems = _store.getSaleItems(category);
+            List<ISaleItem> saleItems = _store.getSaleItems(category);
             int totalInCategory = 0;
-            for (SaleItem saleItem : saleItems)
+            for (ISaleItem saleItem : saleItems)
                 totalInCategory += saleItem.getQty();
 
             MenuItem item = new MenuItem(i)
@@ -145,19 +146,25 @@ public class CategoryView extends AbstractMenuView {
         showPaginViewOrNext(nextView, saleItems, nextArguments);
     }
 
-    public static PaginatedItems getCategorySaleItems(IStore store, ViewTaskMode currentMode, Category category) {
+    public static PaginatedItems getCategorySaleItems(final IStore store, ViewTaskMode currentMode,
+                                                      final Category category) {
         PaginatedItems saleItems;
 
         if (store.getStoreType() == StoreType.PLAYER_OWNABLE
                 && currentMode.getBasicTask() == BasicTask.SELL) {
 
             saleItems = currentMode.isOwnerManagerTask()
-                    ? store.getSaleItems(category)
-                    : store.getWantedItems().get(category);
+                    ? new PaginatedItems(store, category)
+                    : new PaginatedItems(new ISaleItemGetter() {
+                @Override
+                public List<ISaleItem> getSaleItems() {
+                    return store.getWantedItems().get(category);
+                }
+            });
         }
         else {
 
-            saleItems = store.getSaleItems(category);
+            saleItems = new PaginatedItems(store, category);
         }
 
         return saleItems;

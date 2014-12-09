@@ -33,6 +33,7 @@ import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
 import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
 import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
@@ -47,6 +48,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuantityView extends AbstractMenuView {
+
+    public static final ViewArgumentKey<ISaleItem>
+            SALE_ITEM = new ViewArgumentKey<>(ISaleItem.class);
 
     public static final ViewArgumentKey<ItemStack>
             ITEM_STACK = new ViewArgumentKey<>(ItemStack.class);
@@ -99,9 +103,15 @@ public class QuantityView extends AbstractMenuView {
         PreCon.notNull(taskMode);
 
         setTitle(taskMode.getChatColor() + "Select Quantity");
-        ItemStack itemStack = getArguments().get(ITEM_STACK);
+
+        ISaleItem saleItem = getArguments().get(SALE_ITEM);
+
+        ItemStack itemStack = saleItem == null
+                ? getArguments().get(ITEM_STACK)
+                : saleItem.getItemStack();
+
         if (itemStack == null)
-            throw new IllegalStateException("ITEM_STACK argument is required.");
+            throw new IllegalStateException("SALE_ITEM or ITEM_STACK argument is required.");
 
         Integer maxQty = getArguments().get(MAX_QUANTITY);
         _maxQty = maxQty != null ? maxQty : 64;
@@ -116,9 +126,9 @@ public class QuantityView extends AbstractMenuView {
             _price = price;
         }
 
-        _result = new QuantityViewResult(itemStack, qty);
+        _result = new QuantityViewResult(getArguments(), saleItem, itemStack, qty);
         _result.setCancelled(true);
-
+        setResults(_result);
 
         _menuItems = new ArrayList<>(6);
 
@@ -157,7 +167,7 @@ public class QuantityView extends AbstractMenuView {
         _menuItems.add(_menuAdd10);
 
         _itemToQuantify = new MenuItem(SLOT_ITEM);
-        _itemToQuantify.setItemStack(itemStack.clone());
+        _itemToQuantify.setItemStack(setLore(itemStack.clone()));
         _itemToQuantify.getItemStack().setAmount(qty);
         _menuItems.add(_itemToQuantify);
 
@@ -199,12 +209,12 @@ public class QuantityView extends AbstractMenuView {
 
     @Override
     protected void onShow(ViewOpenReason reason) {
-
+        updateItemVisibility();
     }
 
     @Override
     protected void onClose(ViewCloseReason reason) {
-
+        // do nothing
     }
 
     private void updateItemVisibility() {
@@ -220,7 +230,7 @@ public class QuantityView extends AbstractMenuView {
         _menuAdd10.setVisible(this, qty < _maxQty);
     }
 
-    private void setLore(ItemStack itemStack) {
+    private ItemStack setLore(ItemStack itemStack) {
 
         ItemStackUtil.removeTempLore(itemStack);
 
@@ -239,6 +249,8 @@ public class QuantityView extends AbstractMenuView {
             ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to purchase.");
         else
             ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to confirm.");
+
+        return itemStack;
     }
 
 }

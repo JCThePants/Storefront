@@ -38,12 +38,12 @@ import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
-import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -103,18 +103,21 @@ public class WantedView extends AbstractMenuView {
         }
 
         if (pagin == null) {
-            WantedItems wanted = _store.getWantedItems();
-            List<SaleItem> saleItems = wanted.getAll();
-            pagin = new PaginatedItems(saleItems);
+            pagin = new PaginatedItems(new ISaleItemGetter() {
+                @Override
+                public List<ISaleItem> getSaleItems() {
+                    return _store.getWantedItems().getAll();
+                }
+            });
         }
 
-        List<SaleItem> items = pagin.getPage(page);//, PaginatorPageType.SALE_ITEM);
+        List<ISaleItem> items = pagin.getPage(page);//, PaginatorPageType.SALE_ITEM);
 
         List<MenuItem> menuItems = new ArrayList<>(items.size());
 
         // add items to chest
         for (int i=0; i < items.size(); i++) {
-            SaleItem item = items.get(i);
+            ISaleItem item = items.get(i);
 
             ItemStack clone = item.getItemStack();
 

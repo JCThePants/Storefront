@@ -26,8 +26,8 @@ package com.jcwhatever.bukkit.storefront.data;
 
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.storefront.Category;
-import com.jcwhatever.bukkit.storefront.data.SaleItem.SaleItemStack;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
@@ -72,9 +72,9 @@ public interface ISaleItem {
      */
     public int getTotalItems ();
 
-    public List<SaleItemStack> getSaleItemStacks ();
-    
-    public ISaleItem getParent();
+    public List<ISaleItem> getSaleItemStacks ();
+
+    public SaleItem getParent();
     
     public void increment (int amount);    
 }

@@ -155,12 +155,18 @@ public class PriceView extends AbstractMenuView {
 
         _result = new PriceViewResult(itemToPrice, _price);
         _result.setCancelled(true);
+        setResults(_result);
 
         return menuItems;
     }
 
     @Override
     protected void onItemSelect(MenuItem menuItem) {
+
+        if (menuItem == _itemToPrice) {
+            getViewSession().back();
+            return;
+        }
 
         Double increment = menuItem.getMeta(PRICE_INCREMENT);
         if (increment == null)
@@ -172,12 +178,12 @@ public class PriceView extends AbstractMenuView {
 
     @Override
     protected void onShow(ViewOpenReason reason) {
-
+        updateItemVisibility();
     }
 
     @Override
     protected void onClose(ViewCloseReason reason) {
-
+        // do nothing
     }
 
     private void incrementPrice (double increment) {
@@ -199,14 +205,13 @@ public class PriceView extends AbstractMenuView {
         ItemStackUtil.setPriceLore(_minus1.getItemStack(), _price, PriceType.PER_ITEM);
         ItemStackUtil.setPriceLore(_minus10.getItemStack(), _price, PriceType.PER_ITEM);
         ItemStackUtil.setPriceLore(_minus50.getItemStack(), _price, PriceType.PER_ITEM);
-    }
 
-    private boolean setItemVisible(MenuItem item, boolean isVisible) {
-        if (item.isVisible(this) == isVisible)
-            return false;
-
-        item.setVisible(this, isVisible);
-        return true;
+        _add1.set(this);
+        _add10.set(this);
+        _add50.set(this);
+        _minus1.set(this);
+        _minus10.set(this);
+        _minus50.set(this);
     }
 
     private void updateItemVisibility() {

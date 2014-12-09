@@ -27,8 +27,10 @@ package com.jcwhatever.bukkit.storefront.views.sell;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.permissions.Permissions;
 import com.jcwhatever.bukkit.generic.scheduler.ScheduledTask;
+import com.jcwhatever.bukkit.generic.scheduler.TaskHandler;
 import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
+import com.jcwhatever.bukkit.generic.utils.MetaKey;
 import com.jcwhatever.bukkit.generic.utils.PreCon;
 import com.jcwhatever.bukkit.generic.utils.Scheduler;
 import com.jcwhatever.bukkit.generic.views.IView;
@@ -77,15 +79,18 @@ import javax.annotation.Nullable;
 
 public class SellView extends ChestView {
 
+    private static MetaKey<ItemStack>
+            PRICED_ITEM_STACK = new MetaKey<ItemStack>(ItemStack.class);
+
     private IStore _store;
     private PriceMap _priceMap;
     private ScheduledTask _sledgehammer = null;
-    private List<SaleItem> _saleItemStacks;
+    private List<ISaleItem> _saleItemStacks;
     private SaleItemSnapshot _snapshot;
     private Inventory _inventory;
 
     protected SellView(@Nullable String title, ViewSession session, IViewFactory factory, ViewArguments arguments) {
-        super(title, session, factory, arguments);
+        super(title, session, factory, arguments, StoreStackComparer.getDefault());
     }
 
     @Override
@@ -120,20 +125,10 @@ public class SellView extends ChestView {
             new Sledgehammer().run();
         }
 
-        if (reason == ViewCloseReason.PREV) {
+        if (reason == ViewCloseReason.PREV ||
+                reason == ViewCloseReason.ESCAPE) {
 
             _store.updateFromInventory(getPlayer(), _priceMap, _inventory, _snapshot);
-
-            // update meta pagination, if any
-            PaginatedItems pagin = (PaginatedItems)getArguments().get(PaginatorView.PAGINATOR);
-            if (pagin != null) {
-
-                List<SaleItem> saleItems = _store.getSaleItems(getPlayer().getUniqueId());
-
-                pagin.clear();
-                pagin.addAll(saleItems);
-            }
-
         }
     }
 
@@ -166,7 +161,7 @@ public class SellView extends ChestView {
         if (page == null)
             page = 1;
 
-        PaginatedItems pagin = _store.getSaleItems(getPlayer().getUniqueId());
+        PaginatedItems pagin = new PaginatedItems(_store, getPlayer().getUniqueId());
 
         _saleItemStacks = pagin.getPage(page);//, PaginatorPageType.SALE_ITEM_STACK);
 
@@ -196,7 +191,7 @@ public class SellView extends ChestView {
     @Override
     protected ChestEventAction onItemsPlaced(ChestEventInfo eventInfo) {
 
-        if (eventInfo.getInventoryPosition() == InventoryPosition.UPPER) {
+        if (eventInfo.getInventoryPosition() == InventoryPosition.TOP) {
             return onUpperItemsPlaced(eventInfo);
         }
 
@@ -368,7 +363,6 @@ public class SellView extends ChestView {
         final ItemStack itemClone = item.clone();
 
         ItemStackUtil.removeTempLore(itemClone);
-        ;
 
         ItemWrapper itemWrapper = new ItemWrapper(itemClone, StoreStackComparer.getDefault());
 
@@ -383,6 +377,7 @@ public class SellView extends ChestView {
             }
 
             ViewArguments arguments = new ViewArguments(
+                    new ViewArgument(PRICED_ITEM_STACK, item),
                     new ViewArgument(PriceView.ITEM_STACK, itemClone),
                     new ViewArgument(PriceView.INITIAL_PRICE, price != null
                             ? price
@@ -406,8 +401,12 @@ public class SellView extends ChestView {
 
     private void updatePrice (PriceViewResult priceResult) {
 
-        ItemStackUtil.setPriceLore(_inventory, priceResult.getItemStack().clone(),
+        ItemStack item = getViewSession().getNextView().getArguments().get(PRICED_ITEM_STACK);
+
+        ItemStackUtil.setPriceLore(_inventory, item,
                 priceResult.getPrice(1), PriceType.PER_ITEM, false);
+
+        ItemStackUtil.removeTempLore(priceResult.getItemStack());
 
         _priceMap.setPrice(priceResult.getItemStack(), priceResult.getPrice(1));
     }
@@ -417,10 +416,15 @@ public class SellView extends ChestView {
      * so check periodically for inconsistencies caused by
      * an unfired event.
      */
-    private class Sledgehammer implements Runnable {
+    private class Sledgehammer extends TaskHandler {
 
         @Override
         public void run () {
+
+            if (getViewSession().getCurrentView() != SellView.this) {
+                cancelTask();
+                return;
+            }
 
             ItemStack[] contents = _inventory.getContents();
             CategoryManager categoryManager = Storefront.getInstance().getCategoryManager();

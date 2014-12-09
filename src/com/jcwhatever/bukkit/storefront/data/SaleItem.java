@@ -130,7 +130,6 @@ public class SaleItem implements ISaleItem {
 
     @Override
     public IStore getStore () {
-
         return _store;
     }
 
@@ -145,27 +144,22 @@ public class SaleItem implements ISaleItem {
 
     @Override
     public ItemStack getItemStack () {
-
         return _itemStack.clone();
     }
 
-
+    @Override
     public ItemWrapper getWrapper () {
-
         return _wrapper;
     }
 
-
     @Override
     public int getQty () {
-
         return _qty;
     }
 
-
     public void setQty (int qty) {
 
-        _qty = qty;
+        _qty = Math.max(qty, 0);
 
         if (_removed)
             return;
@@ -182,13 +176,10 @@ public class SaleItem implements ISaleItem {
         _dataNode.saveAsync(null);
     }
 
-
     @Override
     public double getPricePerUnit () {
-
         return _pricePerUnit;
     }
-
 
     public void setPricePerUnit (double pricePerUnit) {
 
@@ -201,16 +192,14 @@ public class SaleItem implements ISaleItem {
         _dataNode.saveAsync(null);
     }
 
-
     @Override
     public int getTotalItems () {
         return _qty;
     }
 
     @Override
-    public ISaleItem getParent () {
-
-        return null;
+    public SaleItem getParent () {
+        return this;
     }
     
     @Override
@@ -235,15 +224,10 @@ public class SaleItem implements ISaleItem {
         _qty = _dataNode.getInteger("qty", _qty);
         
         long expireLong = _dataNode.getLong("expires", -1);
-        
-        if (expireLong != -1) {
-            _expires = new Date(expireLong);
-        }
-        else {
-            _expires = DateUtils.addDays(new Date(), 5);
-        }
-        
-        
+
+        _expires = expireLong == -1
+                ? DateUtils.addDays(new Date(), 5)
+                : new Date(expireLong);
     }
 
 
@@ -261,21 +245,21 @@ public class SaleItem implements ISaleItem {
         _dataNode.saveAsync(null);
     }
 
-
-    public List<SaleItemStack> getSaleItemStacks () {
-
-        List<SaleItemStack> result = new ArrayList<SaleItemStack>();
+    @Override
+    public List<ISaleItem> getSaleItemStacks () {
 
         int maxPerStack = _wrapper.getMaterialExt().getMaxStackSize();
         if (maxPerStack == 0)
-            return result;
+            return new ArrayList<>(0);
 
         int totalStacks = (int) Math.ceil((double) _qty / maxPerStack);
 
         if (_qty < 1) {
             onRemove(this.getItemId());
-            return result;
+            return new ArrayList<>(0);
         }
+
+        List<ISaleItem> result = new ArrayList<>(totalStacks);
 
         int itemsLeft = _qty;
         for (int i = 0; i < totalStacks; i++) {
@@ -291,9 +275,7 @@ public class SaleItem implements ISaleItem {
         return result;
     }
 
-
     protected void onRemove (UUID itemId) {
-
         getStore().removeSaleItem(itemId);
     }
 
@@ -302,73 +284,59 @@ public class SaleItem implements ISaleItem {
         private SaleItem _parent;
         private int _qty;
 
-
         SaleItemStack(SaleItem parent, int qty) {
-
             _parent = parent;
             _qty = qty;
         }
 
         @Override
         public UUID getItemId () {
-
             return _parent._itemId;
         }
 
         @Override
         public UUID getSellerId () {
-
             return _parent._sellerId;
         }
 
         @Override
         public Category getCategory () {
-
             return _parent._category;
         }
 
         @Override
         public int getQty () {
-
             return _qty;
         }
 
-
+        @Override
         public void increment (int amount) {
-
             _qty += amount;
             int newParentQty = _parent._qty + amount;
             _parent.setQty(newParentQty);
         }
 
-
         @Override
         public ItemStack getItemStack () {
-
             return _parent.getItemStack().clone();
         }
 
         @Override
         public ItemWrapper getWrapper () {
-
             return _wrapper;
         }
 
-
         public void remove () {
-
             increment(-_qty);
         }
         
         @Override
         public SaleItem getParent() {
-            
             return _parent;
         }
 
         @Override
         public boolean isRemoved () {
-
             return _parent.isRemoved();
         }
         
@@ -384,34 +352,27 @@ public class SaleItem implements ISaleItem {
 
         @Override
         public int getTotalSlots () {
-
             return _parent.getTotalSlots();
         }
 
         @Override
         public IStore getStore () {
-
             return _parent.getStore();
         }
 
         @Override
         public double getPricePerUnit () {
-
             return _parent.getPricePerUnit();
         }
 
         @Override
         public int getTotalItems () {
-
             return _parent.getTotalItems();
         }
 
         @Override
-        public List<SaleItemStack> getSaleItemStacks () {
-
+        public List<ISaleItem> getSaleItemStacks () {
             return _parent.getSaleItemStacks();
         }
-
     }
-
 }

@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class SaleItemMap extends HashMap<ItemWrapper, SaleItem> {
+public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
 
     /**
      * 
@@ -43,26 +43,26 @@ public class SaleItemMap extends HashMap<ItemWrapper, SaleItem> {
     }
 
 
-    public SaleItem get (ItemStack key) {
+    public ISaleItem get (ItemStack key) {
         return get(key, StoreStackComparer.getDefault());
     }
     
-    public SaleItem get (ItemStack key, ItemStackComparer comparer) {
+    public ISaleItem get (ItemStack key, ItemStackComparer comparer) {
         ItemWrapper wrapper = new ItemWrapper(key, comparer);
         return super.get(wrapper);
     }
 
-    public SaleItem put (ItemStack key, SaleItem value) {
+    public ISaleItem put (ItemStack key, SaleItem value) {
 
         ItemWrapper wrapper = new ItemWrapper(key);
         return super.put(wrapper, value);
     }
 
-    public SaleItem remove (ItemStack key) {
+    public ISaleItem remove (ItemStack key) {
         return remove(key, StoreStackComparer.getDefault());
     }
     
-    public SaleItem remove (ItemStack key, ItemStackComparer comparer) {
+    public ISaleItem remove (ItemStack key, ItemStackComparer comparer) {
         ItemWrapper wrapper = new ItemWrapper(key);
         return super.remove(wrapper);
     }

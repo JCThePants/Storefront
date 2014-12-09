@@ -24,10 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.utils;
 
-import com.jcwhatever.bukkit.generic.utils.PreCon;
-import org.bukkit.inventory.ItemStack;
-
 import com.jcwhatever.bukkit.generic.items.ItemStackComparer;
+
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Extends {@code ItemStackComparer} functionality by
@@ -79,9 +78,10 @@ public class StoreStackComparer extends ItemStackComparer {
      */
     @Override
     public boolean isSame(ItemStack itemStack1, ItemStack itemStack2) {
-        PreCon.notNull(itemStack1);
-        PreCon.notNull(itemStack2);
-        
+
+        if (itemStack1 == null || itemStack2 == itemStack1)
+            return false;
+
         ItemStack clone1 = itemStack1.clone();
         ItemStack clone2 = itemStack2.clone();
         

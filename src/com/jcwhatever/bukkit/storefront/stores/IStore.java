@@ -29,7 +29,6 @@ import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
@@ -147,21 +146,21 @@ public interface IStore {
     /**
      * Get all sale items from the store.
      */
-    public PaginatedItems getSaleItems ();
+    public List<ISaleItem> getSaleItems ();
 
     /**
      * Get all sale items in the specified category from the store.
      *
      * @param category  The category to search in
      */
-    public PaginatedItems getSaleItems (Category category);
+    public List<ISaleItem> getSaleItems (Category category);
 
     /**
      * Get sale items to be viewed by the specified seller.
      *
      * @param sellerId  The id of the seller
      */
-    public PaginatedItems getSaleItems (UUID sellerId);
+    public List<ISaleItem> getSaleItems (UUID sellerId);
 
     /**
      * Determine if there is room to add a sale item represented by the 

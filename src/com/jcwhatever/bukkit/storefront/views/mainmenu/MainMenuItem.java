@@ -3,6 +3,7 @@ package com.jcwhatever.bukkit.storefront.views.mainmenu;
 import com.jcwhatever.bukkit.generic.views.IViewFactory;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.sun.istack.internal.Nullable;
@@ -46,9 +47,12 @@ public class MainMenuItem extends MenuItem {
         return _saleItems;
     }
 
+    public void setSaleItems(ISaleItemGetter getter) {
+        _saleItems = new PaginatedItems(getter);
+    }
+
     public void setSaleItems(PaginatedItems items) {
         _saleItems = items;
-
     }
 
     public boolean isCategorized() {
