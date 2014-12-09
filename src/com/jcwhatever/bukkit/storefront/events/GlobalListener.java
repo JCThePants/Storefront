@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.events;
 
 import com.jcwhatever.bukkit.generic.GenericsLib;
-import com.jcwhatever.bukkit.generic.events.bukkit.regions.RegionOwnerChangedEvent;
+import com.jcwhatever.bukkit.generic.events.regions.RegionOwnerChangedEvent;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.storefront.Msg;
