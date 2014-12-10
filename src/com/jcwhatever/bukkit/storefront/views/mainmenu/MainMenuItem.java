@@ -6,7 +6,7 @@ import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
-import com.sun.istack.internal.Nullable;
+import javax.annotation.Nullable;
 
 /*
  * 
