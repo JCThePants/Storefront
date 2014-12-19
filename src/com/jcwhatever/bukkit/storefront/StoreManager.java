@@ -29,7 +29,7 @@ import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.performance.SingleCache;
 import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.storage.DataStorage;
-import com.jcwhatever.bukkit.generic.storage.DataStorage.DataPath;
+import com.jcwhatever.bukkit.generic.storage.DataPath;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.storage.StorageLoadHandler;
 import com.jcwhatever.bukkit.generic.storage.StorageLoadResult;
