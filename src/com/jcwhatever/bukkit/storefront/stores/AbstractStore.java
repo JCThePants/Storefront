@@ -30,7 +30,7 @@ import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
 import com.jcwhatever.bukkit.generic.regions.IRegion;
-import com.jcwhatever.bukkit.generic.storage.BatchOperation;
+import com.jcwhatever.bukkit.generic.storage.DataBatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.utils.Utils;
 import com.jcwhatever.bukkit.storefront.Category;
@@ -382,7 +382,7 @@ public abstract class AbstractStore implements IStore {
     public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
                                             final SaleItemSnapshot startSnapshot) {
 
-        getDataNode().runBatchOperation(new BatchOperation() {
+        getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {
@@ -427,7 +427,7 @@ public abstract class AbstractStore implements IStore {
                                       final PriceMap priceMap, final QtyMap qtyMap, final Inventory currentInventory,
                                       final SaleItemSnapshot startSnapshot) {
 
-        getDataNode().runBatchOperation(new BatchOperation() {
+        getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {

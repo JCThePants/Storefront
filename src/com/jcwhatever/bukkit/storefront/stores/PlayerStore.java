@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.stores;
 
 import com.jcwhatever.bukkit.generic.items.ItemWrapper;
-import com.jcwhatever.bukkit.generic.storage.BatchOperation;
+import com.jcwhatever.bukkit.generic.storage.DataBatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.views.ViewSession;
 import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
@@ -173,7 +173,7 @@ public class PlayerStore extends AbstractStore {
     private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
                                         final double pricePerUnit) {
 
-        getDataNode().runBatchOperation(new BatchOperation() {
+        getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {
@@ -274,7 +274,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             return false;
 
-        getDataNode().runBatchOperation(new BatchOperation() {
+        getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {

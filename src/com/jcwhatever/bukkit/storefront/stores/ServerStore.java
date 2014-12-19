@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.stores;
 
 import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
-import com.jcwhatever.bukkit.generic.storage.BatchOperation;
+import com.jcwhatever.bukkit.generic.storage.DataBatchOperation;
 import com.jcwhatever.bukkit.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
 import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
@@ -173,7 +173,7 @@ public class ServerStore extends AbstractStore {
     private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
                                         final double pricePerUnit) {
 
-        getDataNode().runBatchOperation(new BatchOperation() {
+        getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {
@@ -342,7 +342,7 @@ public class ServerStore extends AbstractStore {
         if (map == null)
             return false;
 
-        getDataNode().runBatchOperation(new BatchOperation() {
+        getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {
