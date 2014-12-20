@@ -30,10 +30,11 @@ import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException.CommandSenderType;
 import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
-import com.jcwhatever.bukkit.generic.regions.selection.RegionSelection;
+import com.jcwhatever.bukkit.generic.regions.selection.IRegionSelection;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -44,7 +45,7 @@ import org.bukkit.entity.Player;
             "storeName"
         },
         usage = "/stores regions set <storeName>",
-        description = "Set the specified store region to the current WorldEdit selection.")
+        description = "Set the specified store region to your current region selection.")
 
 public class SetSubCommand extends AbstractCommand {
 
@@ -54,9 +55,6 @@ public class SetSubCommand extends AbstractCommand {
 
         InvalidCommandSenderException.check(sender, CommandSenderType.PLAYER, 
                 "Console cannot select regions.");
-
-        if (!isWorldEditInstalled(sender))
-            return; // finished
 
         String storeName = args.getName("storeName");
 
@@ -68,12 +66,12 @@ public class SetSubCommand extends AbstractCommand {
             return; // finished
         }
         
-        RegionSelection selection = getWorldEditSelection((Player) sender);
+        IRegionSelection selection = getRegionSelection((Player) sender);
         if (selection == null)
             return; // finished
 
         store.setRegionCoords(selection.getP1(), selection.getP2());
 
-        tellSuccess(sender, "Store '{0}' region set to current WorldEdit selection.", store.getName());
+        tellSuccess(sender, "Store '{0}' region set to current region selection.", store.getName());
     }
 }
