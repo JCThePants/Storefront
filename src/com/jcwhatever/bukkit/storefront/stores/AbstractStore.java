@@ -296,7 +296,7 @@ public abstract class AbstractStore implements IStore {
             return false;
         }
 
-        if (!EconomyUtils.transferMoney(getOwnerId(), seller.getUniqueId(), price)) {
+        if (!EconomyUtils.transfer(getOwnerId(), seller.getUniqueId(), price)) {
             Msg.debug("Failed to transfer money");
 
             return false;
@@ -331,12 +331,12 @@ public abstract class AbstractStore implements IStore {
         }
 
         // make sure buyer can afford
-        if (EconomyUtils.getBalance(buyer) < price) {
+        if (EconomyUtils.getBalance(buyer.getUniqueId()) < price) {
             Msg.debug("Player sale rejected because player doesn't have enough money.");
             return false;
         }
 
-        if (!EconomyUtils.transferMoney(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
+        if (!EconomyUtils.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
             return false;
         }
 

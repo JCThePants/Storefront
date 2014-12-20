@@ -24,8 +24,8 @@
 
 package com.jcwhatever.bukkit.storefront.views.buy;
 
+import com.jcwhatever.bukkit.generic.providers.economy.IEconomyProvider.CurrencyNoun;
 import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
-import com.jcwhatever.bukkit.generic.utils.EconomyUtils.CurrencyNoun;
 import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
 import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
@@ -148,7 +148,7 @@ public class BuyView extends AbstractMenuView {
         int quantity = qtyResult.getQty();
         double amount = saleItemStack.getPricePerUnit() * quantity;
 
-        double balance = EconomyUtils.getBalance(getPlayer());
+        double balance = EconomyUtils.getBalance(getPlayer().getUniqueId());
 
         // check buyer balance
         if (balance < amount) {

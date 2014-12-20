@@ -314,12 +314,12 @@ public class ServerStore extends AbstractStore {
         }
 
         // make sure buyer can afford
-        if (EconomyUtils.getBalance(buyer) < price) {
+        if (EconomyUtils.getBalance(buyer.getUniqueId()) < price) {
             Msg.debug("Player sale rejected because player doesn't have enough money.");
             return false;
         }
 
-        if (!EconomyUtils.transferMoney(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
+        if (!EconomyUtils.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
             return false;
         }
 
