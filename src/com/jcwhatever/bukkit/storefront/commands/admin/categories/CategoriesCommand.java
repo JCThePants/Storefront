@@ -37,16 +37,16 @@ public class CategoriesCommand extends AbstractCommand {
 
         super();
 
-        registerSubCommand(AddItemsSubCommand.class);
-        registerSubCommand(AddSubCommand.class);
-        registerSubCommand(ClearItemsSubCommand.class);
-        registerSubCommand(DelItemsSubCommand.class);
-        registerSubCommand(DelSubCommand.class);
-        registerSubCommand(ListSubCommand.class);
-        registerSubCommand(ListItemsSubCommand.class);
-        registerSubCommand(SetDescSubCommand.class);
-        registerSubCommand(SetFilterSubCommand.class);
-        registerSubCommand(SetItemSubCommand.class);
-        registerSubCommand(SetTitleSubCommand.class);
+        registerCommand(AddItemsSubCommand.class);
+        registerCommand(AddSubCommand.class);
+        registerCommand(ClearItemsSubCommand.class);
+        registerCommand(DelItemsSubCommand.class);
+        registerCommand(DelSubCommand.class);
+        registerCommand(ListSubCommand.class);
+        registerCommand(ListItemsSubCommand.class);
+        registerCommand(SetDescSubCommand.class);
+        registerCommand(SetFilterSubCommand.class);
+        registerCommand(SetItemSubCommand.class);
+        registerCommand(SetTitleSubCommand.class);
     }
 }

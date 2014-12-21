@@ -37,7 +37,7 @@ public class RegionsCommand extends AbstractCommand {
 
         super();
 
-        registerSubCommand(SetSubCommand.class);
-        registerSubCommand(SetExtSubCommand.class);
+        registerCommand(SetSubCommand.class);
+        registerCommand(SetExtSubCommand.class);
     }
 }
