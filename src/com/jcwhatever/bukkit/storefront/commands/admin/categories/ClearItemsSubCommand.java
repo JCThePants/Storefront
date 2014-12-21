@@ -29,7 +29,7 @@ import org.bukkit.command.CommandSender;
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
+import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -47,7 +47,7 @@ public class ClearItemsSubCommand extends AbstractCommand {
 
     @Override
     public void execute (CommandSender sender, CommandArguments args)
-            throws InvalidValueException {
+            throws InvalidArgumentException {
 
         String categoryName = args.getName("categoryName");
 

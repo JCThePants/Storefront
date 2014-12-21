@@ -29,7 +29,7 @@ import org.bukkit.command.CommandSender;
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
+import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -46,7 +46,7 @@ import com.jcwhatever.bukkit.storefront.Storefront;
 public class DelSubCommand extends AbstractCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidValueException {
+    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
 
         String categoryName = args.getName("categoryName");
 

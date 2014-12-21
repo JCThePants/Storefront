@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.commands.user;
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
+import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -50,7 +50,7 @@ import java.util.UUID;
 public class EntryMsgCommand extends AbstractCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidValueException {
+    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
 
         String storeName = args.getName("storeName");
         String message = args.getString("message");

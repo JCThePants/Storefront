@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.commands.admin;
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidValueException;
+import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.bukkit.generic.utils.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -48,7 +48,7 @@ import java.util.UUID;
 public class SetOwnerCommand extends AbstractCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidValueException {
+    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
 
         String storeName = args.getName("storeName");
         String ownerName = args.getName("ownerName");
