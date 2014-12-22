@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.commands;
 
 import org.bukkit.plugin.Plugin;
 
-import com.jcwhatever.bukkit.generic.commands.AbstractCommandHandler;
+import com.jcwhatever.bukkit.generic.commands.CommandDispatcher;
 import com.jcwhatever.bukkit.storefront.commands.admin.AddCommand;
 import com.jcwhatever.bukkit.storefront.commands.admin.DelCommand;
 import com.jcwhatever.bukkit.storefront.commands.admin.ListCommand;
@@ -37,9 +37,9 @@ import com.jcwhatever.bukkit.storefront.commands.user.EntryMsgCommand;
 import com.jcwhatever.bukkit.storefront.commands.user.ExitMsgCommand;
 import com.jcwhatever.bukkit.storefront.commands.user.SetTitleCommand;
 
-public class CommandHandler extends AbstractCommandHandler {
+public class StorefrontCommandDispatcher extends CommandDispatcher {
 
-    public CommandHandler(Plugin plugin) {
+    public StorefrontCommandDispatcher(Plugin plugin) {
 
         super(plugin);
     }

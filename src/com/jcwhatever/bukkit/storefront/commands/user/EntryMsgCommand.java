@@ -40,10 +40,7 @@ import java.util.UUID;
 
 @CommandInfo(
         command = "entrymsg",
-        staticParams = {
-                "storeName", "message="
-        },
-        usage = "/stores entrymsg <storeName> <message>",
+        staticParams = { "storeName", "message=" },
         description = "Set the region entry message of a store. Omit message to remove.",
         permissionDefault = PermissionDefault.TRUE)
 

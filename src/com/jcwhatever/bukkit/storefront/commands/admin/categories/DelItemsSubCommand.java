@@ -24,9 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.ItemStack;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -35,13 +32,13 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
+
 @CommandInfo(
         parent = "categories",
         command = "delitems",
-        staticParams = {
-                "categoryName", "items"
-        },
-        usage = "/stores categories delitems <categoryName> <items>",
+        staticParams = { "categoryName", "items" },
         description = "Remove filter items from a category.")
 
 public class DelItemsSubCommand extends AbstractCommand {

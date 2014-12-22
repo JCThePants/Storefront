@@ -41,10 +41,7 @@ import java.util.UUID;
 
 @CommandInfo(
         command = "exitmsg",
-        staticParams = {
-                "storeName", "message="
-        },
-        usage = "/stores exitmsg <storeName> <message>",
+        staticParams = { "storeName", "message=" },
         description = "Set the region exit message of a store. Omit message to remove.",
         permissionDefault = PermissionDefault.TRUE)
 

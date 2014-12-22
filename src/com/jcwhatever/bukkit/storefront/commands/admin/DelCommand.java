@@ -24,8 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin;
 
-import org.bukkit.command.CommandSender;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -34,12 +32,11 @@ import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
+import org.bukkit.command.CommandSender;
+
 @CommandInfo(
         command = "del",
-        staticParams = {
-            "storeName"
-        },
-        usage = "/stores del <storeName>",
+        staticParams = { "storeName" },
         description = "Remove a store.")
 
 public class DelCommand extends AbstractCommand {

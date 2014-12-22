@@ -24,8 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
-import org.bukkit.command.CommandSender;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -34,13 +32,12 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
+import org.bukkit.command.CommandSender;
+
 @CommandInfo(
         parent = "categories",
         command = "clearitems",
-        staticParams = {
-            "categoryName"
-        },
-        usage = "/stores categories clearitems <categoryName>",
+        staticParams = { "categoryName" },
         description = "Clear all filter items from a category.")
 
 public class ClearItemsSubCommand extends AbstractCommand {

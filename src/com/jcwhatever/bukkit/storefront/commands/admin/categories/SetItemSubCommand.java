@@ -38,10 +38,7 @@ import org.bukkit.inventory.ItemStack;
 @CommandInfo(
         parent = "categories",
         command = "setitem",
-        staticParams = {
-                "categoryName", "item"
-        },
-        usage = "/stores categories setitem <categoryName> <item>",
+        staticParams = { "categoryName", "item" },
         description = "Set item used to represent category in chest menus.")
 
 public class SetItemSubCommand extends AbstractCommand {

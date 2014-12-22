@@ -46,10 +46,7 @@ import java.util.Set;
 @CommandInfo(
         parent = "categories",
         command = "listitems",
-        staticParams = {
-                "categoryName", "page=1"
-        },
-        usage = "/stores categories listitems <categoryName> [page]",
+        staticParams = { "categoryName", "page=1" },
         description = "List a categories filter items.")
 
 public class ListItemsSubCommand extends AbstractCommand {

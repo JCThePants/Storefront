@@ -39,10 +39,7 @@ import java.util.UUID;
 
 @CommandInfo(
         command = "setowner",
-        staticParams = {
-                "storeName", "ownerName"
-        },
-        usage = "/stores setowner <storeName> <ownerName>",
+        staticParams = { "storeName", "ownerName" },
         description = "Set the owner of the store")
 
 public class SetOwnerCommand extends AbstractCommand {

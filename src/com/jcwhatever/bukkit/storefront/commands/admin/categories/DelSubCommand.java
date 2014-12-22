@@ -24,8 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
-import org.bukkit.command.CommandSender;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -34,13 +32,12 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
+import org.bukkit.command.CommandSender;
+
 @CommandInfo(
         parent = "categories",
         command = "del",
-        staticParams = {
-            "categoryName"
-        },
-        usage = "/stores categories del <categoryName>",
+        staticParams = { "categoryName" },
         description = "Removes an item category.")
 
 public class DelSubCommand extends AbstractCommand {

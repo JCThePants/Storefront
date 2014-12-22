@@ -42,10 +42,7 @@ import java.util.List;
 
 @CommandInfo(
         command = "list",
-        staticParams = {
-            "page=1"
-        },
-        usage = "/stores list [page]",
+        staticParams = { "page=1" },
         description = "List stores.")
 
 public class ListCommand extends AbstractCommand {

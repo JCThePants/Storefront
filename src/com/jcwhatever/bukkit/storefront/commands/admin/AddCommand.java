@@ -24,8 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin;
 
-import org.bukkit.command.CommandSender;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -35,12 +33,11 @@ import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
+import org.bukkit.command.CommandSender;
+
 @CommandInfo(
         command = "add",
-        staticParams = {
-                "storeName", "server|player_ownable"
-        },
-        usage = "/stores add <storeName> <storeType>",
+        staticParams = { "storeName", "server|player_ownable" },
         description = "Add a store.")
 
 public class AddCommand extends AbstractCommand {

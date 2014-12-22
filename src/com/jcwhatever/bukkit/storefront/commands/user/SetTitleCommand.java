@@ -41,10 +41,7 @@ import java.util.UUID;
 
 @CommandInfo(
         command = "settitle",
-        staticParams = {
-                "storeName", "title"
-        },
-        usage = "/stores settitle <storeName> <ownerName>",
+        staticParams = { "storeName", "title" },
         description = "Set the title of a store.",
         permissionDefault = PermissionDefault.TRUE)
 

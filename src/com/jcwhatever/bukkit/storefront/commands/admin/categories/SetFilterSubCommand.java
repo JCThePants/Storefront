@@ -24,8 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
-import org.bukkit.command.CommandSender;
-
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
@@ -35,13 +33,12 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
+import org.bukkit.command.CommandSender;
+
 @CommandInfo(
         parent = "categories",
         command = "setfilter",
-        staticParams = {
-                "categoryName", "whitelist|blacklist"
-        },
-        usage = "/stores categories setfilter <categoryName> <whitelist|blacklist>",
+        staticParams = { "categoryName", "whitelist|blacklist" },
         description = "Set category title.")
 
 public class SetFilterSubCommand extends AbstractCommand {

@@ -48,10 +48,7 @@ import java.util.List;
 @CommandInfo(
         parent = "regions",
         command = "setext",
-        staticParams = {
-            "storeName", "regionName="
-        },
-        usage = "/stores regions setext <storeName> [regionName]",
+        staticParams = { "storeName", "regionName=" },
         description = "Set the specified store region to the region you are standing in. If there is more than 1, specify with [regionName].")
 
 public class SetExtSubCommand extends AbstractCommand {

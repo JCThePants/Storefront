@@ -41,10 +41,7 @@ import org.bukkit.entity.Player;
 @CommandInfo(
         parent = "regions",
         command = "set",
-        staticParams = {
-            "storeName"
-        },
-        usage = "/stores regions set <storeName>",
+        staticParams = { "storeName" },
         description = "Set the specified store region to your current region selection.")
 
 public class SetSubCommand extends AbstractCommand {
