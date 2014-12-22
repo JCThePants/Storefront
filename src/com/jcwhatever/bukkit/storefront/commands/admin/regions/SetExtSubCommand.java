@@ -28,9 +28,7 @@ import com.jcwhatever.bukkit.generic.GenericsLib;
 import com.jcwhatever.bukkit.generic.commands.AbstractCommand;
 import com.jcwhatever.bukkit.generic.commands.CommandInfo;
 import com.jcwhatever.bukkit.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidCommandSenderException.CommandSenderType;
-import com.jcwhatever.bukkit.generic.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.bukkit.generic.commands.exceptions.CommandException;
 import com.jcwhatever.bukkit.generic.regions.IRegion;
 import com.jcwhatever.bukkit.generic.utils.text.TextUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
@@ -54,11 +52,9 @@ import java.util.List;
 public class SetExtSubCommand extends AbstractCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args)
-            throws InvalidArgumentException, InvalidCommandSenderException {
+    public void execute (CommandSender sender, CommandArguments args) throws CommandException {
 
-        InvalidCommandSenderException.check(sender, CommandSenderType.PLAYER, 
-                "Console has no location.");
+        CommandException.assertNotConsole(this, sender);
         
         String storeName = args.getName("storeName");
         String regionName = args.getString("regionName");
