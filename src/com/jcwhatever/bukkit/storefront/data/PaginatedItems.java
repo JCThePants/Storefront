@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.bukkit.generic.collections.TimeScale;
+import com.jcwhatever.bukkit.generic.collections.timed.TimeScale;
 import com.jcwhatever.bukkit.generic.mixins.IPaginator;
 import com.jcwhatever.bukkit.generic.performance.SingleCache;
 import com.jcwhatever.bukkit.generic.views.chest.ChestView;
