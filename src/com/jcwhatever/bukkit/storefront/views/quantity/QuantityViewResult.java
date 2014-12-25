@@ -1,9 +1,9 @@
 package com.jcwhatever.bukkit.storefront.views.quantity;
 
-import com.jcwhatever.bukkit.generic.mixins.ICancellable;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.data.ViewResultKey;
-import com.jcwhatever.bukkit.generic.views.data.ViewResults;
+import com.jcwhatever.generic.mixins.ICancellable;
+import com.jcwhatever.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.data.ViewResultKey;
+import com.jcwhatever.generic.views.data.ViewResults;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 
 import org.bukkit.inventory.ItemStack;

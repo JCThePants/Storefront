@@ -24,15 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.generic.GenericsLib;
-import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
-import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
-import com.jcwhatever.bukkit.generic.items.ItemWrapper;
-import com.jcwhatever.bukkit.generic.items.bank.ItemBankManager;
-import com.jcwhatever.bukkit.generic.regions.IRegion;
-import com.jcwhatever.bukkit.generic.storage.DataBatchOperation;
-import com.jcwhatever.bukkit.generic.storage.IDataNode;
-import com.jcwhatever.bukkit.generic.utils.Utils;
+import com.jcwhatever.generic.GenericsLib;
+import com.jcwhatever.generic.utils.EconomyUtils;
+import com.jcwhatever.generic.utils.InventoryUtils;
+import com.jcwhatever.generic.utils.items.ItemWrapper;
+import com.jcwhatever.generic.itembank.ItemBankManager;
+import com.jcwhatever.generic.regions.IRegion;
+import com.jcwhatever.generic.storage.DataBatchOperation;
+import com.jcwhatever.generic.storage.IDataNode;
+import com.jcwhatever.generic.utils.Utils;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;

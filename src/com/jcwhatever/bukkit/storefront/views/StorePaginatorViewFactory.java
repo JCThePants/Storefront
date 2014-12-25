@@ -1,11 +1,11 @@
 package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.bukkit.generic.utils.PreCon;
-import com.jcwhatever.bukkit.generic.views.IView;
-import com.jcwhatever.bukkit.generic.views.ViewFactory;
-import com.jcwhatever.bukkit.generic.views.ViewSession;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
+import com.jcwhatever.generic.utils.PreCon;
+import com.jcwhatever.generic.views.IView;
+import com.jcwhatever.generic.views.ViewFactory;
+import com.jcwhatever.generic.views.ViewSession;
+import com.jcwhatever.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 

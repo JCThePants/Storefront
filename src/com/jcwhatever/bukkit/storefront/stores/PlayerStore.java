@@ -24,11 +24,11 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.generic.items.ItemWrapper;
-import com.jcwhatever.bukkit.generic.storage.DataBatchOperation;
-import com.jcwhatever.bukkit.generic.storage.IDataNode;
-import com.jcwhatever.bukkit.generic.views.ViewSession;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.utils.items.ItemWrapper;
+import com.jcwhatever.generic.storage.DataBatchOperation;
+import com.jcwhatever.generic.storage.IDataNode;
+import com.jcwhatever.generic.views.ViewSession;
+import com.jcwhatever.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;

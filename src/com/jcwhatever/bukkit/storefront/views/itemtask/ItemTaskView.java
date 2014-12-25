@@ -24,15 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront.views.itemtask;
 
-import com.jcwhatever.bukkit.generic.views.IView;
-import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.ViewSession;
-import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
-import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
-import com.jcwhatever.bukkit.generic.views.data.ViewResults;
-import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
+import com.jcwhatever.generic.views.IView;
+import com.jcwhatever.generic.views.IViewFactory;
+import com.jcwhatever.generic.views.ViewSession;
+import com.jcwhatever.generic.views.data.ViewArgumentKey;
+import com.jcwhatever.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.data.ViewCloseReason;
+import com.jcwhatever.generic.views.data.ViewOpenReason;
+import com.jcwhatever.generic.views.data.ViewResults;
+import com.jcwhatever.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;

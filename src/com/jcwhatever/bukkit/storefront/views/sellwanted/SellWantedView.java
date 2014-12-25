@@ -25,20 +25,20 @@
 package com.jcwhatever.bukkit.storefront.views.sellwanted;
 
 
-import com.jcwhatever.bukkit.generic.mixins.IPaginator;
-import com.jcwhatever.bukkit.generic.utils.EconomyUtils;
-import com.jcwhatever.bukkit.generic.utils.InventoryUtils;
-import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
-import com.jcwhatever.bukkit.generic.utils.ItemStackUtils.DisplayNameResult;
-import com.jcwhatever.bukkit.generic.utils.MetaKey;
-import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.ViewSession;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.data.ViewCloseReason;
-import com.jcwhatever.bukkit.generic.views.data.ViewOpenReason;
-import com.jcwhatever.bukkit.generic.views.data.ViewResults;
-import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
-import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
+import com.jcwhatever.generic.mixins.IPaginator;
+import com.jcwhatever.generic.utils.EconomyUtils;
+import com.jcwhatever.generic.utils.InventoryUtils;
+import com.jcwhatever.generic.utils.items.ItemStackUtils;
+import com.jcwhatever.generic.utils.items.ItemStackUtils.DisplayNameResult;
+import com.jcwhatever.generic.utils.MetaKey;
+import com.jcwhatever.generic.views.IViewFactory;
+import com.jcwhatever.generic.views.ViewSession;
+import com.jcwhatever.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.data.ViewCloseReason;
+import com.jcwhatever.generic.views.data.ViewOpenReason;
+import com.jcwhatever.generic.views.data.ViewResults;
+import com.jcwhatever.generic.views.menu.MenuItem;
+import com.jcwhatever.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;

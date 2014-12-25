@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.bukkit.generic.storage.IDataNode;
+import com.jcwhatever.generic.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import org.bukkit.inventory.ItemStack;
 

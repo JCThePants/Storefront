@@ -1,13 +1,13 @@
 package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.ViewSession;
-import com.jcwhatever.bukkit.generic.views.data.ViewArgumentKey;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments.ViewArgument;
-import com.jcwhatever.bukkit.generic.views.data.ViewResults;
-import com.jcwhatever.bukkit.generic.views.menu.MenuView;
-import com.jcwhatever.bukkit.generic.views.menu.PaginatorView;
+import com.jcwhatever.generic.views.IViewFactory;
+import com.jcwhatever.generic.views.ViewSession;
+import com.jcwhatever.generic.views.data.ViewArgumentKey;
+import com.jcwhatever.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.data.ViewArguments.ViewArgument;
+import com.jcwhatever.generic.views.data.ViewResults;
+import com.jcwhatever.generic.views.menu.MenuView;
+import com.jcwhatever.generic.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Storefront;

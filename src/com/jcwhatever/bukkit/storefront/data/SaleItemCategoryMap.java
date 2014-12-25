@@ -24,8 +24,8 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.bukkit.generic.extended.MaterialExt;
-import com.jcwhatever.bukkit.generic.utils.PreCon;
+import com.jcwhatever.generic.extended.MaterialExt;
+import com.jcwhatever.generic.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 import org.bukkit.inventory.ItemStack;
 

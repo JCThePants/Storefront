@@ -1,9 +1,9 @@
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.bukkit.generic.views.IView;
-import com.jcwhatever.bukkit.generic.views.ViewFactory;
-import com.jcwhatever.bukkit.generic.views.ViewSession;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.IView;
+import com.jcwhatever.generic.views.ViewFactory;
+import com.jcwhatever.generic.views.ViewSession;
+import com.jcwhatever.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Storefront;
 
 import org.bukkit.plugin.Plugin;

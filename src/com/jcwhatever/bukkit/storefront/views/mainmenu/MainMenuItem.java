@@ -1,8 +1,8 @@
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.bukkit.generic.views.IViewFactory;
-import com.jcwhatever.bukkit.generic.views.data.ViewArguments;
-import com.jcwhatever.bukkit.generic.views.menu.MenuItem;
+import com.jcwhatever.generic.views.IViewFactory;
+import com.jcwhatever.generic.views.data.ViewArguments;
+import com.jcwhatever.generic.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;

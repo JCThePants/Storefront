@@ -1,14 +1,14 @@
 package com.jcwhatever.bukkit.storefront.regions;
 
-import com.jcwhatever.bukkit.generic.mixins.IDisposable;
-import com.jcwhatever.bukkit.generic.regions.BasicRegion;
-import com.jcwhatever.bukkit.generic.regions.IRegion;
-import com.jcwhatever.bukkit.generic.regions.IRegionEventHandler;
-import com.jcwhatever.bukkit.generic.regions.ReadOnlyRegion;
-import com.jcwhatever.bukkit.generic.regions.Region.EnterRegionReason;
-import com.jcwhatever.bukkit.generic.regions.Region.LeaveRegionReason;
-import com.jcwhatever.bukkit.generic.utils.MetaKey;
-import com.jcwhatever.bukkit.generic.utils.PreCon;
+import com.jcwhatever.generic.mixins.IDisposable;
+import com.jcwhatever.generic.regions.BasicRegion;
+import com.jcwhatever.generic.regions.IRegion;
+import com.jcwhatever.generic.regions.IRegionEventHandler;
+import com.jcwhatever.generic.regions.ReadOnlyRegion;
+import com.jcwhatever.generic.regions.Region.EnterRegionReason;
+import com.jcwhatever.generic.regions.Region.LeaveRegionReason;
+import com.jcwhatever.generic.utils.MetaKey;
+import com.jcwhatever.generic.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;

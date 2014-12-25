@@ -24,10 +24,10 @@
 
 package com.jcwhatever.bukkit.storefront.utils;
 
-import com.jcwhatever.bukkit.generic.extended.MaterialExt;
-import com.jcwhatever.bukkit.generic.items.ItemWrapper;
-import com.jcwhatever.bukkit.generic.utils.ItemStackUtils;
-import com.jcwhatever.bukkit.generic.utils.PlayerUtils;
+import com.jcwhatever.generic.extended.MaterialExt;
+import com.jcwhatever.generic.utils.items.ItemWrapper;
+import com.jcwhatever.generic.utils.items.ItemStackUtils;
+import com.jcwhatever.generic.utils.player.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 

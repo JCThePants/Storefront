@@ -24,10 +24,10 @@
 
 package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.bukkit.generic.GenericsPlugin;
-import com.jcwhatever.bukkit.generic.permissions.IPermission;
-import com.jcwhatever.bukkit.generic.permissions.Permissions;
-import com.jcwhatever.bukkit.generic.views.IViewFactory;
+import com.jcwhatever.generic.GenericsPlugin;
+import com.jcwhatever.generic.permissions.IPermission;
+import com.jcwhatever.generic.permissions.Permissions;
+import com.jcwhatever.generic.views.IViewFactory;
 import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
 import com.jcwhatever.bukkit.storefront.events.GlobalListener;
 import com.jcwhatever.bukkit.storefront.views.StorePaginatorViewFactory;
