@@ -28,7 +28,7 @@ import com.jcwhatever.generic.utils.items.ItemWrapper;
 import com.jcwhatever.generic.permissions.Permissions;
 import com.jcwhatever.generic.scheduler.ScheduledTask;
 import com.jcwhatever.generic.scheduler.TaskHandler;
-import com.jcwhatever.generic.utils.InventoryUtils;
+import com.jcwhatever.generic.utils.inventory.InventoryUtils;
 import com.jcwhatever.generic.utils.items.ItemStackUtils;
 import com.jcwhatever.generic.utils.MetaKey;
 import com.jcwhatever.generic.utils.PreCon;

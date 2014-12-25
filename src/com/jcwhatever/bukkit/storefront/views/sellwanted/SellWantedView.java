@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.views.sellwanted;
 
 import com.jcwhatever.generic.mixins.IPaginator;
 import com.jcwhatever.generic.utils.EconomyUtils;
-import com.jcwhatever.generic.utils.InventoryUtils;
+import com.jcwhatever.generic.utils.inventory.InventoryUtils;
 import com.jcwhatever.generic.utils.items.ItemStackUtils;
 import com.jcwhatever.generic.utils.items.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.generic.utils.MetaKey;

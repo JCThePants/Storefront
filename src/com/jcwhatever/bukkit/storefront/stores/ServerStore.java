@@ -28,7 +28,7 @@ import com.jcwhatever.generic.itembank.ItemBankManager;
 import com.jcwhatever.generic.storage.DataBatchOperation;
 import com.jcwhatever.generic.storage.IDataNode;
 import com.jcwhatever.generic.utils.EconomyUtils;
-import com.jcwhatever.generic.utils.InventoryUtils;
+import com.jcwhatever.generic.utils.inventory.InventoryUtils;
 import com.jcwhatever.generic.views.ViewSession;
 import com.jcwhatever.generic.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Category;

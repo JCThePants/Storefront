@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.views.buy;
 
 import com.jcwhatever.generic.providers.economy.IEconomyProvider.CurrencyNoun;
 import com.jcwhatever.generic.utils.EconomyUtils;
-import com.jcwhatever.generic.utils.InventoryUtils;
+import com.jcwhatever.generic.utils.inventory.InventoryUtils;
 import com.jcwhatever.generic.utils.items.ItemStackUtils;
 import com.jcwhatever.generic.utils.items.ItemStackUtils.DisplayNameResult;
 import com.jcwhatever.generic.utils.MetaKey;
