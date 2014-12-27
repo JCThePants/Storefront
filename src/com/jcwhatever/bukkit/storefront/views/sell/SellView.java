@@ -333,7 +333,7 @@ public class SellView extends ChestView {
 
                         int total = InventoryUtils.count(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault());
 
-                        InventoryUtils.remove(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), total);
+                        InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), total);
 
                         continue;
                     }
@@ -347,7 +347,7 @@ public class SellView extends ChestView {
 
                     int delta = Math.abs(inventoryQty - currQty);
 
-                    InventoryUtils.remove(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), delta);
+                    InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), delta);
 
                 }
             }

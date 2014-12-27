@@ -302,7 +302,7 @@ public abstract class AbstractStore implements IStore {
             return false;
         }
 
-        InventoryUtils.remove(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty);
+        InventoryUtils.removeAmount(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty);
 
         ItemBankManager.deposit(getOwnerId(), saleItem.getItemStack(), qty);
 
