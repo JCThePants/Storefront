@@ -2,7 +2,7 @@ name: Storefront
 author: JCThePants
 main: com.jcwhatever.bukkit.storefront.Storefront
 version: 0.0-beta
-depend: [GenericsLib]
+depend: [NucleusFramework]
 commands:
     store:
         description: Base command for Storefront
