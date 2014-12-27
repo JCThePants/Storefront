@@ -24,14 +24,14 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin;
 
-import com.jcwhatever.generic.commands.AbstractCommand;
-import com.jcwhatever.generic.commands.CommandInfo;
-import com.jcwhatever.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.generic.commands.exceptions.InvalidArgumentException;
-import com.jcwhatever.generic.messaging.ChatPaginator;
+import com.jcwhatever.nucleus.commands.AbstractCommand;
+import com.jcwhatever.nucleus.commands.CommandInfo;
+import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
+import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.messaging.ChatPaginator;
 import com.jcwhatever.bukkit.storefront.Lang;
-import com.jcwhatever.generic.language.Localizable;
-import com.jcwhatever.generic.utils.text.TextUtils.FormatTemplate;
+import com.jcwhatever.nucleus.language.Localizable;
+import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;

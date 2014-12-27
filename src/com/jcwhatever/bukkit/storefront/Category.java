@@ -27,9 +27,9 @@ package com.jcwhatever.bukkit.storefront;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.jcwhatever.generic.utils.items.ItemFilterManager;
-import com.jcwhatever.generic.utils.items.ItemStackComparer;
-import com.jcwhatever.generic.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.items.ItemFilterManager;
+import com.jcwhatever.nucleus.utils.items.ItemStackComparer;
+import com.jcwhatever.nucleus.storage.IDataNode;
 
 public class Category {
 

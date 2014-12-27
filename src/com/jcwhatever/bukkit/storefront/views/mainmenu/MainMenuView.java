@@ -24,12 +24,12 @@
 
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.generic.views.IViewFactory;
-import com.jcwhatever.generic.views.ViewSession;
-import com.jcwhatever.generic.views.data.ViewArguments;
-import com.jcwhatever.generic.views.data.ViewCloseReason;
-import com.jcwhatever.generic.views.data.ViewOpenReason;
-import com.jcwhatever.generic.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.IViewFactory;
+import com.jcwhatever.nucleus.views.ViewSession;
+import com.jcwhatever.nucleus.views.data.ViewArguments;
+import com.jcwhatever.nucleus.views.data.ViewCloseReason;
+import com.jcwhatever.nucleus.views.data.ViewOpenReason;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;

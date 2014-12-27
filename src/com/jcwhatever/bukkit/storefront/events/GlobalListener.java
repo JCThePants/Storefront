@@ -24,10 +24,10 @@
 
 package com.jcwhatever.bukkit.storefront.events;
 
-import com.jcwhatever.generic.GenericsLib;
-import com.jcwhatever.generic.events.regions.RegionOwnerChangedEvent;
-import com.jcwhatever.generic.itembank.ItemBankManager;
-import com.jcwhatever.generic.regions.IRegion;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.events.regions.RegionOwnerChangedEvent;
+import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -100,7 +100,7 @@ public class GlobalListener implements Listener {
         if (event.getClickedBlock().getType() != Material.CHEST)
             return;
 
-        List<IRegion> regions = GenericsLib.getRegionManager().getRegions(event.getClickedBlock().getLocation());
+        List<IRegion> regions = Nucleus.getRegionManager().getRegions(event.getClickedBlock().getLocation());
 
         for (IRegion region : regions) {
             IStore store = region.getMeta(StoreRegion.REGION_STORE);

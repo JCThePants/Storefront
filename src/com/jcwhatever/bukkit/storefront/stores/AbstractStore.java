@@ -24,15 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.generic.GenericsLib;
-import com.jcwhatever.generic.utils.EconomyUtils;
-import com.jcwhatever.generic.utils.inventory.InventoryUtils;
-import com.jcwhatever.generic.utils.items.ItemWrapper;
-import com.jcwhatever.generic.itembank.ItemBankManager;
-import com.jcwhatever.generic.regions.IRegion;
-import com.jcwhatever.generic.storage.DataBatchOperation;
-import com.jcwhatever.generic.storage.IDataNode;
-import com.jcwhatever.generic.utils.Utils;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.utils.EconomyUtils;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.DataBatchOperation;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.Utils;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -191,7 +191,7 @@ public abstract class AbstractStore implements IStore {
             if (_regionName != null && _regionP1 != null && _regionP2 != null) {
 
                 // find external region
-                List<IRegion> regions = GenericsLib.getRegionManager().getRegions(_regionP1);
+                List<IRegion> regions = Nucleus.getRegionManager().getRegions(_regionP1);
 
                 for (IRegion region : regions) {
                     //noinspection ConstantConditions

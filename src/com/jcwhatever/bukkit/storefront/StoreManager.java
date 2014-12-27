@@ -24,15 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.generic.GenericsLib;
-import com.jcwhatever.generic.itembank.ItemBankManager;
-import com.jcwhatever.generic.utils.performance.SingleCache;
-import com.jcwhatever.generic.regions.IRegion;
-import com.jcwhatever.generic.storage.DataStorage;
-import com.jcwhatever.generic.storage.DataPath;
-import com.jcwhatever.generic.storage.IDataNode;
-import com.jcwhatever.generic.storage.StorageLoadHandler;
-import com.jcwhatever.generic.storage.StorageLoadResult;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.utils.performance.SingleCache;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.DataStorage;
+import com.jcwhatever.nucleus.storage.DataPath;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.storage.StorageLoadHandler;
+import com.jcwhatever.nucleus.storage.StorageLoadResult;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
@@ -91,7 +91,7 @@ public class StoreManager {
         if (_blockCache.keyEquals(block))
             return _blockCache.getValue();
 
-        List<IRegion> regions = GenericsLib.getRegionManager().getRegions(block.getLocation());
+        List<IRegion> regions = Nucleus.getRegionManager().getRegions(block.getLocation());
         IStore result = null;
 
         for (IRegion region : regions) {

@@ -24,20 +24,20 @@
 
 package com.jcwhatever.bukkit.storefront.views.buy;
 
-import com.jcwhatever.generic.providers.economy.IEconomyProvider.CurrencyNoun;
-import com.jcwhatever.generic.utils.EconomyUtils;
-import com.jcwhatever.generic.utils.inventory.InventoryUtils;
-import com.jcwhatever.generic.utils.items.ItemStackUtils;
-import com.jcwhatever.generic.utils.items.ItemStackUtils.DisplayNameResult;
-import com.jcwhatever.generic.utils.MetaKey;
-import com.jcwhatever.generic.views.IViewFactory;
-import com.jcwhatever.generic.views.ViewSession;
-import com.jcwhatever.generic.views.data.ViewArguments;
-import com.jcwhatever.generic.views.data.ViewCloseReason;
-import com.jcwhatever.generic.views.data.ViewOpenReason;
-import com.jcwhatever.generic.views.data.ViewResults;
-import com.jcwhatever.generic.views.menu.MenuItem;
-import com.jcwhatever.generic.views.menu.PaginatorView;
+import com.jcwhatever.nucleus.providers.economy.IEconomyProvider.CurrencyNoun;
+import com.jcwhatever.nucleus.utils.EconomyUtils;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameResult;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.views.IViewFactory;
+import com.jcwhatever.nucleus.views.ViewSession;
+import com.jcwhatever.nucleus.views.data.ViewArguments;
+import com.jcwhatever.nucleus.views.data.ViewCloseReason;
+import com.jcwhatever.nucleus.views.data.ViewOpenReason;
+import com.jcwhatever.nucleus.views.data.ViewResults;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;

@@ -24,13 +24,13 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.regions;
 
-import com.jcwhatever.generic.GenericsLib;
-import com.jcwhatever.generic.commands.AbstractCommand;
-import com.jcwhatever.generic.commands.CommandInfo;
-import com.jcwhatever.generic.commands.arguments.CommandArguments;
-import com.jcwhatever.generic.commands.exceptions.CommandException;
-import com.jcwhatever.generic.regions.IRegion;
-import com.jcwhatever.generic.utils.text.TextUtils;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.commands.AbstractCommand;
+import com.jcwhatever.nucleus.commands.CommandInfo;
+import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
+import com.jcwhatever.nucleus.commands.exceptions.CommandException;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.utils.text.TextUtils;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
@@ -70,10 +70,10 @@ public class SetExtSubCommand extends AbstractCommand {
         }
         
         
-        List<IRegion> regions = GenericsLib.getRegionManager().getRegions(p.getLocation());
+        List<IRegion> regions = Nucleus.getRegionManager().getRegions(p.getLocation());
         
         if (regions.isEmpty()) {
-            tellError(sender, "No GenericsLib region was found where you are standing.");
+            tellError(sender, "No Nucleus region was found where you are standing.");
             return; // finished
         }
         

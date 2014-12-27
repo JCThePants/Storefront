@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.utils;
 
-import com.jcwhatever.generic.utils.items.ItemStackComparer;
+import com.jcwhatever.nucleus.utils.items.ItemStackComparer;
 
 import org.bukkit.inventory.ItemStack;
 

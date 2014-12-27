@@ -1,6 +1,6 @@
 package com.jcwhatever.bukkit.storefront.meta;
 
-import com.jcwhatever.generic.views.data.ViewArgumentKey;
+import com.jcwhatever.nucleus.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 
 /*

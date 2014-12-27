@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.generic.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;

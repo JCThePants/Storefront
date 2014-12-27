@@ -24,8 +24,8 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.generic.regions.IRegion;
-import com.jcwhatever.generic.storage.IDataNode;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;

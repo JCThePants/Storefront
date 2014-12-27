@@ -24,9 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.generic.utils.items.ItemWrapper;
-import com.jcwhatever.generic.storage.IDataNode;
-import com.jcwhatever.generic.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;

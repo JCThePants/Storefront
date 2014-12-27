@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.commands;
 
 import org.bukkit.plugin.Plugin;
 
-import com.jcwhatever.generic.commands.CommandDispatcher;
+import com.jcwhatever.nucleus.commands.CommandDispatcher;
 import com.jcwhatever.bukkit.storefront.commands.admin.AddCommand;
 import com.jcwhatever.bukkit.storefront.commands.admin.DelCommand;
 import com.jcwhatever.bukkit.storefront.commands.admin.ListCommand;

@@ -1,9 +1,9 @@
 package com.jcwhatever.bukkit.storefront.views.itemtask;
 
-import com.jcwhatever.generic.mixins.ICancellable;
-import com.jcwhatever.generic.views.data.ViewArguments;
-import com.jcwhatever.generic.views.data.ViewResultKey;
-import com.jcwhatever.generic.views.data.ViewResults;
+import com.jcwhatever.nucleus.mixins.ICancellable;
+import com.jcwhatever.nucleus.views.data.ViewArguments;
+import com.jcwhatever.nucleus.views.data.ViewResultKey;
+import com.jcwhatever.nucleus.views.data.ViewResults;
 import javax.annotation.Nullable;
 
 /*

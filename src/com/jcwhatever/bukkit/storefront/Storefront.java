@@ -24,10 +24,10 @@
 
 package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.generic.GenericsPlugin;
-import com.jcwhatever.generic.permissions.IPermission;
-import com.jcwhatever.generic.permissions.Permissions;
-import com.jcwhatever.generic.views.IViewFactory;
+import com.jcwhatever.nucleus.NucleusPlugin;
+import com.jcwhatever.nucleus.permissions.IPermission;
+import com.jcwhatever.nucleus.permissions.Permissions;
+import com.jcwhatever.nucleus.views.IViewFactory;
 import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
 import com.jcwhatever.bukkit.storefront.events.GlobalListener;
 import com.jcwhatever.bukkit.storefront.views.StorePaginatorViewFactory;
@@ -44,7 +44,7 @@ import com.jcwhatever.bukkit.storefront.views.wanted.WantedViewFactory;
 import org.bukkit.ChatColor;
 import org.bukkit.permissions.PermissionDefault;
 
-public class Storefront extends GenericsPlugin {
+public class Storefront extends NucleusPlugin {
 
     private static final String CHAT_PREFIX = ChatColor.WHITE + "[" + ChatColor.BLUE + "Store" + ChatColor.WHITE + "] ";
     
