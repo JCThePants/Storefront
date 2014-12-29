@@ -34,7 +34,7 @@ import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
-import com.jcwhatever.nucleus.utils.EconomyUtils;
+import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
@@ -129,7 +129,7 @@ public class SellWantedView extends AbstractMenuView {
             }
 
             double totalCost = amount * _selectedSaleItem.getPricePerUnit();
-            double storeBalance = EconomyUtils.getBalance(_store.getOwnerId());
+            double storeBalance = Economy.getBalance(_store.getOwnerId());
 
             if (storeBalance < totalCost) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}The store cannot afford to buy from you right now.");
@@ -153,7 +153,7 @@ public class SellWantedView extends AbstractMenuView {
                 Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Sold {0} {1} to the store for {GREEN}{2}{WHITE}.",
                         amount,
                         ItemStackUtils.getDisplayName(menuItem, DisplayNameResult.REQUIRED),
-                        EconomyUtils.formatAmount(totalCost));
+                        Economy.formatAmount(totalCost));
             }
 
         }

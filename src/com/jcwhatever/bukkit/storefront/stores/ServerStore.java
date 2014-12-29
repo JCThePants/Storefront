@@ -38,7 +38,7 @@ import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
 import com.jcwhatever.nucleus.itembank.ItemBankManager;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.EconomyUtils;
+import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.views.ViewSession;
 
@@ -314,12 +314,12 @@ public class ServerStore extends AbstractStore {
         }
 
         // make sure buyer can afford
-        if (EconomyUtils.getBalance(buyer.getUniqueId()) < price) {
+        if (Economy.getBalance(buyer.getUniqueId()) < price) {
             Msg.debug("Player sale rejected because player doesn't have enough money.");
             return false;
         }
 
-        if (!EconomyUtils.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
+        if (!Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
             return false;
         }
 
