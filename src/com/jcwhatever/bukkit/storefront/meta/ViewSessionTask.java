@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.meta;
 
 import org.bukkit.ChatColor;
 
-public enum ViewTaskMode {
+public enum ViewSessionTask {
 	SERVER_BUY (false, ChatColor.DARK_BLUE, BasicTask.BUY),
 	SERVER_SELL (false, ChatColor.DARK_GRAY, BasicTask.SELL),
 
@@ -45,7 +45,7 @@ public enum ViewTaskMode {
 	private final boolean _isOwnerManagerTask;
 	private ChatColor _chatColor;
 
-	ViewTaskMode (boolean isOwnerManagerTask, ChatColor chatColor, BasicTask pureTask) {
+	ViewSessionTask(boolean isOwnerManagerTask, ChatColor chatColor, BasicTask pureTask) {
 		_basicTask = pureTask;
 		_isOwnerManagerTask = isOwnerManagerTask;
 		_chatColor = chatColor;

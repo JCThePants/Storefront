@@ -22,23 +22,18 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront.views.quantity;
+package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.nucleus.utils.MetaKey;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.data.ViewArgumentKey;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
-import com.jcwhatever.nucleus.views.data.ViewCloseReason;
-import com.jcwhatever.nucleus.views.data.ViewOpenReason;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
-import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -48,21 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuantityView extends AbstractMenuView {
-
-    public static final ViewArgumentKey<ISaleItem>
-            SALE_ITEM = new ViewArgumentKey<>(ISaleItem.class);
-
-    public static final ViewArgumentKey<ItemStack>
-            ITEM_STACK = new ViewArgumentKey<>(ItemStack.class);
-
-    public static final ViewArgumentKey<Integer>
-            INITIAL_QUANTITY = new ViewArgumentKey<>(Integer.class);
-
-    public static final ViewArgumentKey<Integer>
-            MAX_QUANTITY = new ViewArgumentKey<>(Integer.class);
-
-    public static final ViewArgumentKey<Double>
-            PRICE = new ViewArgumentKey<>(Double.class);
 
     private static final MetaKey<Integer>
             QUANTITY_INCREMENT = new MetaKey<Integer>(Integer.class);
@@ -80,17 +60,37 @@ public class QuantityView extends AbstractMenuView {
     private MenuItem _menuAdd1;
     private MenuItem _menuAdd10;
 
-    private double _price = 0.0D;
-    private int _maxQty = 64;
     private MenuItem _itemToQuantify;
-    private QuantityViewResult _result;
+
 
     private List<MenuItem> _menuItems;
 
-    protected QuantityView(ViewSession session,
-                           IViewFactory factory, ViewArguments arguments) {
-        super(session, factory, arguments);
+    private ItemStack _item;
+    private int _qty;
+    private int _maxQty;
+    private Integer _selectedAmount;
+    private double _price;
 
+    public QuantityView(ItemStack item, int qty, int maxQty, double price) {
+        PreCon.notNull(item);
+
+        _item = item;
+        _qty = qty;
+        _maxQty = Math.min(64, maxQty);
+        _price = price;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Select Amount";
+    }
+
+    public ItemStack getItemStack() {
+        return _item;
+    }
+
+    public Integer getSelectedAmount() {
+        return _selectedAmount;
     }
 
     @Override
@@ -99,76 +99,51 @@ public class QuantityView extends AbstractMenuView {
         if (_menuItems != null)
             return _menuItems;
 
-        ViewTaskMode taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        _selectedAmount = null;
+
+        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
         PreCon.notNull(taskMode);
-
-        setTitle(taskMode.getChatColor() + "Select Quantity");
-
-        ISaleItem saleItem = getArguments().get(SALE_ITEM);
-
-        ItemStack itemStack = saleItem == null
-                ? getArguments().get(ITEM_STACK)
-                : saleItem.getItemStack();
-
-        if (itemStack == null)
-            throw new IllegalStateException("SALE_ITEM or ITEM_STACK argument is required.");
-
-        Integer maxQty = getArguments().get(MAX_QUANTITY);
-        _maxQty = maxQty != null ? maxQty : 64;
-
-        Integer qty = getArguments().get(INITIAL_QUANTITY);
-        if (qty == null) {
-            qty = 1;
-        }
-
-        Double price = getArguments().get(PRICE);
-        if (price != null) {
-            _price = price;
-        }
-
-        _result = new QuantityViewResult(getArguments(), saleItem, itemStack, qty);
-        _result.setCancelled(true);
-        setResults(_result);
 
         _menuItems = new ArrayList<>(6);
 
-        _menuCancel = new MenuItem(SLOT_CANCEL);
-        _menuCancel.setItemStack(new ItemStack(Material.REDSTONE_BLOCK));
-        _menuCancel.setTitle(ChatColor.RED + "Cancel");
-        _menuCancel.setDescription(ChatColor.RED + "Click to cancel and return.");
+        _menuCancel = new MenuItemBuilder(Material.REDSTONE_BLOCK)
+                .title("{RED}Cancel")
+                .description("{RED}Click to cancel and return.")
+                .build(SLOT_CANCEL);
         _menuItems.add(_menuCancel);
 
-        _menuSubtract1 = new MenuItem(SLOT_SUBTRACT_1);
-        _menuSubtract1.setItemStack(new ItemStack(Material.STONE));
-        _menuSubtract1.setTitle(ChatColor.RED + "Subtract 1");
-        _menuSubtract1.setDescription("Click to Subtract 1 item from the quantity.");
-        _menuSubtract1.setMeta(QUANTITY_INCREMENT, -1);
+        _menuSubtract1 = new MenuItemBuilder(Material.STONE)
+                .title("{RED}Subtract 1")
+                .description("Click to Subtract 1 item from the quantity.")
+                .meta(QUANTITY_INCREMENT, -1)
+                .build(SLOT_SUBTRACT_1);
         _menuItems.add(_menuSubtract1);
 
-        _menuSubtract10 = new MenuItem(SLOT_SUBTRACT_10);
-        _menuSubtract10.setItemStack(new ItemStack(Material.DIRT));
-        _menuSubtract10.setTitle(ChatColor.RED + "Subtract 10");
-        _menuSubtract10.setDescription("Click to Subtract 10 items from the quantity.");
-        _menuSubtract10.setMeta(QUANTITY_INCREMENT, -10);
+        _menuSubtract10 = new MenuItemBuilder(Material.DIRT)
+                .title("{RED}Subtract 10")
+                .description("Click to Subtract 10 items from the quantity.")
+                .meta(QUANTITY_INCREMENT, -10)
+                .build(SLOT_SUBTRACT_10);
         _menuItems.add(_menuSubtract10);
 
-        _menuAdd1 = new MenuItem(SLOT_ADD_1);
-        _menuAdd1.setItemStack(new ItemStack(Material.IRON_BLOCK));
-        _menuAdd1.setTitle(ChatColor.GREEN + "Add 1");
-        _menuAdd1.setDescription("Click to Add 1 item to the quantity.");
-        _menuAdd1.setMeta(QUANTITY_INCREMENT, 1);
+        _menuAdd1 = new MenuItemBuilder(Material.IRON_BLOCK)
+                .title("{GREEN}Add 1")
+                .description("Click to Add 1 item to the quantity.")
+                .meta(QUANTITY_INCREMENT, 1)
+                .build(SLOT_ADD_1);
         _menuItems.add(_menuAdd1);
 
-        _menuAdd10 = new MenuItem(SLOT_ADD_10);
-        _menuAdd10.setItemStack(new ItemStack(Material.GOLD_BLOCK));
-        _menuAdd10.setTitle(ChatColor.GREEN + "Add 10");
-        _menuAdd10.setDescription("Click to Add 10 item to the quantity.");
-        _menuAdd10.setMeta(QUANTITY_INCREMENT, 10);
+        _menuAdd10 = new MenuItemBuilder(Material.GOLD_BLOCK)
+                .title("{GREEN}Add 10")
+                .description("Click to Add 10 item to the quantity.")
+                .meta(QUANTITY_INCREMENT, 10)
+                .build(SLOT_ADD_10);
         _menuItems.add(_menuAdd10);
 
-        _itemToQuantify = new MenuItem(SLOT_ITEM);
-        _itemToQuantify.setItemStack(setLore(itemStack.clone()));
-        _itemToQuantify.getItemStack().setAmount(qty);
+        _itemToQuantify = new MenuItemBuilder(_item)
+                .amount(_qty)
+                .build(SLOT_ITEM);
+        setLore(_itemToQuantify);
         _menuItems.add(_itemToQuantify);
 
         return _menuItems;
@@ -178,29 +153,30 @@ public class QuantityView extends AbstractMenuView {
     protected void onItemSelect(MenuItem menuItem) {
 
         if (menuItem == _itemToQuantify) {
-            _result.setCancelled(false);
-            getPlayer().closeInventory();
+            getViewSession().back();
             return;
         }
         else if (menuItem == _menuCancel) {
-            _result.setCancelled(true);
+            // escape
             getPlayer().closeInventory();
             return;
         }
+
+        if (_selectedAmount == null)
+            _selectedAmount = 0;
 
         Integer increment = menuItem.getMeta(QUANTITY_INCREMENT);
         if (increment == null)
             return;
 
-        int qty = Math.max(1, _result.getQty() + increment);
+        int qty = Math.max(1, _selectedAmount + increment);
         int max = Math.min(64, _maxQty);
         qty = Math.min(qty, max);
-
-        _result.setQty(qty);
 
         ItemStack item = getInventoryView().getTopInventory().getItem(0);
 
         item.setAmount(qty);
+        _selectedAmount = qty;
 
         setLore(item);
 
@@ -243,9 +219,9 @@ public class QuantityView extends AbstractMenuView {
         ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Available: " + ChatColor.GRAY
                 + _maxQty);
 
-        ViewTaskMode taskMode = getTaskMode();
+        ViewSessionTask taskMode = getSessionTask();
 
-        if (taskMode == ViewTaskMode.SERVER_BUY || taskMode == ViewTaskMode.PLAYER_BUY)
+        if (taskMode == ViewSessionTask.SERVER_BUY || taskMode == ViewSessionTask.PLAYER_BUY)
             ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to purchase.");
         else
             ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to confirm.");

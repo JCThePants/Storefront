@@ -22,59 +22,94 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront.views.category;
+package com.jcwhatever.bukkit.storefront.views;
 
 
-import com.jcwhatever.nucleus.utils.text.TextUtils;
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.data.ViewArgumentKey;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
-import com.jcwhatever.nucleus.views.data.ViewCloseReason;
-import com.jcwhatever.nucleus.views.data.ViewOpenReason;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.Category;
+import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
+import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode.BasicTask;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask.BasicTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.ViewSession;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
+import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryView extends AbstractMenuView {
 
-    public static ViewArgumentKey<IViewFactory>
-            NEXT_VIEW = new ViewArgumentKey<>(IViewFactory.class);
+    public static MetaKey<Category>
+            ITEM_CATEGORY = new MetaKey<>(Category.class);
 
-    public static ViewArgumentKey<ViewArguments>
-            NEXT_VIEW_ARGUMENTS = new ViewArgumentKey<>(ViewArguments.class);
+    public static void categoryNext(ViewSession session, View nextView, PaginatedItems pagin) {
 
-    private static ViewArgumentKey<Category>
-            ITEM_CATEGORY = new ViewArgumentKey<>(Category.class);
+        IStore store = session.getMeta(SessionMetaKey.STORE);
+        if (store == null)
+            throw new AssertionError();
+
+        ViewSessionTask task = session.getMeta(SessionMetaKey.TASK_MODE);
+
+        List<Category> categories = getCategories(store, task);
+
+        int totalSlots = pagin.getTotalItems();
+
+        if (totalSlots <= 6 * 9 * 3 || categories.size() <= 1) {
+
+            PaginatorView.paginateNext(session, nextView, pagin, StoreStackComparer.getDurability());
+            return;
+        }
+
+        // show categories
+        session.next(new CategoryView(nextView));
+    }
+
+    private static List<Category> getCategories(IStore store, ViewSessionTask mode) {
+        List<Category> categories;
+
+        if (mode.isOwnerManagerTask()) {
+            CategoryManager manager = Storefront.getInstance().getCategoryManager();
+            categories = manager.getCategories();
+        }
+        else {
+            categories = mode.getBasicTask() == BasicTask.BUY
+                    ? store.getBuyCategories()
+                    : store.getSellCategories();
+        }
+
+        return categories;
+    }
+
 
     private IStore _store;
-    private ViewTaskMode _taskMode;
-    private Category _previousCategory;
+    private View _nextView;
 
+    public CategoryView(@Nullable View nextView) {
 
-    public CategoryView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
-        super(session, factory, arguments);
-
+        _nextView = nextView;
         _store = getStore();
-        _taskMode = getTaskMode();
-        _previousCategory = hasCategory() ? getCategory() : null;
+    }
 
+    @Override
+    public String getTitle() {
         // set title
-        if (_taskMode.getBasicTask() == BasicTask.BUY)
-            setTitle(_taskMode.getChatColor() + "Buy Item Categories");
-        else
-            setTitle(_taskMode.getChatColor() + "Sell Item Categories");
+        ViewSessionTask taskMode = getSessionTask();
+        return taskMode.getBasicTask() == BasicTask.BUY
+                ? taskMode.getChatColor() + "Buy Item Categories"
+                : taskMode.getChatColor() + "Sell Item Categories";
     }
 
     @Override
@@ -90,7 +125,7 @@ public class CategoryView extends AbstractMenuView {
     @Override
     protected List<MenuItem> createMenuItems() {
 
-        List<Category> categories = getCategories();
+        List<Category> categories = getCategories(getStore(), getSessionTask());
 
         double itemSize = categories.size();
         int rows = (int) Math.ceil(itemSize / 9);
@@ -109,13 +144,13 @@ public class CategoryView extends AbstractMenuView {
             for (ISaleItem saleItem : saleItems)
                 totalInCategory += saleItem.getQty();
 
-            MenuItem item = new MenuItem(i)
-                    .setItemStack(category.getMenuItem())
-                    .setDescription(category.getDescription())
-                    .setTitle(TextUtils.format("{YELLOW}{ITALIC}" + category.getTitle().toUpperCase() +
-                            "{AQUA} " + totalInCategory + " items  "));
-
-            item.setMeta(ITEM_CATEGORY, category);
+            MenuItem item = new MenuItemBuilder(category.getMenuItem())
+                    .description(category.getDescription())
+                    .title("{YELLOW}{ITALIC}{0}{AQUA} {1} items  ",
+                            category.getTitle().toUpperCase(),
+                            totalInCategory)
+                    .meta(ITEM_CATEGORY, category)
+                    .build(i);
 
             menuItems.add(item);
         }
@@ -134,19 +169,15 @@ public class CategoryView extends AbstractMenuView {
 
         // get sale items in category
 
-        PaginatedItems saleItems = getCategorySaleItems(_store, _taskMode, category);
-        IViewFactory nextView = getArguments().get(NEXT_VIEW);
-        if (nextView == null)
-            throw new RuntimeException("NEXT_VIEW argument is required.");
+        //PaginatedItems saleItems = getCategorySaleItems(_store, _taskMode, category);
 
-        ViewArguments nextArguments = getArguments().get(NEXT_VIEW_ARGUMENTS);
-        if (nextArguments == null)
-            nextArguments = new ViewArguments();
-
-        showPaginViewOrNext(nextView, saleItems, nextArguments);
+        if (_nextView != null)
+            getViewSession().next(_nextView);
+        else
+            getViewSession().back();
     }
 
-    public static PaginatedItems getCategorySaleItems(final IStore store, ViewTaskMode currentMode,
+    public static PaginatedItems getCategorySaleItems(final IStore store, ViewSessionTask currentMode,
                                                       final Category category) {
         PaginatedItems saleItems;
 

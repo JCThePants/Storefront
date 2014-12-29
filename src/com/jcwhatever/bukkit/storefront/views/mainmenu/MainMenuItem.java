@@ -1,11 +1,14 @@
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.Map;
 import javax.annotation.Nullable;
 
 /*
@@ -13,46 +16,34 @@ import javax.annotation.Nullable;
  */
 public class MainMenuItem extends MenuItem {
 
-    private ViewTaskMode _taskMode;
-    private IViewFactory _viewFactory;
-    private PaginatedItems _saleItems;
-    private ViewArguments _arguments;
+    private ViewSessionTask _taskMode;
     private boolean _isCategorized;
+    private ISaleItemGetter _getter;
 
-    public MainMenuItem(int slot) {
-        super(slot);
+    public MainMenuItem(int slot, ItemStack itemStack,
+                        @Nullable Map<Object, Object> meta,
+                        @Nullable List<Runnable> onClick) {
+        super(slot, itemStack, meta, onClick);
     }
 
-    public ViewTaskMode getTaskMode() {
+    public ViewSessionTask getTask() {
         if (_taskMode == null)
             throw new RuntimeException("Task mode not set.");
 
         return _taskMode;
     }
 
-    public void setTaskMode(ViewTaskMode viewTaskMode) {
+    public void setTask(ViewSessionTask viewTaskMode) {
         _taskMode = viewTaskMode;
-    }
-
-    public IViewFactory getViewFactory() {
-        return _viewFactory;
-    }
-
-    public void setViewFactory(IViewFactory factory) {
-        _viewFactory = factory;
     }
 
     @Nullable
     public PaginatedItems getSaleItems() {
-        return _saleItems;
+        return new PaginatedItems(_getter);
     }
 
     public void setSaleItems(ISaleItemGetter getter) {
-        _saleItems = new PaginatedItems(getter);
-    }
-
-    public void setSaleItems(PaginatedItems items) {
-        _saleItems = items;
+        _getter = getter;
     }
 
     public boolean isCategorized() {
@@ -62,17 +53,4 @@ public class MainMenuItem extends MenuItem {
     public void setCategorized(boolean isCategorized) {
         _isCategorized = isCategorized;
     }
-
-    public ViewArguments getArguments() {
-        if (_arguments == null)
-            return new ViewArguments();
-
-        return _arguments;
-    }
-
-    public void setArguments(ViewArguments arguments) {
-        _arguments = arguments;
-    }
-
-
 }

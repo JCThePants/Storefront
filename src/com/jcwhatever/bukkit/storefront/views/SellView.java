@@ -22,30 +22,8 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront.views.sell;
+package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
-import com.jcwhatever.nucleus.permissions.Permissions;
-import com.jcwhatever.nucleus.scheduler.ScheduledTask;
-import com.jcwhatever.nucleus.scheduler.TaskHandler;
-import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.MetaKey;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.Scheduler;
-import com.jcwhatever.nucleus.views.IView;
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.chest.ChestEventAction;
-import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
-import com.jcwhatever.nucleus.views.chest.ChestView;
-import com.jcwhatever.nucleus.views.chest.InventoryItemAction.InventoryPosition;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
-import com.jcwhatever.nucleus.views.data.ViewArguments.ViewArgument;
-import com.jcwhatever.nucleus.views.data.ViewCloseReason;
-import com.jcwhatever.nucleus.views.data.ViewOpenReason;
-import com.jcwhatever.nucleus.views.data.ViewResults;
-import com.jcwhatever.nucleus.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Msg;
@@ -57,15 +35,30 @@ import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
-import com.jcwhatever.bukkit.storefront.views.price.PriceView;
-import com.jcwhatever.bukkit.storefront.views.price.PriceViewResult;
+import com.jcwhatever.nucleus.permissions.Permissions;
+import com.jcwhatever.nucleus.scheduler.ScheduledTask;
+import com.jcwhatever.nucleus.scheduler.TaskHandler;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.Scheduler;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.chest.ChestEventAction;
+import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
+import com.jcwhatever.nucleus.views.chest.ChestView;
+import com.jcwhatever.nucleus.views.chest.InventoryItemAction.InventoryPosition;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.menu.MenuInventory;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -75,7 +68,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.Nullable;
 
 public class SellView extends ChestView {
 
@@ -89,8 +81,24 @@ public class SellView extends ChestView {
     private SaleItemSnapshot _snapshot;
     private Inventory _inventory;
 
-    protected SellView(@Nullable String title, ViewSession session, IViewFactory factory, ViewArguments arguments) {
-        super(title, session, factory, arguments, StoreStackComparer.getDefault());
+    private int _page = 1;
+    private PaginatedItems _pagin;
+
+    public SellView(PaginatedItems paginatedItems) {
+        super(Storefront.getInstance(), null);
+
+        PreCon.notNull(paginatedItems);
+
+        _pagin = paginatedItems;
+    }
+
+    @Override
+    public String getTitle() {
+        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        if (taskMode == null)
+            throw new AssertionError();
+
+        return taskMode.getChatColor() + "Place items to sell";
     }
 
     @Override
@@ -98,20 +106,34 @@ public class SellView extends ChestView {
 
         if (reason == ViewOpenReason.PREV) {
 
-            IView nextView = getViewSession().getNextView();
-            if (nextView == null)
-                return; // finished
+            View nextView = getViewSession().getNextView();
+            if (nextView instanceof PriceView) {
 
-            ViewResults results = nextView.getResults();
 
-            if (results instanceof PriceViewResult) {
-                PriceViewResult result = (PriceViewResult) results;
+                PriceView priceView = (PriceView) nextView;
 
-                if (!result.isCancelled() || _priceMap.getPrice(result.getItemStack()) == null)
-                    updatePrice(result);
+                ItemStack item = priceView.getItemToPrice();
+
+                Double price = priceView.getSelectedPrice();
+                if (price == null && _priceMap.getPrice(item) != null)
+                    return;
+
+                price = price != null ? price : 1.0D;
+
+                ItemStackUtil.removeTempLore(item);
+
+                _priceMap.setPrice(item.clone(), price);
+
+                ItemStackUtil.setPriceLore(_inventory, item,
+                        price, PriceType.PER_ITEM, false);
             }
         }
+        else {
 
+            View paginatorView = getViewSession().getPrevView();
+            if (paginatorView instanceof PaginatorView)
+                _page = ((PaginatorView) paginatorView).getSelectedPage();
+        }
     }
 
     @Override
@@ -145,25 +167,17 @@ public class SellView extends ChestView {
         if (_priceMap == null)
             _priceMap = new PriceMap(getPlayer(), _store);
 
-        ViewTaskMode taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
         PreCon.notNull(taskMode);
-
-        setTitle(taskMode.getChatColor() + "Place items to sell");
 
         // create new chest
         int maxSaleItems = getMaxSaleItems(getPlayer());
 
-        Inventory inventory = getTitle() != null
-                ? Bukkit.createInventory(getPlayer(), maxSaleItems, getTitle())
-                : Bukkit.createInventory(getPlayer(), maxSaleItems);
-
-        Integer page = getArguments().get(PaginatorView.SELECTED_PAGE);
-        if (page == null)
-            page = 1;
+        MenuInventory inventory = new MenuInventory(getPlayer(), maxSaleItems, getTitle());
 
         PaginatedItems pagin = new PaginatedItems(_store, getPlayer().getUniqueId());
 
-        _saleItemStacks = pagin.getPage(page);//, PaginatorPageType.SALE_ITEM_STACK);
+        _saleItemStacks = pagin.getPage(_page);
 
         if (_saleItemStacks == null)
             return _inventory = inventory;
@@ -376,39 +390,15 @@ public class SellView extends ChestView {
                 _sledgehammer = null;
             }
 
-            ViewArguments arguments = new ViewArguments(
-                    new ViewArgument(PRICED_ITEM_STACK, item),
-                    new ViewArgument(PriceView.ITEM_STACK, itemClone),
-                    new ViewArgument(PriceView.INITIAL_PRICE, price != null
-                            ? price
-                            : 1.0D)
-            );
-
-            getViewSession().next(Storefront.VIEW_PRICE, arguments);
+            getViewSession().next(new PriceView(itemClone, price != null
+                    ? price
+                    : 1.0D));
             return true;
         }
         else {
             ItemStackUtil.setPriceLore(_inventory, item, price, PriceType.PER_ITEM, true);
             return false;
         }
-    }
-
-    @Nullable
-    @Override
-    public ViewResults getResults() {
-        return null;
-    }
-
-    private void updatePrice (PriceViewResult priceResult) {
-
-        ItemStack item = getViewSession().getNextView().getArguments().get(PRICED_ITEM_STACK);
-
-        ItemStackUtil.setPriceLore(_inventory, item,
-                priceResult.getPrice(1), PriceType.PER_ITEM, false);
-
-        ItemStackUtil.removeTempLore(priceResult.getItemStack());
-
-        _priceMap.setPrice(priceResult.getItemStack(), priceResult.getPrice(1));
     }
 
     /**

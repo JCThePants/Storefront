@@ -24,11 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -38,6 +33,11 @@ import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
+import com.jcwhatever.nucleus.storage.DataBatchOperation;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -87,7 +87,7 @@ public class PlayerStore extends AbstractStore {
         }
 
         ViewSession session = ViewSession.get(p, sourceBlock);
-        session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
+        session.next(new MainMenuView());
     }
 
     @Override

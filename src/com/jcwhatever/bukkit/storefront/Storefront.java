@@ -24,22 +24,11 @@
 
 package com.jcwhatever.bukkit.storefront;
 
+import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
+import com.jcwhatever.bukkit.storefront.events.GlobalListener;
 import com.jcwhatever.nucleus.NucleusPlugin;
 import com.jcwhatever.nucleus.permissions.IPermission;
 import com.jcwhatever.nucleus.permissions.Permissions;
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
-import com.jcwhatever.bukkit.storefront.events.GlobalListener;
-import com.jcwhatever.bukkit.storefront.views.StorePaginatorViewFactory;
-import com.jcwhatever.bukkit.storefront.views.buy.BuyViewFactory;
-import com.jcwhatever.bukkit.storefront.views.category.CategoryViewFactory;
-import com.jcwhatever.bukkit.storefront.views.itemtask.ItemTaskViewFactory;
-import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuViewFactory;
-import com.jcwhatever.bukkit.storefront.views.price.PriceViewFactory;
-import com.jcwhatever.bukkit.storefront.views.quantity.QuantityViewFactory;
-import com.jcwhatever.bukkit.storefront.views.sell.SellViewFactory;
-import com.jcwhatever.bukkit.storefront.views.sellwanted.SellWantedViewFactory;
-import com.jcwhatever.bukkit.storefront.views.wanted.WantedViewFactory;
 
 import org.bukkit.ChatColor;
 import org.bukkit.permissions.PermissionDefault;
@@ -47,18 +36,7 @@ import org.bukkit.permissions.PermissionDefault;
 public class Storefront extends NucleusPlugin {
 
     private static final String CHAT_PREFIX = ChatColor.WHITE + "[" + ChatColor.BLUE + "Store" + ChatColor.WHITE + "] ";
-    
-    public static final IViewFactory VIEW_MAIN_MENU = new MainMenuViewFactory("MainMenu");
-    public static final IViewFactory VIEW_CATEGORY = new CategoryViewFactory("Category");
-    public static final IViewFactory VIEW_SELL = new SellViewFactory("Sell");
-    public static final IViewFactory VIEW_PRICE = new PriceViewFactory("Price");
-    public static final IViewFactory VIEW_PAGINATOR = new StorePaginatorViewFactory("Paginator");
-    public static final IViewFactory VIEW_BUY = new BuyViewFactory("Buy");
-    public static final IViewFactory VIEW_QUANTITY = new QuantityViewFactory("Quantity");
-    public static final IViewFactory VIEW_WANTED = new WantedViewFactory("Wanted");
-    public static final IViewFactory VIEW_ITEM_TASK_MENU = new ItemTaskViewFactory("ItemTask");
-    public static final IViewFactory VIEW_SELL_WANTED = new SellWantedViewFactory("SellWanted");
-    
+
     private static Storefront _singleton;
 
     public static Storefront getInstance () {

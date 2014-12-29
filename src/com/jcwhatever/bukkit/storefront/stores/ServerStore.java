@@ -24,13 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.nucleus.itembank.ItemBankManager;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.EconomyUtils;
-import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
@@ -41,6 +34,13 @@ import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
+import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.storage.DataBatchOperation;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.EconomyUtils;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -82,7 +82,7 @@ public class ServerStore extends AbstractStore {
 
         ViewSession session = ViewSession.get(p, sourceBlock);
 
-        session.next(Storefront.VIEW_MAIN_MENU, new ViewArguments());
+        session.next(new MainMenuView());
     }
 
     @Override

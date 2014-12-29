@@ -24,9 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.meta;
 
-import com.jcwhatever.nucleus.views.data.ViewArgumentKey;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.nucleus.utils.MetaKey;
 
 /**
  * Session Meta Keys
@@ -38,18 +38,18 @@ public class SessionMetaKey {
 	/**
 	 * The current Task Mode whose value is a {@code ViewTaskMode} enum constant.
 	 */
-	public static ViewArgumentKey<ViewTaskMode>
-			TASK_MODE = new ViewArgumentKey<ViewTaskMode>(ViewTaskMode.class);
+	public static MetaKey<ViewSessionTask>
+			TASK_MODE = new MetaKey<ViewSessionTask>(ViewSessionTask.class);
 	
 	/**
 	 * The current store whose value is an an instance that implements {@code IStore}.
 	 */
-	public static ViewArgumentKey<IStore>
-			STORE = new ViewArgumentKey<IStore>(IStore.class);
+	public static MetaKey<IStore>
+			STORE = new MetaKey<IStore>(IStore.class);
 	
 	/**
 	 * The current category
 	 */
-	public static ViewArgumentKey<Category>
-			CATEGORY = new ViewArgumentKey<>(Category.class);
+	public static MetaKey<Category>
+			CATEGORY = new MetaKey<>(Category.class);
 }

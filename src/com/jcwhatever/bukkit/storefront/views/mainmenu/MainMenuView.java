@@ -24,26 +24,29 @@
 
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
-import com.jcwhatever.nucleus.views.data.ViewCloseReason;
-import com.jcwhatever.nucleus.views.data.ViewOpenReason;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
-import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
+import com.jcwhatever.bukkit.storefront.views.BuyView;
+import com.jcwhatever.bukkit.storefront.views.CategoryView;
+import com.jcwhatever.bukkit.storefront.views.SellView;
+import com.jcwhatever.bukkit.storefront.views.SellWantedView;
+import com.jcwhatever.bukkit.storefront.views.WantedView;
+import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +57,12 @@ public class MainMenuView extends AbstractMenuView {
     private boolean _isStoreOwner;
     private boolean _canSell;
 
-    public MainMenuView(ViewSession session, IViewFactory factory, ViewArguments arguments) {
-        super(session, factory, arguments);
+    public MainMenuView() {
 
         _store = getStore();
 
         // set session store
         getViewSession().setMeta(SessionMetaKey.STORE, _store);
-        setTitle("Store: " + _store.getTitle());
 
         _isStoreOwner = _store.getStoreType() == StoreType.PLAYER_OWNABLE
                 && getPlayer().getUniqueId().equals(_store.getOwnerId());
@@ -93,30 +94,58 @@ public class MainMenuView extends AbstractMenuView {
 
         MainMenuItem menuItem = (MainMenuItem)item;
 
-        ViewTaskMode taskMode = menuItem.getTaskMode();
+        ViewSessionTask taskMode = menuItem.getTask();
         if (taskMode == null)
             throw new AssertionError();
-
-        IViewFactory factory = menuItem.getViewFactory();
-        if (factory == null)
-            throw new AssertionError();
-
-        ViewArguments arguments = menuItem.getArguments();
 
         // set persistent task mode
         getViewSession().setMeta(SessionMetaKey.TASK_MODE, taskMode);
 
+        View view = null;
+
+        switch (taskMode) {
+            case SERVER_BUY:
+                // fall through
+            case PLAYER_BUY:
+                view = new BuyView(menuItem.getSaleItems());
+                break;
+
+            case SERVER_SELL:
+                // fall through
+            case OWNER_MANAGE_SELL:
+                view = new SellView(menuItem.getSaleItems());
+                break;
+
+            case PLAYER_SELL:
+                view = new SellWantedView(menuItem.getSaleItems());
+                break;
+
+            case OWNER_MANAGE_BUY:
+                view = new WantedView(menuItem.getSaleItems());
+                break;
+        }
+
         if (menuItem.isCategorized()) {
-            showCategoryViewOrNext(factory, menuItem.getSaleItems(), arguments);
+            CategoryView.categoryNext(getViewSession(),
+                    view,
+                    menuItem.getSaleItems());
         }
         else {
-            showPaginViewOrNext(factory, menuItem.getSaleItems(), arguments);
+            PaginatorView.paginateNext(getViewSession(),
+                    view,
+                    menuItem.getSaleItems(),
+                    StoreStackComparer.getDurability());
         }
     }
 
     @Override
     protected void onShow(ViewOpenReason reason) {
         // do nothing
+    }
+
+    @Override
+    public String getTitle() {
+        return getStore().getTitle();
     }
 
     @Override
@@ -143,75 +172,60 @@ public class MainMenuView extends AbstractMenuView {
      */
     private MenuItem getSellItem() {
 
-        final MainMenuItem sellItem = new MainMenuItem(1);
-
-        sellItem.setItemStack(new ItemStack(Material.GOLD_BLOCK));
-        sellItem.setTitle(ChatColor.BLUE + "SELL");
-
-        if (_store.hasOwner()) {
-            sellItem.setDescription("Click to sell items to the store.");
-        }
-        else {
-            sellItem.setDescription("Click to sell items from the store.");
-        }
+        MainMenuItemBuilder builder = (MainMenuItemBuilder)new MainMenuItemBuilder(Material.GOLD_BLOCK)
+                .title("{BLUE}SELL")
+                .description(_store.hasOwner()
+                        ? "Click to sell items to the store."
+                        : "Click to sell items from the store.");
 
         switch (_store.getStoreType()) {
 
             case SERVER:
-                sellItem.setViewFactory  (Storefront.VIEW_SELL);
-                sellItem.setTaskMode     (ViewTaskMode.SERVER_SELL);
-                sellItem.setCategorized  (true);
-                sellItem.onClick(new Runnable() {
-                    @Override
-                    public void run() {
-                        sellItem.setSaleItems(new ISaleItemGetter() {
+                //builder.setViewFactory(Storefront.VIEW_SELL);
+                builder
+                        .task(ViewSessionTask.SERVER_SELL)
+                        .categorized()
+                        .saleItems(new ISaleItemGetter() {
                             @Override
                             public List<ISaleItem> getSaleItems() {
                                 return _store.getSaleItems(getPlayer().getUniqueId());
                             }
                         });
-                    }
-                });
                 break;
 
             case PLAYER_OWNABLE:
                 // owner sell
                 if (_isStoreOwner) {
-                    sellItem.setViewFactory (Storefront.VIEW_SELL);
-                    sellItem.setTaskMode    (ViewTaskMode.OWNER_MANAGE_SELL);
-                    sellItem.onClick(new Runnable() {
-                        @Override
-                        public void run() {
-                            sellItem.setSaleItems(new ISaleItemGetter() {
+                    //builder.setViewFactory(Storefront.VIEW_SELL);
+                    builder
+                            .task(ViewSessionTask.OWNER_MANAGE_SELL)
+                            .saleItems(new ISaleItemGetter() {
                                 @Override
                                 public List<ISaleItem> getSaleItems() {
                                     return _store.getSaleItems();
                                 }
                             });
-                        }
-                    });
+
                 }
                 // player sell
                 else {
-                    sellItem.setViewFactory (Storefront.VIEW_SELL_WANTED);
-                    sellItem.setTaskMode    (ViewTaskMode.PLAYER_SELL);
-                    sellItem.setCategorized (true);
-                    sellItem.onClick(new Runnable() {
-                        @Override
-                        public void run() {
-                            sellItem.setSaleItems(new ISaleItemGetter() {
+                    //builder.setViewFactory(Storefront.VIEW_SELL_WANTED);
+                    builder
+                            .task(ViewSessionTask.PLAYER_SELL)
+                            .categorized()
+                            .saleItems(new ISaleItemGetter() {
                                 @Override
                                 public List<ISaleItem> getSaleItems() {
-                                    return _store.getWantedItems().getAll();
+                                    return hasCategory()
+                                            ? _store.getWantedItems().get(getCategory())
+                                            : _store.getWantedItems().getAll();
                                 }
                             });
-                        }
-                    });
                 }
                 break;
         }
 
-        return sellItem;
+        return builder.build(1);
     }
 
     /**
@@ -233,86 +247,69 @@ public class MainMenuView extends AbstractMenuView {
     }
 
     private MenuItem getServerBuyItem() {
-        final MainMenuItem item = new MainMenuItem(0);
 
-        item.setTitle       ("BUY");
-        item.setDescription ("Click to buy from the store.");
-        item.setViewFactory (Storefront.VIEW_BUY);
-        item.setTaskMode    (ViewTaskMode.SERVER_BUY);
-        item.setItemStack   (new ItemStack(Material.CHEST));
-        item.setCategorized (true);
-        item.onClick(new Runnable() {
-            @Override
-            public void run() {
+        MainMenuItemBuilder builder = (MainMenuItemBuilder)new MainMenuItemBuilder(Material.CHEST)
+                //item.setViewFactory (Storefront.VIEW_BUY);
+                .task(ViewSessionTask.SERVER_BUY)
+                .categorized()
+                .saleItems(new ISaleItemGetter() {
+                    @Override
+                    public List<ISaleItem> getSaleItems() {
 
-                if (_store.getSaleItems().size() == 0) {
-                    Msg.tell(getPlayer(), "Out of Stock");
-                    item.setCancelled(true);
-                } else {
-                    item.setSaleItems(new ISaleItemGetter() {
-                        @Override
-                        public List<ISaleItem> getSaleItems() {
-                            List<ISaleItem> items = _store.getSaleItems();
+                        List<ISaleItem> items = _store.getSaleItems();
 
-                            // remove players items from the list
-                            List<ISaleItem> results = new ArrayList<ISaleItem>(items.size());
-                            for (ISaleItem item : items) {
-                                if (!item.getSellerId().equals(getPlayer().getUniqueId())) {
-                                    results.add(item);
-                                }
+                        // remove players items from the list
+                        List<ISaleItem> results = new ArrayList<ISaleItem>(items.size());
+                        for (ISaleItem item : items) {
+                            if (!item.getSellerId().equals(getPlayer().getUniqueId())) {
+                                results.add(item);
                             }
-
-                            return results;
                         }
-                    });
-                }
-            }
-        });
 
-        return item;
+                        return results;
+                    }
+                })
+                .title("BUY")
+                .description("Click to buy from the store.")
+                ;
+
+        return builder.build(0);
     }
 
     private MenuItem getPlayerBuyItem() {
-        final MainMenuItem item = new MainMenuItem(0);
-        item.setItemStack(new ItemStack(Material.CHEST));
+        MainMenuItemBuilder builder = new MainMenuItemBuilder(Material.CHEST);
 
         if (_isStoreOwner) {
-            item.setTitle       (ChatColor.GREEN + "WANTED");
-            item.setDescription ("Click to manage items you're willing to buy.");
-            item.setViewFactory (Storefront.VIEW_WANTED);
-            item.setTaskMode    (ViewTaskMode.OWNER_MANAGE_BUY);
-            item.onClick(new Runnable() {
-                @Override
-                public void run() {
-                    item.setSaleItems(new ISaleItemGetter() {
+            builder
+                    //m.setViewFactory (Storefront.VIEW_WANTED);
+                    .task(ViewSessionTask.OWNER_MANAGE_BUY)
+                    .saleItems(new ISaleItemGetter() {
 
                         @Override
                         public List<ISaleItem> getSaleItems() {
                             return _store.getWantedItems().getAll();
                         }
-                    });
-                }
-            });
+                    })
+                    .title(ChatColor.GREEN + "WANTED")
+                    .description("Click to manage items you're willing to buy.");
+
         }
         else {
-            item.setTitle       ("BUY");
-            item.setDescription ("Click to buy from the store.");
-            item.setViewFactory (Storefront.VIEW_BUY);
-            item.setTaskMode    (ViewTaskMode.PLAYER_BUY);
-            item.setCategorized(true);
-            item.onClick(new Runnable() {
-                @Override
-                public void run() {
-                    item.setSaleItems(new ISaleItemGetter() {
+            builder
+                    //.setViewFactory (Storefront.VIEW_BUY);
+                    .task(ViewSessionTask.PLAYER_BUY)
+                    .categorized()
+                    .saleItems(new ISaleItemGetter() {
                         @Override
                         public List<ISaleItem> getSaleItems() {
                             return _store.getSaleItems();
                         }
-                    });
-                }
-            });
+                    })
+                    .title("BUY")
+                    .description("Click to buy from the store.");
+
         }
-        return item;
+        return builder.build(0);
     }
 
 }

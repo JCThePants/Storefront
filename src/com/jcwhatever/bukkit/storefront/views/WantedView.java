@@ -22,36 +22,34 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront.views.wanted;
+package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.nucleus.extended.MaterialExt;
-import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.MetaKey;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.views.IViewFactory;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
-import com.jcwhatever.nucleus.views.data.ViewArguments;
-import com.jcwhatever.nucleus.views.data.ViewCloseReason;
-import com.jcwhatever.nucleus.views.data.ViewOpenReason;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
-import com.jcwhatever.nucleus.views.menu.PaginatorView;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
-import com.jcwhatever.bukkit.storefront.meta.ViewTaskMode;
+import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.AddToInventoryResult;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.AddToInventoryResult.SlotInfo;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.nucleus.extended.MaterialExt;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -75,9 +73,20 @@ public class WantedView extends AbstractMenuView {
     private PriceMap _priceMap;
     private QtyMap _qtyMap;
 
-    protected WantedView(ViewSession session,
-                         IViewFactory factory, ViewArguments arguments) {
-        super(session, factory, arguments);
+    private int _page = 1;
+    private PaginatedItems _pagin;
+
+    public WantedView(PaginatedItems paginatedItems) {
+        PreCon.notNull(paginatedItems);
+
+        _pagin = paginatedItems;
+
+    }
+
+    @Override
+    public String getTitle() {
+        ViewSessionTask taskMode = getSessionTask();
+        return taskMode.getChatColor() + "Wanted";
     }
 
     @Override
@@ -87,31 +96,13 @@ public class WantedView extends AbstractMenuView {
         if (_store == null)
             throw new IllegalStateException("Store not set in session meta.");
 
-        ViewTaskMode taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
         PreCon.notNull(taskMode);
-
-        setTitle(taskMode.getChatColor() + "Wanted");
 
         _priceMap = new PriceMap(getPlayer(), _store);
         _qtyMap = new QtyMap(getPlayer(), _store);
 
-        Integer page = getArguments().get(PaginatorView.SELECTED_PAGE);
-        PaginatedItems pagin = (PaginatedItems)getArguments().get(PaginatorView.PAGINATOR);
-
-        if (page == null) {
-            page = 1;
-        }
-
-        if (pagin == null) {
-            pagin = new PaginatedItems(new ISaleItemGetter() {
-                @Override
-                public List<ISaleItem> getSaleItems() {
-                    return _store.getWantedItems().getAll();
-                }
-            });
-        }
-
-        List<ISaleItem> items = pagin.getPage(page);//, PaginatorPageType.SALE_ITEM);
+        List<ISaleItem> items = _pagin.getPage(_page);//, PaginatorPageType.SALE_ITEM);
 
         List<MenuItem> menuItems = new ArrayList<>(items.size());
 
@@ -121,8 +112,7 @@ public class WantedView extends AbstractMenuView {
 
             ItemStack clone = item.getItemStack();
 
-            MenuItem menuItem = new MenuItem(i);
-            menuItem.setItemStack(clone);
+            MenuItem menuItem = new MenuItemBuilder(clone).build(i);
 
             updateItem(menuItem, item.getQty(), item.getPricePerUnit());
 
@@ -134,6 +124,31 @@ public class WantedView extends AbstractMenuView {
 
     @Override
     protected void onItemSelect(MenuItem menuItem) {
+
+    }
+
+    @Override
+    protected boolean onPreShow(ViewOpenReason reason) {
+
+        if (reason != ViewOpenReason.PREV && reason != ViewOpenReason.REFRESH) {
+
+            if (_pagin.getTotalPages() > 1) {
+                getViewSession().next(new PaginatorView(Storefront.getInstance(), _pagin,
+                        StoreStackComparer.getDurability()));
+                return false;
+            }
+        }
+
+        else if (reason == ViewOpenReason.PREV) {
+
+            View nextView = getViewSession().getNextView();
+
+            if (nextView instanceof PaginatorView) {
+                _page = ((PaginatorView) nextView).getSelectedPage();
+            }
+        }
+
+        return true;
 
     }
 
@@ -151,15 +166,13 @@ public class WantedView extends AbstractMenuView {
 
     private void updateItem(MenuItem menuItem, int qty, double price) {
 
-        ItemStack itemStack = menuItem.getItemStack();
+        menuItem.setAmount(qty);
+        _priceMap.setPrice(menuItem, price);
+        _qtyMap.setQty(menuItem, qty);
 
-        itemStack.setAmount(qty);
-        _priceMap.setPrice(itemStack, price);
-        _qtyMap.setQty(itemStack, qty);
-
-        ItemStackUtil.removeTempLore(itemStack);
-        ItemStackUtil.setPriceLore(itemStack, price, PriceType.PER_ITEM);
-        ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Wanted: " + ChatColor.GRAY + qty);
+        ItemStackUtil.removeTempLore(menuItem);
+        ItemStackUtil.setPriceLore(menuItem, price, PriceType.PER_ITEM);
+        ItemStackUtil.addTempLore(menuItem, ChatColor.YELLOW + "Wanted: " + ChatColor.GRAY + qty);
 
         menuItem.set(this);
     }
@@ -199,8 +212,9 @@ public class WantedView extends AbstractMenuView {
         itemStack.setAmount(1);
 
         // open price view
-        MenuItem menuItem = new MenuItem(slotInfo.getSlot());
-        menuItem.setItemStack(itemStack);
+        MenuItem menuItem = new MenuItemBuilder(itemStack)
+            .build(slotInfo.getSlot());
+
         if (!hasItem) {
             _priceMap.setPrice(selectedStack, 1.0D);
             _qtyMap.setQty(selectedStack, 1);
@@ -208,7 +222,7 @@ public class WantedView extends AbstractMenuView {
 
         getViewSession().setMeta(ITEM_TASKED_MENU_ITEM, menuItem);
 
-        showItemTaskMenu(itemStack, _qtyMap.getQty(itemStack), _priceMap.getPrice(itemStack));
+        getViewSession().next(new ItemTaskView(itemStack, _priceMap.getPrice(itemStack), _qtyMap.getQty(itemStack), 64));
 
         return false; // cancel underlying event
     }
