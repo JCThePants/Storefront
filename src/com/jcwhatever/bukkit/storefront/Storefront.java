@@ -27,8 +27,8 @@ package com.jcwhatever.bukkit.storefront;
 import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
 import com.jcwhatever.bukkit.storefront.events.GlobalListener;
 import com.jcwhatever.nucleus.NucleusPlugin;
-import com.jcwhatever.nucleus.permissions.IPermission;
-import com.jcwhatever.nucleus.permissions.Permissions;
+import com.jcwhatever.nucleus.providers.permissions.IPermission;
+import com.jcwhatever.nucleus.utils.Permissions;
 
 import org.bukkit.ChatColor;
 import org.bukkit.permissions.PermissionDefault;

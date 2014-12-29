@@ -40,7 +40,7 @@ import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
-import com.jcwhatever.nucleus.permissions.Permissions;
+import com.jcwhatever.nucleus.utils.Permissions;
 import com.jcwhatever.nucleus.scheduler.ScheduledTask;
 import com.jcwhatever.nucleus.scheduler.TaskHandler;
 import com.jcwhatever.nucleus.utils.MetaKey;
