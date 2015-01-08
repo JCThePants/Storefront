@@ -24,15 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.nucleus.Nucleus;
-import com.jcwhatever.nucleus.utils.Economy;
-import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
-import com.jcwhatever.nucleus.itembank.ItemBankManager;
-import com.jcwhatever.nucleus.regions.IRegion;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.Utils;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -46,6 +37,15 @@ import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.DataBatchOperation;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.Economy;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.text.TextUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -558,7 +558,7 @@ public abstract class AbstractStore implements IStore {
 
             for (String rawItemId : rawItemIds) {
 
-                UUID itemId = Utils.getId(rawItemId);
+                UUID itemId = TextUtils.parseUUID(rawItemId);
                 if (itemId == null) {
                     Msg.debug("Failed to parse Item Id: {0}", rawItemId);
                     continue;

@@ -24,15 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.Utils;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.text.TextUtils;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -168,7 +168,7 @@ public class WantedItems {
 
             for (String rawItemId : rawItemIds) {
 
-                UUID itemId = Utils.getId(rawItemId);
+                UUID itemId = TextUtils.parseUUID(rawItemId);
                 if (itemId == null) {
                     Msg.debug("Failed to parse Item Id: {0}", rawItemId);
                     continue;
