@@ -43,11 +43,11 @@ import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.Economy;
+import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemWrapper;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -552,56 +552,47 @@ public abstract class AbstractStore implements IStore {
 
         IDataNode itemsNode = _storeNode.getNode("sale-items");
 
-        Set<String> rawItemIds = itemsNode.getSubNodeNames();
+        for (IDataNode node : itemsNode) {
 
-        if (rawItemIds != null && !rawItemIds.isEmpty()) {
-
-            for (String rawItemId : rawItemIds) {
-
-                UUID itemId = TextUtils.parseUUID(rawItemId);
-                if (itemId == null) {
-                    Msg.debug("Failed to parse Item Id: {0}", rawItemId);
-                    continue;
-                }
-
-                SaleItem saleItem = new SaleItem(this, itemId, itemsNode.getNode(rawItemId));
-
-                if (saleItem.getItemStack() == null) {
-                    Msg.debug("Failed to parse sale item stack.");
-                    continue;
-                }
-
-                if (saleItem.getCategory() == null)
-                    continue;
-
-                onSaleItemLoaded(saleItem);
-
+            UUID itemId = TextUtils.parseUUID(node.getName());
+            if (itemId == null) {
+                Msg.debug("Failed to parse Item Id: {0}", node.getName());
+                continue;
             }
+
+            SaleItem saleItem = new SaleItem(this, itemId, node);
+
+            if (saleItem.getItemStack() == null) {
+                Msg.debug("Failed to parse sale item stack.");
+                continue;
+            }
+
+            if (saleItem.getCategory() == null)
+                continue;
+
+            onSaleItemLoaded(saleItem);
         }
 
-        Bukkit.getScheduler().runTaskLater(Storefront.getInstance(), new Runnable() {
+        Scheduler.runTaskLater(Storefront.getInstance(), 30, new Runnable() {
 
             @Override
-            public void run () {
+            public void run() {
 
                 // load external region, if any
                 getRegion();
             }
-        }, 30);
+        });
 
         onLoadSettings(_storeNode);
     }
 
-
     @Override
     public abstract StoreType getStoreType ();
-
 
     protected IDataNode getItemNode (UUID itemId) {
 
         return _storeNode.getNode("sale-items." + itemId);
     }
-
 
     protected abstract void onInit ();
 
@@ -610,10 +601,4 @@ public abstract class AbstractStore implements IStore {
 
 
     protected abstract void onLoadSettings (IDataNode storeNode);
-
-
-
-
-
-
 }

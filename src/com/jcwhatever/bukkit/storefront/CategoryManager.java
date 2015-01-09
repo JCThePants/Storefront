@@ -24,15 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
+import com.jcwhatever.nucleus.storage.IDataNode;
+
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class CategoryManager {
 
@@ -50,11 +50,11 @@ public class CategoryManager {
 
 
     public Category getCategory (ItemStack itemStack) {
-        
+
         itemStack = itemStack.clone();
-        
+
         ItemStackUtil.removeTempLore(itemStack);
-        
+
         List<Category> categories = getCategories();
 
         for (Category category : categories) {
@@ -140,20 +140,11 @@ public class CategoryManager {
 
     private void loadSettings () {
 
-        Set<String> categoryNames = _categoryNode.getSubNodeNames();
+        for (IDataNode catNode : _categoryNode) {
 
-        if (categoryNames != null && !categoryNames.isEmpty()) {
+            Category category = new Category(catNode.getName(), catNode);
 
-            for (String categoryName : categoryNames) {
-
-                IDataNode catNode = _categoryNode.getNode(categoryName);
-
-                Category category = new Category(categoryName, catNode);
-
-                _categoryMap.put(categoryName.toLowerCase(), category);
-
-            }
+            _categoryMap.put(category.getName().toLowerCase(), category);
         }
     }
-
 }

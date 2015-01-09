@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
@@ -162,37 +161,30 @@ public class WantedItems {
 
     private void loadSettings () {
 
-        Set<String> rawItemIds = _wantedNode.getSubNodeNames();
+        for (IDataNode node : _wantedNode) {
 
-        if (rawItemIds != null && !rawItemIds.isEmpty()) {
-
-            for (String rawItemId : rawItemIds) {
-
-                UUID itemId = TextUtils.parseUUID(rawItemId);
-                if (itemId == null) {
-                    Msg.debug("Failed to parse Item Id: {0}", rawItemId);
-                    continue;
-                }
-
-                WantedItem saleItem = new WantedItem(_store, itemId, _wantedNode.getNode(rawItemId));
-
-                if (saleItem.getItemStack() == null) {
-                    Msg.debug("Failed to parse sale item stack.");
-                    continue;
-                }
-
-                if (saleItem.getCategory() == null)
-                    continue;
-
-                _wantedMap.put(saleItem.getWrapper(), saleItem);
-                _wantedIdMap.put(saleItem.getItemId(), saleItem);
-
-                SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
-                categoryMap.put(saleItem.getItemId(), saleItem);
-
+            UUID itemId = TextUtils.parseUUID(node.getName());
+            if (itemId == null) {
+                Msg.debug("Failed to parse Item Id: {0}", node.getName());
+                continue;
             }
+
+            WantedItem saleItem = new WantedItem(_store, itemId, node);
+
+            if (saleItem.getItemStack() == null) {
+                Msg.debug("Failed to parse sale item stack.");
+                continue;
+            }
+
+            if (saleItem.getCategory() == null)
+                continue;
+
+            _wantedMap.put(saleItem.getWrapper(), saleItem);
+            _wantedIdMap.put(saleItem.getItemId(), saleItem);
+
+            SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
+            categoryMap.put(saleItem.getItemId(), saleItem);
+
         }
-
     }
-
 }

@@ -24,21 +24,21 @@
 
 package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.nucleus.Nucleus;
-import com.jcwhatever.nucleus.itembank.ItemBankManager;
-import com.jcwhatever.nucleus.utils.performance.SingleCache;
-import com.jcwhatever.nucleus.regions.IRegion;
-import com.jcwhatever.nucleus.storage.DataStorage;
-import com.jcwhatever.nucleus.storage.DataPath;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.storage.StorageLoadHandler;
-import com.jcwhatever.nucleus.storage.StorageLoadResult;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.stores.PlayerStore;
 import com.jcwhatever.bukkit.storefront.stores.ServerStore;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.DataPath;
+import com.jcwhatever.nucleus.storage.DataStorage;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.storage.StorageLoadHandler;
+import com.jcwhatever.nucleus.storage.StorageLoadResult;
+import com.jcwhatever.nucleus.utils.performance.SingleCache;
 
 import org.bukkit.block.Block;
 
@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Nullable;
 
 public class StoreManager {
@@ -141,7 +140,7 @@ public class StoreManager {
         _storeNode.set(name + ".type", type);
         _storeNode.saveAsync(null);
 
-        IDataNode storeNode = getStoreConfig(name);
+        IDataNode storeNode = getStoreNode(name);
 
         if (type == StoreType.SERVER) {
             store = new ServerStore(name, storeNode);
@@ -189,46 +188,41 @@ public class StoreManager {
 
     private void loadSettings () {
 
-        Set<String> storeNames = _storeNode.getSubNodeNames();
-        if (storeNames != null && !storeNames.isEmpty()) {
+        for (final IDataNode node : _storeNode) {
 
-            for (String storeName : storeNames) {
+            final String name = node.getName().toLowerCase();
+            final IDataNode storeNode = getStoreNode(node.getName());
 
-                final String name = storeName.toLowerCase();
+            storeNode.loadAsync(new StorageLoadHandler() {
 
-                final IDataNode storeNode = getStoreConfig(name);
+                @Override
+                public void onFinish(StorageLoadResult result) {
 
-                storeNode.loadAsync(new StorageLoadHandler() {
+                    if (!result.isLoaded())
+                        return;
 
-                    @Override
-                    public void onFinish(StorageLoadResult result) {
+                    StoreType type = _storeNode.getEnum(name + ".type", StoreType.SERVER, StoreType.class);
 
-                        if (!result.isLoaded())
-                            return;
+                    IStore store;
 
-                        StoreType type = _storeNode.getEnum(name + ".type", StoreType.SERVER, StoreType.class);
-
-                        IStore store;
-
-                        if (type == StoreType.SERVER) {
-                            store = new ServerStore(name, storeNode);
-                            _globalStoreMap.put(name, store);
-                        } else {
-                            store = new PlayerStore(name, storeNode);
-                            _playerStoreMap.put(name, store);
-                        }
-
-                        _storeMap.put(name, store);
-
+                    if (type == StoreType.SERVER) {
+                        store = new ServerStore(name, storeNode);
+                        _globalStoreMap.put(name, store);
+                    } else {
+                        store = new PlayerStore(name, storeNode);
+                        _playerStoreMap.put(name, store);
                     }
 
-                });
+                    _storeMap.put(name, store);
 
-            }
+                }
+
+            });
+
         }
     }
 
-    private IDataNode getStoreConfig (String storeName) {
+    private IDataNode getStoreNode(String storeName) {
 
         return DataStorage.getStorage(Storefront.getInstance(), new DataPath("stores." + storeName));
     }

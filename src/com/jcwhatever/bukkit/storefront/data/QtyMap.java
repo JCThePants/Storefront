@@ -24,15 +24,17 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
 
 public class QtyMap {
@@ -48,13 +50,13 @@ public class QtyMap {
         _seller = seller;
     }
 
-
+    @Nullable
     public Integer getQty (ItemStack itemStack) {
 
         return getQty(getWrapper(itemStack));
     }
 
-
+    @Nullable
     public Integer getQty (ItemWrapper wrapper) {
 
         Integer qty = _qtyMap.get(wrapper);
