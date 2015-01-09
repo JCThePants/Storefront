@@ -36,6 +36,7 @@ import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
 import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.Economy;
@@ -319,7 +320,9 @@ public class ServerStore extends AbstractStore {
             return false;
         }
 
-        if (!Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
+        try {
+            Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price);
+        } catch (TransactionFailException e) {
             return false;
         }
 

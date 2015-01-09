@@ -39,6 +39,7 @@ import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
@@ -296,9 +297,10 @@ public abstract class AbstractStore implements IStore {
             return false;
         }
 
-        if (!Economy.transfer(getOwnerId(), seller.getUniqueId(), price)) {
+        try {
+            Economy.transfer(getOwnerId(), seller.getUniqueId(), price);
+        } catch (TransactionFailException e) {
             Msg.debug("Failed to transfer money");
-
             return false;
         }
 
@@ -336,7 +338,9 @@ public abstract class AbstractStore implements IStore {
             return false;
         }
 
-        if (!Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)) {
+        try {
+            Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price);
+        } catch (TransactionFailException e) {
             return false;
         }
 
