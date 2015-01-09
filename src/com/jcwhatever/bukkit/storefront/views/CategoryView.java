@@ -45,10 +45,10 @@ import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
-import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class CategoryView extends AbstractMenuView {
 
