@@ -5,7 +5,7 @@ import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.views.menu.MenuView;
 
 /*
@@ -14,7 +14,7 @@ import com.jcwhatever.nucleus.views.menu.MenuView;
 public abstract class AbstractMenuView extends MenuView {
 
     protected AbstractMenuView() {
-        super(Storefront.getInstance(), StoreStackComparer.getDefault());
+        super(Storefront.getInstance(), StoreStackMatcher.getDefault());
     }
 
     protected IStore getStore() {

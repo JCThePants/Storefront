@@ -33,7 +33,7 @@ import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
 import com.jcwhatever.nucleus.itembank.ItemBankManager;
 import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
@@ -225,7 +225,7 @@ public class ServerStore extends AbstractStore {
             return null;
 
         // remove from map
-        SaleItem saleItem = (SaleItem)map.remove(itemStack, StoreStackComparer.getDurability());
+        SaleItem saleItem = (SaleItem)map.remove(itemStack, StoreStackMatcher.getDurability());
         if (saleItem == null)
             return null;
 
@@ -254,7 +254,7 @@ public class ServerStore extends AbstractStore {
             return null;
 
         // get sale item from map
-        SaleItem saleItem = (SaleItem)map.get(itemStack, StoreStackComparer.getDurability());
+        SaleItem saleItem = (SaleItem)map.get(itemStack, StoreStackMatcher.getDurability());
         if (saleItem == null)
             return null;
 

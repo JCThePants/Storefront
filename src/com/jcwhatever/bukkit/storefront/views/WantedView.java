@@ -38,7 +38,7 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.AddToInventoryResult;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.AddToInventoryResult.SlotInfo;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.extended.MaterialExt;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
@@ -134,7 +134,7 @@ public class WantedView extends AbstractMenuView {
 
             if (_pagin.getTotalPages() > 1) {
                 getViewSession().next(new PaginatorView(Storefront.getInstance(), _pagin,
-                        StoreStackComparer.getDurability()));
+                        StoreStackMatcher.getDurability()));
                 return false;
             }
         }

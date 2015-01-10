@@ -36,7 +36,7 @@ import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.itembank.ItemBankManager;
 import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
@@ -292,7 +292,7 @@ public abstract class AbstractStore implements IStore {
 
         Inventory playerInventory = seller.getInventory();
 
-        if (!InventoryUtils.has(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty)) {
+        if (!InventoryUtils.has(playerInventory, saleItem.getItemStack(), StoreStackMatcher.getDefault(), qty)) {
             Msg.debug("Player doesn't have enough items to sell");
             return false;
         }
@@ -304,7 +304,7 @@ public abstract class AbstractStore implements IStore {
             return false;
         }
 
-        InventoryUtils.removeAmount(playerInventory, saleItem.getItemStack(), StoreStackComparer.getDefault(), qty);
+        InventoryUtils.removeAmount(playerInventory, saleItem.getItemStack(), StoreStackMatcher.getDefault(), qty);
 
         ItemBankManager.deposit(getOwnerId(), saleItem.getItemStack(), qty);
 
@@ -408,9 +408,9 @@ public abstract class AbstractStore implements IStore {
                     if (saleItem == null)
                         continue;
 
-                    int startQty = InventoryUtils.count(startSnapshot.getItemStacks(), startWrapper.getItem(), StoreStackComparer.getDefault());
+                    int startQty = InventoryUtils.count(startSnapshot.getItemStacks(), startWrapper.getItem(), StoreStackMatcher.getDefault());
 
-                    int currQty = InventoryUtils.count(currentInventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
+                    int currQty = InventoryUtils.count(currentInventory.getContents(), startWrapper.getItem(), StoreStackMatcher.getDefault());
 
                     if (currQty >= startQty)
                         continue;

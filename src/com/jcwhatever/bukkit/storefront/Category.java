@@ -28,7 +28,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import com.jcwhatever.nucleus.utils.items.ItemFilterManager;
-import com.jcwhatever.nucleus.utils.items.ItemStackComparer;
+import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
 import com.jcwhatever.nucleus.storage.IDataNode;
 
 public class Category {
@@ -50,7 +50,7 @@ public class Category {
         _name = name;
         _categoryNode = categoryNode;
         _filterManager = new ItemFilterManager(Storefront.getInstance(),
-                categoryNode.getNode("item-filter"), ItemStackComparer.COMPARE_TYPE);
+                categoryNode.getNode("item-filter"), ItemStackMatcher.MATCH_TYPE);
 
         loadSettings();
     }

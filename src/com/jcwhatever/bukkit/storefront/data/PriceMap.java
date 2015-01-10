@@ -27,7 +27,7 @@ package com.jcwhatever.bukkit.storefront.data;
 import com.jcwhatever.nucleus.utils.items.ItemWrapper;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -101,7 +101,7 @@ public class PriceMap {
 
         ItemStackUtil.removeTempLore(itemStack);
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
+        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
 
         return wrapper;
     }

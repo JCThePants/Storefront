@@ -36,7 +36,7 @@ import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask.BasicTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
@@ -69,7 +69,7 @@ public class CategoryView extends AbstractMenuView {
 
         if (totalSlots <= 6 * 9 * 3 || categories.size() <= 1) {
 
-            PaginatorView.paginateNext(session, nextView, pagin, StoreStackComparer.getDurability());
+            PaginatorView.paginateNext(session, nextView, pagin, StoreStackMatcher.getDurability());
             return;
         }
 

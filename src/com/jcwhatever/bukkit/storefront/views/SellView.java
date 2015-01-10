@@ -39,7 +39,7 @@ import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.Permissions;
 import com.jcwhatever.nucleus.scheduler.ScheduledTask;
 import com.jcwhatever.nucleus.scheduler.TaskHandler;
@@ -292,7 +292,7 @@ public class SellView extends ChestView {
 
         int availableSpace = _store.getSpaceAvailable(getPlayer().getUniqueId(), itemToAdd);
 
-        int added = InventoryUtils.count(_inventory, itemToAdd, StoreStackComparer.getDefault());
+        int added = InventoryUtils.count(_inventory, itemToAdd, StoreStackMatcher.getDefault());
 
         if (availableSpace - added < itemToAdd.getAmount()) {
 
@@ -345,23 +345,23 @@ public class SellView extends ChestView {
 
                     if (saleItem == null) {
 
-                        int total = InventoryUtils.count(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault());
+                        int total = InventoryUtils.count(_inventory, startWrapper.getItem(), StoreStackMatcher.getDefault());
 
-                        InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), total);
+                        InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackMatcher.getDefault(), total);
 
                         continue;
                     }
 
                     int currQty = saleItem.getQty();
 
-                    int inventoryQty = InventoryUtils.count(_inventory.getContents(), startWrapper.getItem(), StoreStackComparer.getDefault());
+                    int inventoryQty = InventoryUtils.count(_inventory.getContents(), startWrapper.getItem(), StoreStackMatcher.getDefault());
 
                     if (inventoryQty <= currQty)
                         continue;
 
                     int delta = Math.abs(inventoryQty - currQty);
 
-                    InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackComparer.getDefault(), delta);
+                    InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackMatcher.getDefault(), delta);
 
                 }
             }
@@ -378,7 +378,7 @@ public class SellView extends ChestView {
 
         ItemStackUtil.removeTempLore(itemClone);
 
-        ItemWrapper itemWrapper = new ItemWrapper(itemClone, StoreStackComparer.getDefault());
+        ItemWrapper itemWrapper = new ItemWrapper(itemClone, StoreStackMatcher.getDefault());
 
         final Double price = _priceMap.getPrice(itemWrapper);
         if (price == null || force) {
@@ -440,7 +440,7 @@ public class SellView extends ChestView {
 
                 List<String> removed = ItemStackUtil.removeTempLore(stack);
 
-                ItemWrapper wrapper = new ItemWrapper(stack, StoreStackComparer.getDefault());
+                ItemWrapper wrapper = new ItemWrapper(stack, StoreStackMatcher.getDefault());
 
                 Double price = _priceMap.getPrice(wrapper);
                 if (price == null) {

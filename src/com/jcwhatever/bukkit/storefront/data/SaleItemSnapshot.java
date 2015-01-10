@@ -27,12 +27,12 @@ package com.jcwhatever.bukkit.storefront.data;
 import org.bukkit.inventory.Inventory;
 
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 
 public class SaleItemSnapshot extends InventorySnapshot {
     
     public SaleItemSnapshot(Inventory inventory) {
-        super(inventory, StoreStackComparer.getDefault());
+        super(inventory, StoreStackMatcher.getDefault());
     }
 
     

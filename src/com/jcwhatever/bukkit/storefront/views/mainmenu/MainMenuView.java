@@ -31,7 +31,7 @@ import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
 import com.jcwhatever.bukkit.storefront.views.BuyView;
 import com.jcwhatever.bukkit.storefront.views.CategoryView;
@@ -134,7 +134,7 @@ public class MainMenuView extends AbstractMenuView {
             PaginatorView.paginateNext(getViewSession(),
                     view,
                     menuItem.getSaleItems(),
-                    StoreStackComparer.getDurability());
+                    StoreStackMatcher.getDurability());
         }
     }
 

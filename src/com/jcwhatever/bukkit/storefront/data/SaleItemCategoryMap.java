@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.data;
 
 import com.jcwhatever.nucleus.extended.MaterialExt;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class SaleItemCategoryMap extends HashMap<UUID, ISaleItem> {
             
             slotsUsed += (int)Math.ceil((double)qty / maxStackSize);
             
-            if (StoreStackComparer.getDefault().isSame(itemStack, saleItem.getItemStack()) &&
+            if (StoreStackMatcher.getDefault().isMatch(itemStack, saleItem.getItemStack()) &&
                     saleItem.getSellerId().equals(sellerId)) {
                 
                 partialStackSpace += qty >= maxStackSize ? qty % maxStackSize : maxStackSize - qty;

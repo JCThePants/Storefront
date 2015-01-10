@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.data;
 
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.items.ItemWrapper;
 
 import org.bukkit.entity.Player;
@@ -104,7 +104,7 @@ public class QtyMap {
 
         ItemStackUtil.removeTempLore(itemStack);
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
+        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
 
         return wrapper;
     }

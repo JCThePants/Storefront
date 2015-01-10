@@ -28,7 +28,7 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.ItemWrapper;
@@ -83,7 +83,7 @@ public class WantedItems {
 
         PreCon.notNull(item);
 
-        ItemWrapper wrapper = new ItemWrapper(item, StoreStackComparer.getDefault());
+        ItemWrapper wrapper = new ItemWrapper(item, StoreStackMatcher.getDefault());
 
         return _wantedMap.get(wrapper);
     }

@@ -51,7 +51,7 @@ public class ItemStackUtil {
             + ChatColor.GRAY.toString();
     
     private static NumberFormat _format = DecimalFormat.getCurrencyInstance();
-    private static StoreStackComparer _durabilityComparer = StoreStackComparer.getDurability();
+    private static StoreStackMatcher _durabilityComparer = StoreStackMatcher.getDurability();
 
     public enum PriceType {
         PER_ITEM,
@@ -393,7 +393,7 @@ public class ItemStackUtil {
 
             removeTempLore(itemClone);
 
-            if (StoreStackComparer.getDefault().isSame(clone, itemClone)) {
+            if (StoreStackMatcher.getDefault().isMatch(clone, itemClone)) {
 
                 int itemQty = item.getAmount();
                 int space = 64 - itemQty;

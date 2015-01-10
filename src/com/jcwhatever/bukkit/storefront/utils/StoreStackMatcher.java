@@ -24,37 +24,37 @@
 
 package com.jcwhatever.bukkit.storefront.utils;
 
-import com.jcwhatever.nucleus.utils.items.ItemStackComparer;
+import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
 
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Extends {@code ItemStackComparer} functionality by
+ * Extends {@code ItemStackMatcher} functionality by
  * removing temporary lore from item stacks before comparing them.
  */
-public class StoreStackComparer extends ItemStackComparer {
+public class StoreStackMatcher extends ItemStackMatcher {
     
-    private static StoreStackComparer _default;
-    private static StoreStackComparer _durability;
+    private static StoreStackMatcher _default;
+    private static StoreStackMatcher _durability;
 
     /**
-     * Get the default {@code StoreStackComparer} singleton instance
+     * Get the default {@code StoreStackMatcher} singleton instance
      * which compares based on type and meta data.
      */
-    public static StoreStackComparer getDefault() {
+    public static StoreStackMatcher getDefault() {
         if (_default == null)
-            _default = new StoreStackComparer(ItemStackComparer.DEFAULT_COMPARE);
+            _default = new StoreStackMatcher(ItemStackMatcher.DEFAULT_MATCH);
         
         return _default;
     }
 
     /**
-     * Get the {@code StoreStackComparer} singleton instance which
+     * Get the {@code StoreStackMatcher} singleton instance which
      * compares based on type, meta data, and durability.
      */
-    public static StoreStackComparer getDurability() {
+    public static StoreStackMatcher getDurability() {
         if (_durability == null) {
-            _durability = new StoreStackComparer(ItemStackComparer.DURABILITY_COMPARE);
+            _durability = new StoreStackMatcher(ItemStackMatcher.TYPE_META_DURABILITY_MATCH);
         }
         
         return _durability;
@@ -63,9 +63,9 @@ public class StoreStackComparer extends ItemStackComparer {
     /**
      * Constructor.
      *
-     * @param compareOperations  {@code ItemStackComparer} compare operations bit flags.
+     * @param compareOperations  {@code ItemStackMatcher} compare operations bit flags.
      */
-    public StoreStackComparer(byte compareOperations) {
+    public StoreStackMatcher(byte compareOperations) {
         super(compareOperations);
     }
 
@@ -77,7 +77,7 @@ public class StoreStackComparer extends ItemStackComparer {
      * @param itemStack2  The second item stack
      */
     @Override
-    public boolean isSame(ItemStack itemStack1, ItemStack itemStack2) {
+    public boolean isMatch(ItemStack itemStack1, ItemStack itemStack2) {
 
         if (itemStack1 == null || itemStack2 == itemStack1)
             return false;
@@ -88,7 +88,7 @@ public class StoreStackComparer extends ItemStackComparer {
         ItemStackUtil.removeTempLore(clone1);
         ItemStackUtil.removeTempLore(clone2);
         
-        return super.isSame(clone1, clone2);
+        return super.isMatch(clone1, clone2);
     }
     
 }

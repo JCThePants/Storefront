@@ -33,7 +33,7 @@ import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
@@ -122,7 +122,7 @@ public class SellWantedView extends AbstractMenuView {
 
             // make sure player has the items they are trying to sell
             if (!InventoryUtils.has(getPlayer().getInventory(), _selectedSaleItem.getItemStack(),
-                    StoreStackComparer.getDefault(), amount)) {
+                    StoreStackMatcher.getDefault(), amount)) {
 
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have the items you are trying to sell or do not have enough of them.");
                 return;

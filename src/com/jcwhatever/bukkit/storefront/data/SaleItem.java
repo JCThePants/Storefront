@@ -31,7 +31,7 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import org.apache.commons.lang.time.DateUtils;
 import org.bukkit.inventory.ItemStack;
 
@@ -78,7 +78,7 @@ public class SaleItem implements ISaleItem {
         _qty = qty;
         _pricePerUnit = pricePerUnit;
         _dataNode = dataNode;
-        _wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDurability());
+        _wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDurability());
         _expires = DateUtils.addDays(new Date(), 5);
 
         saveSettings();
@@ -216,7 +216,7 @@ public class SaleItem implements ISaleItem {
         ItemStack[] itemStacks = _dataNode.getItemStacks("item");
         if (itemStacks != null && itemStacks.length > 0) {
             _itemStack = itemStacks[0];
-            _wrapper = new ItemWrapper(_itemStack, StoreStackComparer.getDurability());
+            _wrapper = new ItemWrapper(_itemStack, StoreStackMatcher.getDurability());
         }
 
         _sellerId = _dataNode.getUUID("seller-id", _sellerId);

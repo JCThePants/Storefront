@@ -32,7 +32,7 @@ import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
@@ -101,7 +101,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             throw new RuntimeException("The seller is not the owner of the store.");
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
+        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
 
         return (SaleItem)_stackMap.get(wrapper);
     }
@@ -219,7 +219,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             return null;
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
+        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
 
         // remove from map
         SaleItem saleItem = (SaleItem)_stackMap.remove(wrapper);
@@ -248,7 +248,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             return null;
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackComparer.getDefault());
+        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
 
         // get sale item from map
         SaleItem saleItem = (SaleItem)_stackMap.get(wrapper);

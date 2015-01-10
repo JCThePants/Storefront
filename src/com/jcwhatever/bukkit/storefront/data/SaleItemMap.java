@@ -24,9 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.ItemStackComparer;
+import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
 import com.jcwhatever.nucleus.utils.items.ItemWrapper;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackComparer;
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -44,10 +44,10 @@ public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
 
 
     public ISaleItem get (ItemStack key) {
-        return get(key, StoreStackComparer.getDefault());
+        return get(key, StoreStackMatcher.getDefault());
     }
     
-    public ISaleItem get (ItemStack key, ItemStackComparer comparer) {
+    public ISaleItem get (ItemStack key, ItemStackMatcher comparer) {
         ItemWrapper wrapper = new ItemWrapper(key, comparer);
         return super.get(wrapper);
     }
@@ -59,19 +59,19 @@ public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
     }
 
     public ISaleItem remove (ItemStack key) {
-        return remove(key, StoreStackComparer.getDefault());
+        return remove(key, StoreStackMatcher.getDefault());
     }
     
-    public ISaleItem remove (ItemStack key, ItemStackComparer comparer) {
+    public ISaleItem remove (ItemStack key, ItemStackMatcher comparer) {
         ItemWrapper wrapper = new ItemWrapper(key);
         return super.remove(wrapper);
     }
 
     public boolean containsKey (ItemStack key) {
-        return containsKey(key, StoreStackComparer.getDefault());
+        return containsKey(key, StoreStackMatcher.getDefault());
     }
         
-    public boolean containsKey (ItemStack key, ItemStackComparer comparer) {
+    public boolean containsKey (ItemStack key, ItemStackMatcher comparer) {
 
         ItemWrapper wrapper = new ItemWrapper(key, comparer);
         return super.containsKey(wrapper);
