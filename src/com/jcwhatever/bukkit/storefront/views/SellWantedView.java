@@ -153,7 +153,7 @@ public class SellWantedView extends AbstractMenuView {
                 Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Sold {0} {1} to the store for {GREEN}{2}{WHITE}.",
                         amount,
                         ItemStackUtils.getDisplayName(menuItem, DisplayNameResult.REQUIRED),
-                        Economy.formatAmount(totalCost));
+                        Economy.getCurrency().format(totalCost));
             }
 
         }

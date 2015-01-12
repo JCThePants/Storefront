@@ -31,7 +31,7 @@ import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.nucleus.providers.economy.IEconomyProvider.CurrencyNoun;
+import com.jcwhatever.nucleus.providers.economy.ICurrency.CurrencyNoun;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
@@ -154,7 +154,7 @@ public class BuyView extends AbstractMenuView {
             // check buyer balance
             if (balance < price) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have enough {0}.",
-                        Economy.getCurrencyName(CurrencyNoun.PLURAL));
+                        Economy.getCurrency().getName(CurrencyNoun.PLURAL));
             }
             // check buyer available inventory room
             else if (!InventoryUtils.hasRoom(getPlayer().getInventory(), _selectedSaleItem.getItemStack(), amount)) {
@@ -168,9 +168,9 @@ public class BuyView extends AbstractMenuView {
             else if (!_store.buySaleItem(getPlayer(), _selectedSaleItem, amount, price)) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Failed to buy items. They may have been purchased by someone else already.");
             } else {
-                Msg.tell(getPlayer(), "{GREEN}Sucess: {WHITE}Purchased {0} {1} for {2}.", amount,
+                Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Purchased {0} {1} for {2}.", amount,
                         ItemStackUtils.getDisplayName(_selectedSaleItem.getItemStack(), DisplayNameResult.REQUIRED),
-                        Economy.formatAmount(price));
+                        Economy.getCurrency().format(price));
             }
 
         } else {
