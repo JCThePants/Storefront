@@ -204,7 +204,7 @@ public class ServerStore extends AbstractStore {
 
         IDataNode itemNode = getItemNode(itemId);
         itemNode.remove();
-        itemNode.saveAsync(null);
+        itemNode.save();
 
         SaleItemCategoryMap categoryMap = getCategoryMap(category);
         categoryMap.remove(itemId);
@@ -239,7 +239,7 @@ public class ServerStore extends AbstractStore {
         // remove from data node
         IDataNode itemNode = getItemNode(saleItem.getItemId());
         itemNode.remove();
-        itemNode.saveAsync(null);
+        itemNode.save();
 
         return saleItem;
     }

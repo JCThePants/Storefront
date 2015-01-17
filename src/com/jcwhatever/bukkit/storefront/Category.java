@@ -72,7 +72,7 @@ public class Category {
 
         _title = title;
         _categoryNode.set("title", title);
-        _categoryNode.saveAsync(null);
+        _categoryNode.save();
         onCategoryChange();
     }
 
@@ -87,7 +87,7 @@ public class Category {
 
         _description = description;
         _categoryNode.set("description", description);
-        _categoryNode.saveAsync(null);
+        _categoryNode.save();
         onCategoryChange();
     }
 
@@ -110,7 +110,7 @@ public class Category {
 
         _menuItem = item;
         _categoryNode.set("menu-item", item);
-        _categoryNode.saveAsync(null);
+        _categoryNode.save();
         onCategoryChange();
     }
 

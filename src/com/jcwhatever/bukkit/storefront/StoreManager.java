@@ -36,8 +36,8 @@ import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.DataPath;
 import com.jcwhatever.nucleus.storage.DataStorage;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.storage.StorageLoadHandler;
-import com.jcwhatever.nucleus.storage.StorageLoadResult;
+import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
+import com.jcwhatever.nucleus.utils.observer.result.Result;
 import com.jcwhatever.nucleus.utils.performance.SingleCache;
 
 import org.bukkit.block.Block;
@@ -138,7 +138,7 @@ public class StoreManager {
             return null;
 
         _storeNode.set(name + ".type", type);
-        _storeNode.saveAsync(null);
+        _storeNode.save();
 
         IDataNode storeNode = getStoreNode(name);
 
@@ -193,13 +193,9 @@ public class StoreManager {
             final String name = node.getName().toLowerCase();
             final IDataNode storeNode = getStoreNode(node.getName());
 
-            storeNode.loadAsync(new StorageLoadHandler() {
-
+            storeNode.loadAsync().onSuccess(new FutureSubscriber<IDataNode>() {
                 @Override
-                public void onFinish(StorageLoadResult result) {
-
-                    if (!result.isLoaded())
-                        return;
+                public void on(Result<IDataNode> result) {
 
                     StoreType type = _storeNode.getEnum(name + ".type", StoreType.SERVER, StoreType.class);
 
@@ -214,11 +210,13 @@ public class StoreManager {
                     }
 
                     _storeMap.put(name, store);
-
                 }
-
+            }).onError(new FutureSubscriber<IDataNode>() {
+                @Override
+                public void on(Result<IDataNode> result) {
+                    Msg.warning("Failed to load store manager settings.");
+                }
             });
-
         }
     }
 

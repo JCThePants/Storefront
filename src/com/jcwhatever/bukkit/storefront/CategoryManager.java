@@ -91,7 +91,7 @@ public class CategoryManager {
 
         IDataNode catNode = _categoryNode.getNode(name);
         catNode.set("title", name);
-        catNode.saveAsync(null);
+        catNode.save();
 
         category = new Category(name, catNode);
 

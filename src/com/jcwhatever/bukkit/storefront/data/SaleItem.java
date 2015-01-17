@@ -173,7 +173,7 @@ public class SaleItem implements ISaleItem {
             _removed = true;
         }
 
-        _dataNode.saveAsync(null);
+        _dataNode.save();
     }
 
     @Override
@@ -189,7 +189,7 @@ public class SaleItem implements ISaleItem {
             return;
 
         _dataNode.set("price", pricePerUnit);
-        _dataNode.saveAsync(null);
+        _dataNode.save();
     }
 
     @Override
@@ -242,7 +242,7 @@ public class SaleItem implements ISaleItem {
         _dataNode.set("seller-id", _sellerId);
         _dataNode.set("expires", _expires.getTime());
 
-        _dataNode.saveAsync(null);
+        _dataNode.save();
     }
 
     @Override

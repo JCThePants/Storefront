@@ -113,7 +113,7 @@ public abstract class AbstractStore implements IStore {
 
         _title = title;
         _storeNode.set("title", title);
-        _storeNode.saveAsync(null);
+        _storeNode.save();
     }
 
     @Override
@@ -176,7 +176,7 @@ public abstract class AbstractStore implements IStore {
 
         _region.setRegion(region);
 
-        _storeNode.saveAsync(null);
+        _storeNode.save();
     }
 
 
@@ -542,7 +542,7 @@ public abstract class AbstractStore implements IStore {
 
         _region.setOwnRegion();
 
-        _storeNode.saveAsync(null);
+        _storeNode.save();
     }
 
 
