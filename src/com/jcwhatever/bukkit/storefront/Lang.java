@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.nucleus.language.Localized;
+import com.jcwhatever.nucleus.utils.language.Localized;
 
 public class Lang {
 
