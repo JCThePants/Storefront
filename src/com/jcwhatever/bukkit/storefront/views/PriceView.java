@@ -154,7 +154,7 @@ public class PriceView extends AbstractMenuView {
     protected void onItemSelect(MenuItem menuItem) {
 
         if (menuItem == _itemToPrice) {
-            getViewSession().back();
+            getViewSession().previous();
             return;
         }
 

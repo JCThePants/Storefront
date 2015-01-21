@@ -146,15 +146,15 @@ public class ItemTaskView extends AbstractMenuView {
 
         else if (menuItem == _removeMenuItem) {
             _selectedAmount = 0;
-            getViewSession().back();
+            getViewSession().previous();
         }
         else if (menuItem == _cancelMenuItem) {
             _selectedAmount = null;
             _selectedPrice = null;
-            getViewSession().back();
+            getViewSession().previous();
         }
         else {
-            getViewSession().back();
+            getViewSession().previous();
         }
     }
 
@@ -193,7 +193,7 @@ public class ItemTaskView extends AbstractMenuView {
 
         setLore(_menuItem);
 
-        _menuItem.set(this);
+        _menuItem.setVisible(this, true);
     }
 
 

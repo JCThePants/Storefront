@@ -174,7 +174,7 @@ public class CategoryView extends AbstractMenuView {
         if (_nextView != null)
             getViewSession().next(_nextView);
         else
-            getViewSession().back();
+            getViewSession().previous();
     }
 
     public static PaginatedItems getCategorySaleItems(final IStore store, ViewSessionTask currentMode,

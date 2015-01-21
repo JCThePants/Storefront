@@ -153,7 +153,7 @@ public class QuantityView extends AbstractMenuView {
     protected void onItemSelect(MenuItem menuItem) {
 
         if (menuItem == _itemToQuantify) {
-            getViewSession().back();
+            getViewSession().previous();
             return;
         }
         else if (menuItem == _menuCancel) {

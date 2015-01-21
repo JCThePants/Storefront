@@ -191,9 +191,4 @@ public class BuyView extends AbstractMenuView {
     protected void onClose(ViewCloseReason reason) {
         // do nothing
     }
-
-    @Override
-    protected int getSlotsRequired() {
-        return MAX_SLOTS;
-    }
 }
