@@ -25,17 +25,17 @@
 package com.jcwhatever.bukkit.storefront;
 
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.stores.PlayerStore;
 import com.jcwhatever.bukkit.storefront.stores.ServerStore;
 import com.jcwhatever.nucleus.Nucleus;
-import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.DataPath;
 import com.jcwhatever.nucleus.storage.DataStorage;
 import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
 import com.jcwhatever.nucleus.utils.observer.result.Result;
 import com.jcwhatever.nucleus.utils.performance.SingleCache;
@@ -169,8 +169,8 @@ public class StoreManager {
         List<ISaleItem> saleItems = store.getSaleItems();
         for (ISaleItem saleItem : saleItems) {
 
-            ItemBankManager.deposit(saleItem.getSellerId(), saleItem.getItemStack(), saleItem.getQty());
-            ((SaleItem)saleItem).setQty(0);
+            IBankItemsAccount account = BankItems.getAccount(saleItem.getSellerId());
+            account.deposit(saleItem.getItemStack(), saleItem.getQty());
         }
 
         store.getStoreRegion().setEntryMessage(null);

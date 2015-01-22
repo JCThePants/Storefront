@@ -78,6 +78,11 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
         return PageStartIndex.ONE;
     }
 
+    @Override
+    public int size() {
+        return getTotalItems();
+    }
+
     public List<ISaleItem> getSaleItemStacks() {
         List<ISaleItem> saleItems = getList();
 

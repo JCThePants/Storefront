@@ -35,10 +35,11 @@ import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
-import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.views.ViewSession;
@@ -275,7 +276,8 @@ public class ServerStore extends AbstractStore {
         if (!saleItem.isExpired())
             return;
 
-        ItemBankManager.deposit(saleItem.getSellerId(), saleItem.getItemStack(), saleItem.getQty());
+        IBankItemsAccount account = BankItems.getAccount(saleItem.getSellerId());
+        account.deposit(saleItem.getItemStack(), saleItem.getQty());
 
         saleItem.setQty(0);
 

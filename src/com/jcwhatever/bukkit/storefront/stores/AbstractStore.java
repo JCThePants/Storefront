@@ -38,11 +38,12 @@ import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.Nucleus;
-import com.jcwhatever.nucleus.itembank.ItemBankManager;
+import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
@@ -306,7 +307,8 @@ public abstract class AbstractStore implements IStore {
 
         InventoryUtils.removeAmount(playerInventory, saleItem.getItemStack(), StoreStackMatcher.getDefault(), qty);
 
-        ItemBankManager.deposit(getOwnerId(), saleItem.getItemStack(), qty);
+        IBankItemsAccount account = BankItems.getAccount(getOwnerId());
+        account.deposit(saleItem.getItemStack(), qty);
 
         // TODO
 
