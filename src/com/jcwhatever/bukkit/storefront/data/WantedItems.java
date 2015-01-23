@@ -31,7 +31,7 @@ import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
 import org.bukkit.inventory.ItemStack;
@@ -47,7 +47,7 @@ public class WantedItems {
 
     private Map<Category, SaleItemCategoryMap> _wantedCategoryMap = new HashMap<Category, SaleItemCategoryMap>(25);
     private Map<UUID, ISaleItem> _wantedIdMap = new HashMap<>(25);
-    private Map<ItemWrapper, ISaleItem> _wantedMap = new HashMap<>(25);
+    private Map<MatchableItem, ISaleItem> _wantedMap = new HashMap<>(25);
 
     private IDataNode _wantedNode;
     private IStore _store;
@@ -83,7 +83,7 @@ public class WantedItems {
 
         PreCon.notNull(item);
 
-        ItemWrapper wrapper = new ItemWrapper(item, StoreStackMatcher.getDefault());
+        MatchableItem wrapper = new MatchableItem(item, StoreStackMatcher.getDefault());
 
         return _wantedMap.get(wrapper);
     }

@@ -25,13 +25,13 @@
 package com.jcwhatever.bukkit.storefront.data;
 
 import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
+public class SaleItemMap extends HashMap<MatchableItem, ISaleItem> {
 
     /**
      * 
@@ -48,13 +48,13 @@ public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
     }
     
     public ISaleItem get (ItemStack key, ItemStackMatcher comparer) {
-        ItemWrapper wrapper = new ItemWrapper(key, comparer);
+        MatchableItem wrapper = new MatchableItem(key, comparer);
         return super.get(wrapper);
     }
 
     public ISaleItem put (ItemStack key, SaleItem value) {
 
-        ItemWrapper wrapper = new ItemWrapper(key);
+        MatchableItem wrapper = new MatchableItem(key);
         return super.put(wrapper, value);
     }
 
@@ -63,7 +63,7 @@ public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
     }
     
     public ISaleItem remove (ItemStack key, ItemStackMatcher comparer) {
-        ItemWrapper wrapper = new ItemWrapper(key);
+        MatchableItem wrapper = new MatchableItem(key);
         return super.remove(wrapper);
     }
 
@@ -73,7 +73,7 @@ public class SaleItemMap extends HashMap<ItemWrapper, ISaleItem> {
         
     public boolean containsKey (ItemStack key, ItemStackMatcher comparer) {
 
-        ItemWrapper wrapper = new ItemWrapper(key, comparer);
+        MatchableItem wrapper = new MatchableItem(key, comparer);
         return super.containsKey(wrapper);
     }
 

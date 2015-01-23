@@ -47,7 +47,7 @@ import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
 import org.bukkit.Location;
@@ -393,12 +393,12 @@ public abstract class AbstractStore implements IStore {
             @Override
             public void run (IDataNode dataNode) {
 
-                List<ItemWrapper> originalItems = startSnapshot.getWrappers();
+                List<MatchableItem> originalItems = startSnapshot.getWrappers();
 
-                Set<ItemWrapper> processed = new HashSet<ItemWrapper>(originalItems.size());
+                Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
 
                 // search for less than total amount items
-                for (ItemWrapper startWrapper : originalItems) {
+                for (MatchableItem startWrapper : originalItems) {
 
                     if (processed.contains(startWrapper))
                         continue;
@@ -440,13 +440,13 @@ public abstract class AbstractStore implements IStore {
 
                 SaleItemSnapshot currentSnapshot = new SaleItemSnapshot(currentInventory);
 
-                List<ItemWrapper> originalItems = startSnapshot.getWrappers();
-                List<ItemWrapper> currentItems = currentSnapshot.getWrappers();
+                List<MatchableItem> originalItems = startSnapshot.getWrappers();
+                List<MatchableItem> currentItems = currentSnapshot.getWrappers();
 
-                Set<ItemWrapper> processed = new HashSet<ItemWrapper>(originalItems.size());
+                Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
 
                 // modify original items
-                for (ItemWrapper wrapper : originalItems) {
+                for (MatchableItem wrapper : originalItems) {
 
                     SaleItem saleItem = (SaleItem)(isWanted
                             ? getWantedItems().get(wrapper.getItem())
@@ -480,7 +480,7 @@ public abstract class AbstractStore implements IStore {
                 }
 
                 // add new Items
-                for (ItemWrapper wrapper : currentItems) {
+                for (MatchableItem wrapper : currentItems) {
                     if (processed.contains(wrapper))
                         continue;
 

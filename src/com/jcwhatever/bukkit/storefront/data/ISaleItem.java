@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
@@ -56,7 +56,7 @@ public interface ISaleItem {
 
     public ItemStack getItemStack ();
 
-    public ItemWrapper getWrapper ();
+    public MatchableItem getWrapper ();
 
     public double getPricePerUnit ();
     

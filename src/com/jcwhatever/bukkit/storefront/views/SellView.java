@@ -48,7 +48,7 @@ import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.chest.ChestEventAction;
 import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
@@ -329,12 +329,12 @@ public class SellView extends ChestView {
             @Override
             public void run() {
 
-                List<ItemWrapper> originalItems = _snapshot.getWrappers();
+                List<MatchableItem> originalItems = _snapshot.getWrappers();
 
-                Set<ItemWrapper> processed = new HashSet<>(6 * 9);
+                Set<MatchableItem> processed = new HashSet<>(6 * 9);
 
                 // modify original items
-                for (ItemWrapper startWrapper : originalItems) {
+                for (MatchableItem startWrapper : originalItems) {
 
                     if (processed.contains(startWrapper))
                         continue;
@@ -378,9 +378,9 @@ public class SellView extends ChestView {
 
         ItemStackUtil.removeTempLore(itemClone);
 
-        ItemWrapper itemWrapper = new ItemWrapper(itemClone, StoreStackMatcher.getDefault());
+        MatchableItem matchableItem = new MatchableItem(itemClone, StoreStackMatcher.getDefault());
 
-        final Double price = _priceMap.getPrice(itemWrapper);
+        final Double price = _priceMap.getPrice(matchableItem);
         if (price == null || force) {
 
             // prevent sledge hammer from running during the delay to show
@@ -440,7 +440,7 @@ public class SellView extends ChestView {
 
                 List<String> removed = ItemStackUtil.removeTempLore(stack);
 
-                ItemWrapper wrapper = new ItemWrapper(stack, StoreStackMatcher.getDefault());
+                MatchableItem wrapper = new MatchableItem(stack, StoreStackMatcher.getDefault());
 
                 Double price = _priceMap.getPrice(wrapper);
                 if (price == null) {

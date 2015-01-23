@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
@@ -38,7 +38,7 @@ public class PriceMap {
 
     private IStore _store;
     private Player _seller;
-    private Map<ItemWrapper, Double> _priceMap = new HashMap<ItemWrapper, Double>(7 * 9);
+    private Map<MatchableItem, Double> _priceMap = new HashMap<MatchableItem, Double>(7 * 9);
 
 
     public PriceMap(Player seller, IStore store) {
@@ -54,7 +54,7 @@ public class PriceMap {
     }
 
 
-    public Double getPrice (ItemWrapper wrapper) {
+    public Double getPrice (MatchableItem wrapper) {
 
         Double price = _priceMap.get(wrapper);
 
@@ -77,7 +77,7 @@ public class PriceMap {
     }
 
 
-    public void setPrice (ItemWrapper wrapper, double price) {
+    public void setPrice (MatchableItem wrapper, double price) {
 
         _priceMap.put(wrapper, price);
     }
@@ -89,19 +89,19 @@ public class PriceMap {
     }
 
 
-    public void clearPrice (ItemWrapper wrapper) {
+    public void clearPrice (MatchableItem wrapper) {
 
         _priceMap.remove(wrapper);
     }
 
 
-    private ItemWrapper getWrapper (ItemStack itemStack) {
+    private MatchableItem getWrapper (ItemStack itemStack) {
 
         itemStack = itemStack.clone();
 
         ItemStackUtil.removeTempLore(itemStack);
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
+        MatchableItem wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDefault());
 
         return wrapper;
     }

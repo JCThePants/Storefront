@@ -29,7 +29,7 @@ import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.items.serializer.ItemStackSerializer.SerializerOutputType;
 import com.jcwhatever.nucleus.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
@@ -66,7 +66,7 @@ public class ListItemsSubCommand extends AbstractCommand {
             return; // finished
         }
 
-        Set<ItemWrapper> wrappers = category.getFilterManager().getItems();
+        Set<MatchableItem> wrappers = category.getFilterManager().getItems();
 
         String paginTitle = Lang.get("Filtered Items in Category '{0}'", category.getName());
         ChatPaginator pagin = Msg.getPaginator(paginTitle);
@@ -74,7 +74,7 @@ public class ListItemsSubCommand extends AbstractCommand {
         String filterLabel = Lang.get("FILTER MODE");
         pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, filterLabel, category.getFilterManager().getFilterPolicy().name());
 
-        for (ItemWrapper wrapper : wrappers) {
+        for (MatchableItem wrapper : wrappers) {
 
             pagin.add(ItemStackUtils.serializeToString(wrapper.getItem(), SerializerOutputType.COLOR));
         }

@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Category;
@@ -51,7 +51,7 @@ public class SaleItem implements ISaleItem {
     private int _qty;
 
     private IDataNode _dataNode;
-    private ItemWrapper _wrapper;
+    private MatchableItem _wrapper;
 
     private boolean _removed;
     private Date _expires;
@@ -78,7 +78,7 @@ public class SaleItem implements ISaleItem {
         _qty = qty;
         _pricePerUnit = pricePerUnit;
         _dataNode = dataNode;
-        _wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDurability());
+        _wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDurability());
         _expires = DateUtils.addDays(new Date(), 5);
 
         saveSettings();
@@ -148,7 +148,7 @@ public class SaleItem implements ISaleItem {
     }
 
     @Override
-    public ItemWrapper getWrapper () {
+    public MatchableItem getWrapper () {
         return _wrapper;
     }
 
@@ -216,7 +216,7 @@ public class SaleItem implements ISaleItem {
         ItemStack[] itemStacks = _dataNode.getItemStacks("item");
         if (itemStacks != null && itemStacks.length > 0) {
             _itemStack = itemStacks[0];
-            _wrapper = new ItemWrapper(_itemStack, StoreStackMatcher.getDurability());
+            _wrapper = new MatchableItem(_itemStack, StoreStackMatcher.getDurability());
         }
 
         _sellerId = _dataNode.getUUID("seller-id", _sellerId);
@@ -322,7 +322,7 @@ public class SaleItem implements ISaleItem {
         }
 
         @Override
-        public ItemWrapper getWrapper () {
+        public MatchableItem getWrapper () {
             return _wrapper;
         }
 

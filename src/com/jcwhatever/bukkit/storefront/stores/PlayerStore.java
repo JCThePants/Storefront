@@ -36,7 +36,7 @@ import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.block.Block;
@@ -54,7 +54,7 @@ import java.util.UUID;
 public class PlayerStore extends AbstractStore {
 
     private Map<UUID, ISaleItem> _idMap;
-    private Map<ItemWrapper, ISaleItem> _stackMap;
+    private Map<MatchableItem, ISaleItem> _stackMap;
 
 
     public PlayerStore(String name, IDataNode storeNode) {
@@ -101,7 +101,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             throw new RuntimeException("The seller is not the owner of the store.");
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
+        MatchableItem wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDefault());
 
         return (SaleItem)_stackMap.get(wrapper);
     }
@@ -219,7 +219,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             return null;
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
+        MatchableItem wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDefault());
 
         // remove from map
         SaleItem saleItem = (SaleItem)_stackMap.remove(wrapper);
@@ -248,7 +248,7 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             return null;
 
-        ItemWrapper wrapper = new ItemWrapper(itemStack, StoreStackMatcher.getDefault());
+        MatchableItem wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDefault());
 
         // get sale item from map
         SaleItem saleItem = (SaleItem)_stackMap.get(wrapper);

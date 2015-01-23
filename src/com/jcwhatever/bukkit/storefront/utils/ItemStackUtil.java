@@ -25,7 +25,7 @@
 package com.jcwhatever.bukkit.storefront.utils;
 
 import com.jcwhatever.nucleus.utils.extended.MaterialExt;
-import com.jcwhatever.nucleus.utils.items.ItemWrapper;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.player.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.Storefront;
@@ -204,7 +204,7 @@ public class ItemStackUtil {
             public void run () {
 
                 removePriceLore(itemStack);
-                ItemWrapper wrapper = new ItemWrapper(itemStack, _durabilityComparer);
+                MatchableItem wrapper = new MatchableItem(itemStack, _durabilityComparer);
 
                 ItemStack[] items = inventory.getContents();
 
