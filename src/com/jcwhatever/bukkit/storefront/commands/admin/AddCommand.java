@@ -50,13 +50,13 @@ public class AddCommand extends AbstractCommand {
 
         StoreManager storeManager = Storefront.getStoreManager();
 
-        IStore store = storeManager.getStore(storeName);
+        IStore store = storeManager.get(storeName);
         if (store != null) {
             tellError(sender, "A store with the name '{0}' already exists.", store.getName());
             return; // finished
         }
 
-        store = storeManager.addStore(storeName, type);
+        store = storeManager.add(storeName, type);
 
         if (store == null) {
             tellError(sender, "Failed to create store.");

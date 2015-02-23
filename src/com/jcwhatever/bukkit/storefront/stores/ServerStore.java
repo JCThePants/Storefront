@@ -50,6 +50,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -416,14 +417,13 @@ public class ServerStore extends AbstractStore {
 
             StoreManager storeManager = Storefront.getStoreManager();
 
-            List<IStore> stores = storeManager.getServerStores();
+            Collection<IStore> stores = storeManager.getAll();
 
             for (IStore store : stores) {
                 
-                if (!(store instanceof ServerStore)) {
+                if (!(store instanceof ServerStore))
                     continue;
-                }
-                
+
                 ServerStore serverStore = (ServerStore)store;
 
                 List<ISaleItem> saleItems = serverStore.getSaleItems();

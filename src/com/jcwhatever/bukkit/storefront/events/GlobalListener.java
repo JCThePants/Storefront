@@ -24,10 +24,6 @@
 
 package com.jcwhatever.bukkit.storefront.events;
 
-import com.jcwhatever.nucleus.Nucleus;
-import com.jcwhatever.nucleus.events.regions.RegionOwnerChangedEvent;
-import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
-import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreManager;
 import com.jcwhatever.bukkit.storefront.StoreType;
@@ -35,6 +31,10 @@ import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.events.regions.RegionOwnerChangedEvent;
+import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
+import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.utils.BankItems;
 
 import org.bukkit.Material;
@@ -43,6 +43,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import java.util.Collection;
 import java.util.List;
 
 public class GlobalListener implements Listener {
@@ -58,7 +59,7 @@ public class GlobalListener implements Listener {
         
         StoreManager storeManager = Storefront.getStoreManager();
         
-        List<IStore> stores = storeManager.getStores();
+        Collection<IStore> stores = storeManager.getAll();
         
         Msg.debug("find store with region");
         

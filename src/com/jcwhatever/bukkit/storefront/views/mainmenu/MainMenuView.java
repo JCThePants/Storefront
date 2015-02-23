@@ -160,7 +160,7 @@ public class MainMenuView extends AbstractMenuView {
             throw new RuntimeException("A session block is required in order to get a store instance.");
         }
 
-        IStore store = Storefront.getStoreManager().getStore(block);
+        IStore store = Storefront.getStoreManager().get(block);
         if (store == null)
             throw new IllegalStateException("Could not get store instance.");
 

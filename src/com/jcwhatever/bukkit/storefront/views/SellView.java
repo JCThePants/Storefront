@@ -370,7 +370,7 @@ public class SellView extends ChestView {
 
     private boolean openPriceMenu (ItemStack item, boolean force) {
 
-        IStore store = Storefront.getStoreManager().getStore(getViewSession().getSessionBlock());
+        IStore store = Storefront.getStoreManager().get(getViewSession().getSessionBlock());
         if (store == null)
             throw new IllegalStateException("Could not get store instance from source block.");
 

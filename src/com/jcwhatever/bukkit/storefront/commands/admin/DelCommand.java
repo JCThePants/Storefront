@@ -48,13 +48,13 @@ public class DelCommand extends AbstractCommand {
 
         StoreManager storeManager = Storefront.getStoreManager();
 
-        IStore store = storeManager.getStore(storeName);
+        IStore store = storeManager.get(storeName);
         if (store == null) {
             tellError(sender, "A store with the name '{0}' was not found.", storeName);
             return; // finished
         }
 
-        if (!storeManager.removeStore(storeName)) {
+        if (!storeManager.remove(storeName)) {
             tellError(sender, "Failed to remove store.");
             return; // finished
         }

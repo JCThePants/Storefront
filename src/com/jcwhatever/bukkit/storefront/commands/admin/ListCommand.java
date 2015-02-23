@@ -24,21 +24,22 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin;
 
+import com.jcwhatever.bukkit.storefront.Lang;
+import com.jcwhatever.bukkit.storefront.Msg;
+import com.jcwhatever.bukkit.storefront.StoreManager;
+import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.nucleus.commands.AbstractCommand;
 import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.nucleus.messaging.ChatPaginator;
-import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
-import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.StoreManager;
-import com.jcwhatever.bukkit.storefront.Storefront;
-import com.jcwhatever.bukkit.storefront.stores.IStore;
+
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Collection;
 
 @CommandInfo(
         command = "list",
@@ -56,7 +57,7 @@ public class ListCommand extends AbstractCommand {
 
         StoreManager manager = Storefront.getStoreManager();
 
-        List<IStore> stores = manager.getStores();
+        Collection<IStore> stores = manager.getAll();
 
         ChatPaginator pagin = Msg.getPaginator(Lang.get(_PAGINATOR_TITLE));
 

@@ -55,7 +55,7 @@ public class ExitMsgCommand extends AbstractCommand {
 
         StoreManager storeManager = Storefront.getStoreManager();
 
-        IStore store = storeManager.getStore(storeName);
+        IStore store = storeManager.get(storeName);
         if (store == null) {
             tellError(sender, "A store with the name '{0}' was not found.", storeName);
             return; // finished

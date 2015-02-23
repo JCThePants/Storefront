@@ -45,6 +45,7 @@ import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
@@ -69,6 +70,7 @@ public abstract class AbstractStore implements IStore {
     private Map<Category, SaleItemCategoryMap> _categoryMap;
 
     private String _name;
+    private String _searchName;
     private String _title;
 
     private IDataNode _storeNode;
@@ -82,8 +84,11 @@ public abstract class AbstractStore implements IStore {
     private Location _regionP2;
 
     public AbstractStore(String name, IDataNode storeNode) {
+        PreCon.notNullOrEmpty(name);
+        PreCon.notNull(storeNode);
 
         _name = name;
+        _searchName = name.toLowerCase();
         _storeNode = storeNode;
         _categoryMap = new HashMap<Category, SaleItemCategoryMap>(25);
 
@@ -94,12 +99,16 @@ public abstract class AbstractStore implements IStore {
         loadSettings();
     }
 
-
     @Override
     public final String getName () {
-
         return _name;
     }
+
+    @Override
+    public String getSearchName() {
+        return _searchName;
+    }
+
 
 
     @Override

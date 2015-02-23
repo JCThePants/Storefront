@@ -32,60 +32,43 @@ import com.jcwhatever.bukkit.storefront.stores.ServerStore;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.regions.IRegion;
-import com.jcwhatever.nucleus.storage.DataPath;
-import com.jcwhatever.nucleus.storage.DataStorage;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
-import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
-import com.jcwhatever.nucleus.utils.observer.result.Result;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.managers.NamedInsensitiveDataManager;
 import com.jcwhatever.nucleus.utils.performance.SingleCache;
 
 import org.bukkit.block.Block;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.annotation.Nullable;
 
-public class StoreManager {
+/**
+ * Manages all stores.
+ */
+public class StoreManager extends NamedInsensitiveDataManager<IStore> {
 
-    private Map<String, IStore> _storeMap = new HashMap<>(40);
-    private Map<String, IStore> _globalStoreMap = new HashMap<>(5);
-    private Map<String, IStore> _playerStoreMap = new HashMap<>(35);
+    private final SingleCache<Block, IStore> _blockCache = new SingleCache<>();
 
-    private IDataNode _storeNode;
-    private SingleCache<Block, IStore> _blockCache = new SingleCache<>();
-
-
+    /**
+     * Constructor.
+     *
+     * @param storeNode  The store manager data node.
+     */
     StoreManager(IDataNode storeNode) {
-
-        _storeNode = storeNode;
-
-        loadSettings();
+        super(storeNode, true);
     }
 
-
-    public List<IStore> getStores () {
-
-        return new ArrayList<IStore>(_storeMap.values());
-    }
-
-
-    public List<IStore> getServerStores () {
-
-        return new ArrayList<IStore>(_globalStoreMap.values());
-    }
-
-
-    public List<IStore> getPlayerStores () {
-
-        return new ArrayList<IStore>(_playerStoreMap.values());
-    }
-
-
+    /**
+     * Determine what store, if any, a {@link org.bukkit.block.Block}
+     * belongs to.
+     *
+     * @param block  The {@link org.bukkit.block.Block} to check.
+     *
+     * @return  The {@link IStore} or null if the block is not part of a store.
+     */
     @Nullable
-    public IStore getStore (Block block) {
+    public IStore get(Block block) {
 
         if (_blockCache.keyEquals(block))
             return _blockCache.getValue();
@@ -104,125 +87,80 @@ public class StoreManager {
         return result;
     }
 
-
-    public IStore getStore (String name) {
-
-        name = name.toLowerCase();
-
-        return _storeMap.get(name);
-    }
-
-
-    public IStore getServerStore (String name) {
-
-        name = name.toLowerCase();
-
-        return _globalStoreMap.get(name);
-    }
-
-
-    public IStore getPlayerStore (String name) {
-
-        name = name.toLowerCase();
-
-        return _playerStoreMap.get(name);
-    }
-
+    /**
+     * Add a new store.
+     *
+     * @param name  The node name of the store.
+     * @param type  The store type.
+     *
+     * @return  The new {@link IStore} instance or null if the name is already in use.
+     */
     @Nullable
-    public IStore addStore (String name, StoreType type) {
+    public IStore add(String name, StoreType type) {
+        PreCon.validNodeName(name);
+        PreCon.notNull(type);
 
         name = name.toLowerCase();
 
-        IStore store = getStore(name);
+        IStore store = get(name);
         if (store != null)
             return null;
 
-        _storeNode.set(name + ".type", type);
-        _storeNode.save();
+        IDataNode storeNode = getNode(name);
+        storeNode.set("type", type);
 
-        IDataNode storeNode = getStoreNode(name);
-
-        if (type == StoreType.SERVER) {
-            store = new ServerStore(name, storeNode);
-            _globalStoreMap.put(name, store);
+        switch (type) {
+            case SERVER:
+                store = new ServerStore(name, storeNode);
+                break;
+            case PLAYER_OWNABLE:
+                store = new PlayerStore(name, storeNode);
+                break;
+            default:
+                throw new AssertionError();
         }
-        else {
-            store = new PlayerStore(name, storeNode);
-            _playerStoreMap.put(name, store);
-        }
 
-        _storeMap.put(name, store);
+        add(store);
 
         return store;
     }
 
-
-    public boolean removeStore (String name) {
-
-        name = name.toLowerCase();
-
-        IStore store = getStore(name);
-        if (store == null)
-            return false;
+    @Override
+    protected void onRemove(IStore removed) {
+        super.onRemove(removed);
 
         // return items to sellers
-        List<ISaleItem> saleItems = store.getSaleItems();
+        List<ISaleItem> saleItems = removed.getSaleItems();
         for (ISaleItem saleItem : saleItems) {
 
             IBankItemsAccount account = BankItems.getAccount(saleItem.getSellerId());
             account.deposit(saleItem.getItemStack(), saleItem.getQty());
         }
 
-        store.getStoreRegion().setEntryMessage(null);
-        store.getStoreRegion().setExitMessage(null);
-
-        DataStorage.remove(Storefront.getPlugin(), new DataPath("stores." + name));
-
-        _globalStoreMap.remove(name);
-        _playerStoreMap.remove(name);
-        _storeMap.remove(name);
-
-        return true;
+        removed.getStoreRegion().setEntryMessage(null);
+        removed.getStoreRegion().setExitMessage(null);
     }
 
+    @Nullable
+    @Override
+    protected IStore load(String name, IDataNode itemNode) {
 
-    private void loadSettings () {
+        StoreType type = itemNode.getEnum("type", StoreType.SERVER, StoreType.class);
+        if (type == null)
+            return null;
 
-        for (final IDataNode node : _storeNode) {
-
-            final String name = node.getName().toLowerCase();
-            final IDataNode storeNode = getStoreNode(node.getName());
-
-            storeNode.loadAsync().onSuccess(new FutureSubscriber<IDataNode>() {
-                @Override
-                public void on(Result<IDataNode> result) {
-
-                    StoreType type = _storeNode.getEnum(name + ".type", StoreType.SERVER, StoreType.class);
-
-                    IStore store;
-
-                    if (type == StoreType.SERVER) {
-                        store = new ServerStore(name, storeNode);
-                        _globalStoreMap.put(name, store);
-                    } else {
-                        store = new PlayerStore(name, storeNode);
-                        _playerStoreMap.put(name, store);
-                    }
-
-                    _storeMap.put(name, store);
-                }
-            }).onError(new FutureSubscriber<IDataNode>() {
-                @Override
-                public void on(Result<IDataNode> result) {
-                    Msg.warning("Failed to load store manager settings.");
-                }
-            });
+        switch (type) {
+            case SERVER:
+                return new ServerStore(name, itemNode);
+            case PLAYER_OWNABLE:
+                return new PlayerStore(name, itemNode);
+            default:
+                throw new AssertionError();
         }
     }
 
-    private IDataNode getStoreNode(String storeName) {
-
-        return DataStorage.get(Storefront.getPlugin(), new DataPath("stores." + storeName));
+    @Override
+    protected void save(IStore item, IDataNode itemNode) {
+        // do nothing
     }
-
 }

@@ -24,6 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
+import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.Category;
@@ -46,12 +47,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-public interface IStore {
-
-    /**
-     * Get the configuration name of the store.
-     */
-    public String getName ();
+public interface IStore extends INamedInsensitive {
 
     /**
      * Get the stores display title.
