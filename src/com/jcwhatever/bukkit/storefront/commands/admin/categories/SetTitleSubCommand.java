@@ -49,7 +49,7 @@ public class SetTitleSubCommand extends AbstractCommand {
         String categoryName = args.getName("categoryName");
         String title = args.getString("title");
 
-        CategoryManager catManager = Storefront.getInstance().getCategoryManager();
+        CategoryManager catManager = Storefront.getCategoryManager();
 
         Category category = catManager.get(categoryName);
         if (category == null) {

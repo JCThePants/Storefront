@@ -57,7 +57,7 @@ public class ListItemsSubCommand extends AbstractCommand {
         int page = args.getInteger("page");
         String categoryName = args.getName("categoryName");
 
-        CategoryManager manager = Storefront.getInstance().getCategoryManager();
+        CategoryManager manager = Storefront.getCategoryManager();
 
         Category category = manager.get(categoryName);
         if (category == null) {

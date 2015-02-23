@@ -94,7 +94,7 @@ public class WantedItems {
 
         PreCon.notNull(itemStack);
 
-        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
+        Category category = Storefront.getCategoryManager().get(itemStack);
         if (category == null)
             return null;
 

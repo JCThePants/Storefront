@@ -85,7 +85,7 @@ public class SellView extends ChestView {
     private PaginatedItems _pagin;
 
     public SellView(PaginatedItems paginatedItems) {
-        super(Storefront.getInstance(), null);
+        super(Storefront.getPlugin(), null);
 
         PreCon.notNull(paginatedItems);
 
@@ -197,7 +197,7 @@ public class SellView extends ChestView {
         if (_sledgehammer != null)
             _sledgehammer.cancel();
 
-        _sledgehammer = Scheduler.runTaskRepeat(Storefront.getInstance(), 1, 15, new Sledgehammer());
+        _sledgehammer = Scheduler.runTaskRepeat(Storefront.getPlugin(), 1, 15, new Sledgehammer());
 
         return _inventory = inventory;
     }
@@ -268,7 +268,7 @@ public class SellView extends ChestView {
 
     private ChestEventAction onUpperItemsPlaced(ChestEventInfo eventInfo) {
         ItemStack cursorStack = eventInfo.getCursorStack();
-        CategoryManager categoryManager = Storefront.getInstance().getCategoryManager();
+        CategoryManager categoryManager = Storefront.getCategoryManager();
         ItemStack itemToAdd = eventInfo.getItemStack();
 
         switch (eventInfo.getInventoryAction()) {
@@ -324,7 +324,7 @@ public class SellView extends ChestView {
 
     private void updateQuantities() {
 
-        Scheduler.runTaskLater(Storefront.getInstance(), 5, new Runnable() {
+        Scheduler.runTaskLater(Storefront.getPlugin(), 5, new Runnable() {
 
             @Override
             public void run() {
@@ -370,7 +370,7 @@ public class SellView extends ChestView {
 
     private boolean openPriceMenu (ItemStack item, boolean force) {
 
-        IStore store = Storefront.getInstance().getStoreManager().getStore(getViewSession().getSessionBlock());
+        IStore store = Storefront.getStoreManager().getStore(getViewSession().getSessionBlock());
         if (store == null)
             throw new IllegalStateException("Could not get store instance from source block.");
 
@@ -417,7 +417,7 @@ public class SellView extends ChestView {
             }
 
             ItemStack[] contents = _inventory.getContents();
-            CategoryManager categoryManager = Storefront.getInstance().getCategoryManager();
+            CategoryManager categoryManager = Storefront.getCategoryManager();
 
             for (int i = 0; i < contents.length; i++) {
 

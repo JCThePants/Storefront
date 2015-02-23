@@ -52,7 +52,7 @@ public class EntryMsgCommand extends AbstractCommand {
         String storeName = args.getName("storeName");
         String message = args.getString("message");
 
-        StoreManager storeManager = Storefront.getInstance().getStoreManager();
+        StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.getStore(storeName);
         if (store == null) {

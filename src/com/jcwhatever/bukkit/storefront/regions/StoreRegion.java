@@ -84,7 +84,7 @@ public class StoreRegion implements IDisposable{
 
         _hasOwnRegion = true;
 
-        BasicRegion region = new BasicRegion(Storefront.getInstance(), _store.getName(),
+        BasicRegion region = new BasicRegion(Storefront.getPlugin(), _store.getName(),
                 _store.getDataNode().getNode("region"));
 
         region.setMeta(REGION, region);

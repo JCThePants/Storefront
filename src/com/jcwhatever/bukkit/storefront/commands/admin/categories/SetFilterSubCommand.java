@@ -49,7 +49,7 @@ public class SetFilterSubCommand extends AbstractCommand {
         String categoryName = args.getName("categoryName");
         FilterPolicy filter = args.getEnum("whitelist|blacklist", FilterPolicy.class);
 
-        CategoryManager catManager = Storefront.getInstance().getCategoryManager();
+        CategoryManager catManager = Storefront.getCategoryManager();
 
         Category category = catManager.get(categoryName);
         if (category == null) {

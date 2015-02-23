@@ -133,7 +133,7 @@ public class WantedView extends AbstractMenuView {
         if (reason != ViewOpenReason.PREV && reason != ViewOpenReason.REFRESH) {
 
             if (_pagin.getTotalPages() > 1) {
-                getViewSession().next(new PaginatorView(Storefront.getInstance(), _pagin,
+                getViewSession().next(new PaginatorView(Storefront.getPlugin(), _pagin,
                         StoreStackMatcher.getDurability()));
                 return false;
             }
@@ -196,7 +196,7 @@ public class WantedView extends AbstractMenuView {
         boolean hasItem = snapshot.getAmount(selectedStack) > 0;
         selectedStack.setAmount(1);
 
-        Category category = Storefront.getInstance().getCategoryManager().get(selectedStack);
+        Category category = Storefront.getCategoryManager().get(selectedStack);
         if (category == null)
             return false;
 

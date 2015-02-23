@@ -51,7 +51,7 @@ public class SetSubCommand extends AbstractCommand {
 
         String storeName = args.getName("storeName");
 
-        StoreManager storeManager = Storefront.getInstance().getStoreManager();
+        StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.getStore(storeName);
         if (store == null) {

@@ -29,57 +29,57 @@ import com.jcwhatever.bukkit.storefront.events.GlobalListener;
 import com.jcwhatever.nucleus.NucleusPlugin;
 import com.jcwhatever.nucleus.providers.permissions.IPermission;
 import com.jcwhatever.nucleus.utils.Permissions;
+import com.jcwhatever.nucleus.utils.text.TextUtils;
 
-import org.bukkit.ChatColor;
 import org.bukkit.permissions.PermissionDefault;
 
+/**
+ * Region and menu based {@link org.bukkit.inventory.ItemStack} store plugin.
+ */
 public class Storefront extends NucleusPlugin {
 
-    private static final String CHAT_PREFIX = ChatColor.WHITE + "[" + ChatColor.BLUE + "Store" + ChatColor.WHITE + "] ";
+    private static final String CHAT_PREFIX = TextUtils.format("{WHITE}[{BLUE}Store{WHITE}] ");
+    private static Storefront _instance;
 
-    private static Storefront _singleton;
-
-    public static Storefront getInstance () {
-
-        return _singleton;
+    /**
+     * Get the current {@link Storefront} plugin instance.
+     */
+    public static Storefront getPlugin() {
+        return _instance;
     }
+
+    /**
+     * Get the category manager.
+     */
+    public static CategoryManager getCategoryManager () {
+        return _instance._categoryManager;
+    }
+
+    /**
+     * Get the store manager.
+     */
+    public static StoreManager getStoreManager () {
+        return _instance._storeManager;
+    }
+
 
     private CategoryManager _categoryManager;
     private StoreManager _storeManager;
-
-
-    public Storefront() {
-
-        super();
-
-        _singleton = this;
-    }
-
-    public CategoryManager getCategoryManager () {
-
-        return _categoryManager;
-    }
-
-    public StoreManager getStoreManager () {
-
-        return _storeManager;
-    }
 
     @Override
     public String getChatPrefix () {
         return CHAT_PREFIX;
     }
 
-
     @Override
     public String getConsolePrefix () {
-
         return "[Storefront] ";
     }
 
     @Override
     protected void onEnablePlugin() {
 
+        _instance = this;
 
         _categoryManager = new CategoryManager(getDataNode().getNode("categories"));
         _storeManager = new StoreManager(getDataNode().getNode("stores"));
@@ -92,7 +92,7 @@ public class Storefront extends NucleusPlugin {
 
     @Override
     protected void onDisablePlugin() {
-
+        // do nothing
     }
 
     private void registerPermissions () {
@@ -113,7 +113,5 @@ public class Storefront extends NucleusPlugin {
                 }
             }
         });
-
     }
-
 }

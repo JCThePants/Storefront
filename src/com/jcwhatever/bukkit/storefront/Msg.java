@@ -61,7 +61,7 @@ public class Msg {
     }
 
     public static void debug (String message, Object... params) {
-        if (!Storefront.getInstance().isDebugging())
+        if (!Storefront.getPlugin().isDebugging())
             return;
 
         msg().debug(message, params);
@@ -84,11 +84,11 @@ public class Msg {
     }
 
     public static ChatPaginator getPaginator (String title, Object... params) {
-        return new ChatPaginator(Storefront.getInstance(), 6, TextUtils.format(title, params));
+        return new ChatPaginator(Storefront.getPlugin(), 6, TextUtils.format(title, params));
     }
 
     private static IMessenger msg() {
-        return Storefront.getInstance().getMessenger();
+        return Storefront.getPlugin().getMessenger();
     }
 
 }

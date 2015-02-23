@@ -141,7 +141,7 @@ public class PlayerStore extends AbstractStore {
         }
 
         // get category for item
-        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
+        Category category = Storefront.getCategoryManager().get(itemStack);
         if (category == null)
             return null;
 

@@ -61,7 +61,7 @@ public class SetExtSubCommand extends AbstractCommand {
         
         Player p = (Player)sender;
         
-        StoreManager storeManager = Storefront.getInstance().getStoreManager();
+        StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.getStore(storeName);
         if (store == null) {

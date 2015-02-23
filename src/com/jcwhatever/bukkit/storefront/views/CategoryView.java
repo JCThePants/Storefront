@@ -82,7 +82,7 @@ public class CategoryView extends AbstractMenuView {
         Collection<Category> categories;
 
         if (mode.isOwnerManagerTask()) {
-            CategoryManager manager = Storefront.getInstance().getCategoryManager();
+            CategoryManager manager = Storefront.getCategoryManager();
             categories = manager.getAll();
         }
         else {

@@ -103,7 +103,7 @@ public class ItemStackUtil {
         };
 
         if (runLater)
-            Bukkit.getScheduler().runTaskLater(Storefront.getInstance(), runnable, 1);
+            Bukkit.getScheduler().runTaskLater(Storefront.getPlugin(), runnable, 1);
         else
             runnable.run();
 
@@ -234,7 +234,7 @@ public class ItemStackUtil {
         };
 
         if (runLater)
-            Bukkit.getScheduler().runTaskLater(Storefront.getInstance(), runnable, 1);
+            Bukkit.getScheduler().runTaskLater(Storefront.getPlugin(), runnable, 1);
         else
             runnable.run();
 
@@ -339,7 +339,7 @@ public class ItemStackUtil {
         };
 
         if (runLater)
-            Bukkit.getScheduler().runTaskLater(Storefront.getInstance(), runnable, 1);
+            Bukkit.getScheduler().runTaskLater(Storefront.getPlugin(), runnable, 1);
         else
             runnable.run();
 

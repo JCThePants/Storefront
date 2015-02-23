@@ -56,7 +56,7 @@ public class GlobalListener implements Listener {
         if (event.getOldOwnerId() == null)
             return;
         
-        StoreManager storeManager = Storefront.getInstance().getStoreManager();
+        StoreManager storeManager = Storefront.getStoreManager();
         
         List<IStore> stores = storeManager.getStores();
         

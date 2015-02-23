@@ -135,7 +135,7 @@ public abstract class AbstractStore implements IStore {
         if (region == null)
             throw new IllegalStateException("Cannot set owner on a store that has no region.");
 
-        if (region.getPlugin() != Storefront.getInstance())
+        if (region.getPlugin() != Storefront.getPlugin())
             throw new IllegalStateException("Cannot set owner on a store with an external region.");
 
         region.setOwner(ownerId);
@@ -161,7 +161,7 @@ public abstract class AbstractStore implements IStore {
 
         IDataNode ownRegionNode = _storeNode.getNode("region");
 
-        boolean isOwn = region.getPlugin() == Storefront.getInstance();
+        boolean isOwn = region.getPlugin() == Storefront.getPlugin();
 
         if (isOwn)
             throw new IllegalStateException("Can only set external regions.");
@@ -249,7 +249,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public boolean canAdd (UUID sellerId, ItemStack itemStack, int qty) {
-        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
+        Category category = Storefront.getCategoryManager().get(itemStack);
         if (category == null)
             return false;
 
@@ -261,7 +261,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public int getSpaceAvailable (UUID sellerId, ItemStack itemStack) {
-        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
+        Category category = Storefront.getCategoryManager().get(itemStack);
         if (category == null)
             return 0;
 
@@ -579,7 +579,7 @@ public abstract class AbstractStore implements IStore {
             onSaleItemLoaded(saleItem);
         }
 
-        Scheduler.runTaskLater(Storefront.getInstance(), 30, new Runnable() {
+        Scheduler.runTaskLater(Storefront.getPlugin(), 30, new Runnable() {
 
             @Override
             public void run() {

@@ -54,7 +54,7 @@ public class ListCommand extends AbstractCommand {
 
         int page = args.getInteger("page");
 
-        StoreManager manager = Storefront.getInstance().getStoreManager();
+        StoreManager manager = Storefront.getStoreManager();
 
         List<IStore> stores = manager.getStores();
 

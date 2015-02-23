@@ -70,7 +70,7 @@ public class ServerStore extends AbstractStore {
         if (_expireChecker == null) {
             _expireChecker = new ExpireChecker();
 
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(Storefront.getInstance(), _expireChecker, 20, 20 * 60);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(Storefront.getPlugin(), _expireChecker, 20, 20 * 60);
         }
     }
 
@@ -141,7 +141,7 @@ public class ServerStore extends AbstractStore {
         }
 
         // get category for item
-        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
+        Category category = Storefront.getCategoryManager().get(itemStack);
         if (category == null)
             return null;
 
@@ -366,12 +366,12 @@ public class ServerStore extends AbstractStore {
 
     @Override
     public List<Category> getSellCategories () {
-        return new ArrayList<>(Storefront.getInstance().getCategoryManager().getAll());
+        return new ArrayList<>(Storefront.getCategoryManager().getAll());
     }
 
     @Override
     public List<Category> getBuyCategories () {
-        return new ArrayList<>(Storefront.getInstance().getCategoryManager().getAll());
+        return new ArrayList<>(Storefront.getCategoryManager().getAll());
     }
 
     @Override
@@ -414,7 +414,7 @@ public class ServerStore extends AbstractStore {
         @Override
         public void run () {
 
-            StoreManager storeManager = Storefront.getInstance().getStoreManager();
+            StoreManager storeManager = Storefront.getStoreManager();
 
             List<IStore> stores = storeManager.getServerStores();
 

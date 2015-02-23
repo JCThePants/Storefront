@@ -53,7 +53,7 @@ public class ListSubCommand extends AbstractCommand {
 
         int page = args.getInteger("page");
 
-        CategoryManager manager = Storefront.getInstance().getCategoryManager();
+        CategoryManager manager = Storefront.getCategoryManager();
 
         Collection<Category> categories = manager.getAll();
 

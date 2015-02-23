@@ -14,7 +14,7 @@ import com.jcwhatever.nucleus.views.menu.MenuView;
 public abstract class AbstractMenuView extends MenuView {
 
     protected AbstractMenuView() {
-        super(Storefront.getInstance(), StoreStackMatcher.getDefault());
+        super(Storefront.getPlugin(), StoreStackMatcher.getDefault());
     }
 
     protected IStore getStore() {

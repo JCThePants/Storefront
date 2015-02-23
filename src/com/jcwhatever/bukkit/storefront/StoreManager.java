@@ -176,7 +176,7 @@ public class StoreManager {
         store.getStoreRegion().setEntryMessage(null);
         store.getStoreRegion().setExitMessage(null);
 
-        DataStorage.remove(Storefront.getInstance(), new DataPath("stores." + name));
+        DataStorage.remove(Storefront.getPlugin(), new DataPath("stores." + name));
 
         _globalStoreMap.remove(name);
         _playerStoreMap.remove(name);
@@ -222,7 +222,7 @@ public class StoreManager {
 
     private IDataNode getStoreNode(String storeName) {
 
-        return DataStorage.get(Storefront.getInstance(), new DataPath("stores." + storeName));
+        return DataStorage.get(Storefront.getPlugin(), new DataPath("stores." + storeName));
     }
 
 }

@@ -48,7 +48,7 @@ public class AddCommand extends AbstractCommand {
         String storeName = args.getName("storeName");
         StoreType type = args.getEnum("server|player_ownable", StoreType.class);
 
-        StoreManager storeManager = Storefront.getInstance().getStoreManager();
+        StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.getStore(storeName);
         if (store != null) {
