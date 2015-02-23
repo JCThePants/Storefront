@@ -24,6 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
@@ -47,7 +48,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
-public interface IStore extends INamedInsensitive {
+public interface IStore extends INamedInsensitive, ISaleItemGetter {
 
     /**
      * Get the stores display title.
@@ -138,11 +139,6 @@ public interface IStore extends INamedInsensitive {
      * @param itemStack  The item stack
      */
     public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack);
-
-    /**
-     * Get all sale items from the store.
-     */
-    public List<ISaleItem> getSaleItems ();
 
     /**
      * Get all sale items in the specified category from the store.

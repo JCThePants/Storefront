@@ -66,7 +66,7 @@ public class CategoryView extends AbstractMenuView {
 
         Collection<Category> categories = getCategories(store, task);
 
-        int totalSlots = pagin.getTotalItems();
+        int totalSlots = pagin.size();
 
         if (totalSlots <= 6 * 9 * 3 || categories.size() <= 1) {
 

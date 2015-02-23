@@ -36,25 +36,31 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.UUID;
 
-public class PaginatedItems implements IPaginator<ISaleItem> {
+/**
+ * An implementation of {@link com.jcwhatever.nucleus.mixins.IPaginator} for use with
+ * {@link ISaleItem}'s.
+ */
+public class PaginatedItems implements IPaginator<ISaleItem>, ISaleItemStacksGetter {
 
     private ISaleItemGetter _getter;
     private int _itemsPerPage = ChestView.MAX_SLOTS;
     private SingleCache<List<ISaleItem>, Void> _listCache = new SingleCache<>(1, TimeScale.TICKS);
 
+    /**
+     * Constructor.
+     *
+     * @param getter  A getter used to retrieve sale items for the paginator.
+     */
     public PaginatedItems(ISaleItemGetter getter) {
         _getter = getter;
     }
 
-    public PaginatedItems(final IStore store) {
-        _getter = new ISaleItemGetter() {
-            @Override
-            public List<ISaleItem> getSaleItems() {
-                return store.getSaleItems();
-            }
-        };
-    }
-
+    /**
+     * Constructor.
+     *
+     * @param store     The store to retrieve sale items from.
+     * @param category  The category of the items to retrieve.
+     */
     public PaginatedItems(final IStore store, final Category category) {
         _getter = new ISaleItemGetter() {
             @Override
@@ -64,11 +70,17 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
         };
     }
 
-    public PaginatedItems(final IStore store, final UUID playerId) {
+    /**
+     * Constructor.
+     *
+     * @param store     The store to retrieve sale items from.
+     * @param sellerId  The ID of the seller of the items to retrieve.
+     */
+    public PaginatedItems(final IStore store, final UUID sellerId) {
         _getter = new ISaleItemGetter() {
             @Override
             public List<ISaleItem> getSaleItems() {
-                return store.getSaleItems(playerId);
+                return store.getSaleItems(sellerId);
             }
         };
     }
@@ -80,10 +92,11 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
 
     @Override
     public int size() {
-        return getTotalItems();
+        return getStacks().size();
     }
 
-    public List<ISaleItem> getSaleItemStacks() {
+    @Override
+    public List<ISaleItem> getStacks() {
         List<ISaleItem> saleItems = getList();
 
         List<ISaleItem> result = new ArrayList<>(saleItems.size() * 5);
@@ -100,17 +113,9 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
         return result;
     }
 
-    public int getTotalItems() {
-        List<ISaleItem> saleItems = getSaleItemStacks();
-
-        return saleItems.size();
-    }
-
     @Override
     public int getTotalPages() {
-
-        int totalItems = getTotalItems();
-
+        int totalItems = size();
         return (int)Math.ceil((double)totalItems / getItemsPerPage());
     }
 
@@ -127,11 +132,10 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
     @Override
     public List<ISaleItem> getPage(int page) {
 
-        List<ISaleItem> saleItems = getSaleItemStacks();
+        List<ISaleItem> saleItems = getStacks();
 
-        if (saleItems.size() == 0) {
+        if (saleItems.size() == 0)
             return new ArrayList<>(0);
-        }
 
         int start = getStartIndex(page);
         int end = getEndIndex(page, saleItems.size());
@@ -180,7 +184,7 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
         int _index;
         final int _startIndex;
         final int _endIndex;
-        final List<ISaleItem> _list = getSaleItemStacks();
+        final List<ISaleItem> _list = getStacks();
 
         PaginatorIterator(int page) {
             _startIndex = getStartIndex(page);

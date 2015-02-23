@@ -31,14 +31,13 @@ import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Represents a quantity of {@link ItemStack}'s for sale by a specific seller
  * in a specific {@link IStore}.
  */
-public interface ISaleItem {
+public interface ISaleItem extends ISaleItemStacksGetter {
 
     /**
      * Get the sale item ID.
@@ -106,19 +105,6 @@ public interface ISaleItem {
      * quantity of the portion. Otherwise the total quantity is returned.</p>
      */
     int getQty();
-
-    /**
-     * Get a list that represents the current {@link ISaleItem} divided
-     * into child sale items based on the max quantity the sale item can fit into an
-     * {@link org.bukkit.inventory.ItemStack}.
-     *
-     * <p>Each {@link ISaleItem} in the returned list has a quantity that is the max
-     * stack size of the represented {@link org.bukkit.inventory.ItemStack} with the
-     * last {@link ISaleItem} containing the remainder.</p>
-     *
-     * @return
-     */
-    List<ISaleItem> getStacks();
 
     /**
      * Increment the number of items in the stack by the specified amount.
