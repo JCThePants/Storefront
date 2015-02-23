@@ -162,7 +162,7 @@ public class PlayerStore extends AbstractStore {
 
         // put sale item into maps
         _idMap.put(itemId, item);
-        _stackMap.put(item.getWrapper(), item);
+        _stackMap.put(item.getMatchable(), item);
 
         SaleItemCategoryMap categoryMap = getCategoryMap(category);
         categoryMap.put(itemId, item);
@@ -200,7 +200,7 @@ public class PlayerStore extends AbstractStore {
         if (category == null)
             return null;
 
-        _stackMap.remove(item.getWrapper());
+        _stackMap.remove(item.getMatchable());
 
         IDataNode itemNode = getItemNode(itemId);
         itemNode.remove();
@@ -227,14 +227,14 @@ public class PlayerStore extends AbstractStore {
             return null;
 
         // remove from maps
-        _idMap.remove(saleItem.getItemId());
+        _idMap.remove(saleItem.getId());
         SaleItemCategoryMap catMap = this.getCategoryMap(saleItem.getCategory());
         if (catMap != null) {
-            catMap.remove(saleItem.getItemId());
+            catMap.remove(saleItem.getId());
         }
 
         // remove from data node
-        IDataNode itemNode = getItemNode(saleItem.getItemId());
+        IDataNode itemNode = getItemNode(saleItem.getId());
         itemNode.remove();
         itemNode.save();
 
@@ -340,11 +340,11 @@ public class PlayerStore extends AbstractStore {
     @Override
     protected void onSaleItemLoaded (SaleItem saleItem) {
 
-        _idMap.put(saleItem.getItemId(), saleItem);
-        _stackMap.put(saleItem.getWrapper(), saleItem);
+        _idMap.put(saleItem.getId(), saleItem);
+        _stackMap.put(saleItem.getMatchable(), saleItem);
 
         SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
-        categoryMap.put(saleItem.getItemId(), saleItem);
+        categoryMap.put(saleItem.getId(), saleItem);
     }
     
 }

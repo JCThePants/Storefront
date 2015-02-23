@@ -113,7 +113,7 @@ public class SellWantedView extends AbstractMenuView {
 
             MenuItem menuItem = _selectedMenuItem;
 
-            if (_selectedSaleItem.getTotalItems() == 0 || _selectedSaleItem.isRemoved()) {
+            if (_selectedSaleItem.getParent().getQty() == 0 || _selectedSaleItem.isRemoved()) {
 
                 // item is not being accepted anymore
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}The store is no longer accepting that item.");

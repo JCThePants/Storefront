@@ -468,19 +468,6 @@ public class ItemStackUtil {
         return (int) Math.ceil((double) qty / maxStackSize);
     }
 
-
-    public static int getTotalSlots (List<SaleItem> saleItems) {
-
-        int total = 0;
-
-        for (SaleItem saleItem : saleItems) {
-            total += saleItem.getTotalSlots();
-        }
-
-        return total;
-    }
-
-    
     /**
      * 
      * @author JC The Pants

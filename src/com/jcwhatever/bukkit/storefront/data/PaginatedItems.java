@@ -90,7 +90,7 @@ public class PaginatedItems implements IPaginator<ISaleItem> {
 
         for (ISaleItem saleItem : saleItems) {
             if (saleItem instanceof SaleItem) {
-                result.addAll(saleItem.getSaleItemStacks());
+                result.addAll(saleItem.getStacks());
             }
             else {
                 result.add(saleItem);

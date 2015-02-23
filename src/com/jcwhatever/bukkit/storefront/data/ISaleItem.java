@@ -24,9 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -34,47 +34,96 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * Represents a quantity of {@link ItemStack}'s for sale by a specific seller
+ * in a specific {@link IStore}.
+ */
 public interface ISaleItem {
 
-    
-    public boolean isRemoved ();
-    
-    public boolean isExpired();
-    
-    public Date getExpiration();
-
-    public int getTotalSlots ();
-
-    public UUID getItemId ();
-
-    public UUID getSellerId ();
-
-    public IStore getStore ();
-
-    public Category getCategory ();
-
-    public ItemStack getItemStack ();
-
-    public MatchableItem getWrapper ();
-
-    public double getPricePerUnit ();
-    
     /**
-     * Get the quantity of the sale item instance
-     * @return
+     * Get the sale item ID.
      */
-    public int getQty ();
+    UUID getId();
 
     /**
-     * Get the total quantity of sale items available
+     * Get the ID of the player that is selling the item.
+     */
+    UUID getSellerId();
+
+    /**
+     * Get the parent sale item. When a sale item has a parent, it means
+     * the sale item represents a portion of the quantity of the parent.
+     *
+     * @return  The parent {@link ISaleItem} or self if the sale item is the parent.
+     */
+    ISaleItem getParent();
+
+    /**
+     * Determine if the sale item is removed.
+     */
+    boolean isRemoved();
+
+    /**
+     * Determine if the sale item is expired.
+     */
+    boolean isExpired();
+
+    /**
+     * Get the date the sale item expires.
+     */
+    Date getExpiration();
+
+    /**
+     * Get the store the sale item is being sold at.
+     */
+    IStore getStore();
+
+    /**
+     * Get the category of the sale item.
+     */
+    Category getCategory();
+
+    /**
+     * Get an {@link org.bukkit.inventory.ItemStack} representing the sale item.
+     */
+    ItemStack getItemStack();
+
+    /**
+     * Get a {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to
+     * match the sale item {@link org.bukkit.inventory.ItemStack}.
+     */
+    MatchableItem getMatchable();
+
+    /**
+     * Get the price per unit of the sale item.
+     */
+    double getPricePerUnit();
+
+    /**
+     * Get the quantity of the sale item instance.
+     *
+     * <p>If the instance is a portion of a parent instance, this returns the
+     * quantity of the portion. Otherwise the total quantity is returned.</p>
+     */
+    int getQty();
+
+    /**
+     * Get a list that represents the current {@link ISaleItem} divided
+     * into child sale items based on the max quantity the sale item can fit into an
+     * {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>Each {@link ISaleItem} in the returned list has a quantity that is the max
+     * stack size of the represented {@link org.bukkit.inventory.ItemStack} with the
+     * last {@link ISaleItem} containing the remainder.</p>
+     *
      * @return
      */
-    public int getTotalItems ();
+    List<ISaleItem> getStacks();
 
-    public List<ISaleItem> getSaleItemStacks ();
-
-    public SaleItem getParent();
-    
-    public void increment (int amount);    
+    /**
+     * Increment the number of items in the stack by the specified amount.
+     *
+     * @param amount  The amount to increment. Negative numbers are allowed.
+     */
+    void increment(int amount);
 }

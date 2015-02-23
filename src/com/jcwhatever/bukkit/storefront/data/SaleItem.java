@@ -24,14 +24,14 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
+
 import org.apache.commons.lang.time.DateUtils;
 import org.bukkit.inventory.ItemStack;
 
@@ -95,29 +95,7 @@ public class SaleItem implements ISaleItem {
     }
 
     @Override
-    public boolean isRemoved () {
-
-        return _removed;
-    }
-    
-    @Override
-    public boolean isExpired() {
-        return _expires.compareTo(new Date()) <= 0;
-    }
-    
-    @Override
-    public Date getExpiration() {
-        return _expires;
-    }
-        
-
-    @Override
-    public int getTotalSlots () {
-        return ItemStackUtil.getTotalSlots(this);
-    }
-
-    @Override
-    public UUID getItemId () {
+    public UUID getId() {
 
         return _itemId;
     }
@@ -126,6 +104,11 @@ public class SaleItem implements ISaleItem {
     public UUID getSellerId () {
 
         return _sellerId;
+    }
+
+    @Override
+    public SaleItem getParent () {
+        return this;
     }
 
     @Override
@@ -142,13 +125,30 @@ public class SaleItem implements ISaleItem {
         return _category;
     }
 
+
+    @Override
+    public boolean isRemoved () {
+
+        return _removed;
+    }
+    
+    @Override
+    public boolean isExpired() {
+        return _expires.compareTo(new Date()) <= 0;
+    }
+    
+    @Override
+    public Date getExpiration() {
+        return _expires;
+    }
+
     @Override
     public ItemStack getItemStack () {
         return _itemStack.clone();
     }
 
     @Override
-    public MatchableItem getWrapper () {
+    public MatchableItem getMatchable() {
         return _wrapper;
     }
 
@@ -168,7 +168,7 @@ public class SaleItem implements ISaleItem {
             _dataNode.set("qty", qty);
         }
         else {
-            onRemove(getItemId());
+            onRemove(getId());
             _dataNode.remove();
             _removed = true;
         }
@@ -192,16 +192,6 @@ public class SaleItem implements ISaleItem {
         _dataNode.save();
     }
 
-    @Override
-    public int getTotalItems () {
-        return _qty;
-    }
-
-    @Override
-    public SaleItem getParent () {
-        return this;
-    }
-    
     @Override
     public void increment (int amount) {
         int qty = _qty + amount;
@@ -246,7 +236,7 @@ public class SaleItem implements ISaleItem {
     }
 
     @Override
-    public List<ISaleItem> getSaleItemStacks () {
+    public List<ISaleItem> getStacks() {
 
         int maxPerStack = _wrapper.getMaterialExt().getMaxStackSize();
         if (maxPerStack == 0)
@@ -255,7 +245,7 @@ public class SaleItem implements ISaleItem {
         int totalStacks = (int) Math.ceil((double) _qty / maxPerStack);
 
         if (_qty < 1) {
-            onRemove(this.getItemId());
+            onRemove(this.getId());
             return new ArrayList<>(0);
         }
 
@@ -290,7 +280,7 @@ public class SaleItem implements ISaleItem {
         }
 
         @Override
-        public UUID getItemId () {
+        public UUID getId() {
             return _parent._itemId;
         }
 
@@ -322,7 +312,7 @@ public class SaleItem implements ISaleItem {
         }
 
         @Override
-        public MatchableItem getWrapper () {
+        public MatchableItem getMatchable() {
             return _wrapper;
         }
 
@@ -351,11 +341,6 @@ public class SaleItem implements ISaleItem {
         }
 
         @Override
-        public int getTotalSlots () {
-            return _parent.getTotalSlots();
-        }
-
-        @Override
         public IStore getStore () {
             return _parent.getStore();
         }
@@ -366,13 +351,8 @@ public class SaleItem implements ISaleItem {
         }
 
         @Override
-        public int getTotalItems () {
-            return _parent.getTotalItems();
-        }
-
-        @Override
-        public List<ISaleItem> getSaleItemStacks () {
-            return _parent.getSaleItemStacks();
+        public List<ISaleItem> getStacks() {
+            return _parent.getStacks();
         }
     }
 }

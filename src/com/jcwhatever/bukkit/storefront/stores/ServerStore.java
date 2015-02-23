@@ -232,14 +232,14 @@ public class ServerStore extends AbstractStore {
             return null;
 
         // remove from maps
-        _idMap.remove(saleItem.getItemId());
+        _idMap.remove(saleItem.getId());
         SaleItemCategoryMap catMap = getCategoryMap(saleItem.getCategory());
         if (catMap != null) {
-            catMap.remove(saleItem.getItemId());
+            catMap.remove(saleItem.getId());
         }
 
         // remove from data node
-        IDataNode itemNode = getItemNode(saleItem.getItemId());
+        IDataNode itemNode = getItemNode(saleItem.getId());
         itemNode.remove();
         itemNode.save();
 
@@ -282,7 +282,7 @@ public class ServerStore extends AbstractStore {
 
         saleItem.setQty(0);
 
-        removeSaleItem(saleItem.getItemId());
+        removeSaleItem(saleItem.getId());
         
         Msg.tellImportant(saleItem.getSellerId(), "storefront-sale-expired-" + this.getName(), 
                 "1 or more items you were selling at the store '{0}' expired and were sent to your item bank account.",
@@ -292,7 +292,7 @@ public class ServerStore extends AbstractStore {
     @Override
     public boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price) {
 
-        SaleItem saleItem = getSaleItem(stack.getItemId());
+        SaleItem saleItem = getSaleItem(stack.getId());
         if (saleItem == null || saleItem.getQty() < qty) {
             Msg.debug("Couldn't find saleItem or not enough quantity to purchase.");
             return false;
@@ -332,7 +332,7 @@ public class ServerStore extends AbstractStore {
         stack.increment(-qty);
 
         if (stack.getParent().getQty() == 0) {
-            removeSaleItem(stack.getItemId());
+            removeSaleItem(stack.getId());
         }
 
         buyer.getInventory().addItem(purchasedStack);
@@ -385,10 +385,10 @@ public class ServerStore extends AbstractStore {
     @Override
     protected void onSaleItemLoaded (SaleItem saleItem) {
 
-        _idMap.put(saleItem.getItemId(), saleItem);
+        _idMap.put(saleItem.getId(), saleItem);
 
         SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
-        categoryMap.put(saleItem.getItemId(), saleItem);
+        categoryMap.put(saleItem.getId(), saleItem);
 
         SaleItemMap playerMap = getPlayerMap(saleItem.getSellerId());
         playerMap.put(saleItem.getItemStack(), saleItem);
@@ -433,7 +433,7 @@ public class ServerStore extends AbstractStore {
                         serverStore.removeExpired((SaleItem)saleItem);
                     }
                     else if (saleItem.isRemoved()) {
-                        serverStore.removeSaleItem(saleItem.getItemId());
+                        serverStore.removeSaleItem(saleItem.getId());
                     }
                 }
             }

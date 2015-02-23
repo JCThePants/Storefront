@@ -293,7 +293,7 @@ public abstract class AbstractStore implements IStore {
         }
 
 
-        ISaleItem saleItem = getWantedItems().get(stack.getItemId());
+        ISaleItem saleItem = getWantedItems().get(stack.getId());
         if (saleItem == null || saleItem.getQty() < qty) {
             Msg.debug("Tried to sell item to the store that it's not willing to accept.");
             return false;
@@ -328,7 +328,7 @@ public abstract class AbstractStore implements IStore {
     @Override
     public boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price) {
 
-        SaleItem saleItem = getSaleItem(stack.getItemId());
+        SaleItem saleItem = getSaleItem(stack.getId());
         if (saleItem == null || saleItem.getQty() < qty) {
             Msg.debug("Couldn't find saleItem or not enough quantity to purchase.");
             return false;

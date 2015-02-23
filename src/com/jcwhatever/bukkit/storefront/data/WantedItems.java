@@ -113,7 +113,7 @@ public class WantedItems {
                 pricePerUnit, itemNode);
 
         _wantedIdMap.put(itemId, item);
-        _wantedMap.put(item.getWrapper(), item);
+        _wantedMap.put(item.getMatchable(), item);
 
         SaleItemCategoryMap categoryMap = getCategoryMap(category);
         categoryMap.put(itemId, item);
@@ -136,7 +136,7 @@ public class WantedItems {
 
         _wantedNode.remove(itemId.toString());
 
-        _wantedMap.remove(item.getWrapper());
+        _wantedMap.remove(item.getMatchable());
 
         SaleItemCategoryMap categoryMap = getCategoryMap(category);
         categoryMap.remove(itemId);
@@ -179,11 +179,11 @@ public class WantedItems {
             if (saleItem.getCategory() == null)
                 continue;
 
-            _wantedMap.put(saleItem.getWrapper(), saleItem);
-            _wantedIdMap.put(saleItem.getItemId(), saleItem);
+            _wantedMap.put(saleItem.getMatchable(), saleItem);
+            _wantedIdMap.put(saleItem.getId(), saleItem);
 
             SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
-            categoryMap.put(saleItem.getItemId(), saleItem);
+            categoryMap.put(saleItem.getId(), saleItem);
 
         }
     }

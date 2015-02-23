@@ -24,7 +24,18 @@
 
 package com.jcwhatever.bukkit.storefront;
 
+/**
+ * Specifies the type of store.
+ *
+ * @see com.jcwhatever.bukkit.storefront.stores.IStore
+ */
 public enum StoreType {
+    /**
+     * The store is a server operated store.
+     */
     SERVER,
+    /**
+     * The store is player ownable.
+     */
     PLAYER_OWNABLE
 }

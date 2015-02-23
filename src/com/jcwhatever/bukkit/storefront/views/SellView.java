@@ -189,7 +189,7 @@ public class SellView extends ChestView {
 
             inventory.addItem(stack);
 
-            _priceMap.setPrice(saleItem.getWrapper(), saleItem.getPricePerUnit());
+            _priceMap.setPrice(saleItem.getMatchable(), saleItem.getPricePerUnit());
         }
 
         _snapshot = new SaleItemSnapshot(inventory);
