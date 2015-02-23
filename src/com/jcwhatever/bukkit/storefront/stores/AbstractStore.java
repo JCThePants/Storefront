@@ -249,7 +249,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public boolean canAdd (UUID sellerId, ItemStack itemStack, int qty) {
-        Category category = Storefront.getInstance().getCategoryManager().getCategory(itemStack);
+        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
         if (category == null)
             return false;
 
@@ -261,7 +261,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public int getSpaceAvailable (UUID sellerId, ItemStack itemStack) {
-        Category category = Storefront.getInstance().getCategoryManager().getCategory(itemStack);
+        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
         if (category == null)
             return 0;
 

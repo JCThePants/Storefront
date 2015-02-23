@@ -47,6 +47,7 @@ import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nullable;
 
@@ -63,7 +64,7 @@ public class CategoryView extends AbstractMenuView {
 
         ViewSessionTask task = session.getMeta(SessionMetaKey.TASK_MODE);
 
-        List<Category> categories = getCategories(store, task);
+        Collection<Category> categories = getCategories(store, task);
 
         int totalSlots = pagin.getTotalItems();
 
@@ -77,12 +78,12 @@ public class CategoryView extends AbstractMenuView {
         session.next(new CategoryView(nextView));
     }
 
-    private static List<Category> getCategories(IStore store, ViewSessionTask mode) {
-        List<Category> categories;
+    private static Collection<Category> getCategories(IStore store, ViewSessionTask mode) {
+        Collection<Category> categories;
 
         if (mode.isOwnerManagerTask()) {
             CategoryManager manager = Storefront.getInstance().getCategoryManager();
-            categories = manager.getCategories();
+            categories = manager.getAll();
         }
         else {
             categories = mode.getBasicTask() == BasicTask.BUY
@@ -125,7 +126,7 @@ public class CategoryView extends AbstractMenuView {
     @Override
     protected List<MenuItem> createMenuItems() {
 
-        List<Category> categories = getCategories(getStore(), getSessionTask());
+        List<Category> categories = new ArrayList<>(getCategories(getStore(), getSessionTask()));
 
         double itemSize = categories.size();
         int rows = (int) Math.ceil(itemSize / 9);

@@ -24,20 +24,21 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
+import com.jcwhatever.bukkit.storefront.Category;
+import com.jcwhatever.bukkit.storefront.CategoryManager;
+import com.jcwhatever.bukkit.storefront.Lang;
+import com.jcwhatever.bukkit.storefront.Msg;
+import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.nucleus.commands.AbstractCommand;
 import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.nucleus.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
-import com.jcwhatever.bukkit.storefront.Category;
-import com.jcwhatever.bukkit.storefront.CategoryManager;
-import com.jcwhatever.bukkit.storefront.Lang;
-import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.Storefront;
+
 import org.bukkit.command.CommandSender;
 
-import java.util.List;
+import java.util.Collection;
 
 @CommandInfo(
         parent = "categories",
@@ -54,7 +55,7 @@ public class ListSubCommand extends AbstractCommand {
 
         CategoryManager manager = Storefront.getInstance().getCategoryManager();
 
-        List<Category> categories = manager.getCategories();
+        Collection<Category> categories = manager.getAll();
 
         String paginTitle = Lang.get("Item Categories");
         ChatPaginator pagin = Msg.getPaginator(paginTitle);

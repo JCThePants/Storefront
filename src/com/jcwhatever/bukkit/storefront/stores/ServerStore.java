@@ -141,7 +141,7 @@ public class ServerStore extends AbstractStore {
         }
 
         // get category for item
-        Category category = Storefront.getInstance().getCategoryManager().getCategory(itemStack);
+        Category category = Storefront.getInstance().getCategoryManager().get(itemStack);
         if (category == null)
             return null;
 
@@ -366,14 +366,12 @@ public class ServerStore extends AbstractStore {
 
     @Override
     public List<Category> getSellCategories () {
-
-        return Storefront.getInstance().getCategoryManager().getCategories();
+        return new ArrayList<>(Storefront.getInstance().getCategoryManager().getAll());
     }
 
     @Override
     public List<Category> getBuyCategories () {
-
-        return Storefront.getInstance().getCategoryManager().getCategories();
+        return new ArrayList<>(Storefront.getInstance().getCategoryManager().getAll());
     }
 
     @Override

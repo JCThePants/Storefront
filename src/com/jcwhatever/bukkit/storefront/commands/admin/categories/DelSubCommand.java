@@ -49,14 +49,13 @@ public class DelSubCommand extends AbstractCommand {
 
         CategoryManager catManager = Storefront.getInstance().getCategoryManager();
 
-        Category category = catManager.getCategory(categoryName);
+        Category category = catManager.get(categoryName);
         if (category == null) {
             tellError(sender, "An item category with the name '{0}' was not found.", categoryName);
             return; // finished
         }
 
-        category = catManager.removeCategory(categoryName);
-        if (category == null) {
+        if (!catManager.remove(categoryName)) {
             tellError(sender, "Failed to remove category.");
             return; // finished
         }

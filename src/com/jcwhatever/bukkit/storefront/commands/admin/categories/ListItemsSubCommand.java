@@ -59,7 +59,7 @@ public class ListItemsSubCommand extends AbstractCommand {
 
         CategoryManager manager = Storefront.getInstance().getCategoryManager();
 
-        Category category = manager.getCategory(categoryName);
+        Category category = manager.get(categoryName);
         if (category == null) {
             String message = Lang.get("An item category with the name '{0}' was not found.", categoryName);
             tellError(sender, message);

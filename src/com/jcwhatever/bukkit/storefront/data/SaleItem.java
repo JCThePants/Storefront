@@ -137,7 +137,7 @@ public class SaleItem implements ISaleItem {
     public Category getCategory () {
 
         if (_category == null) {
-            _category = Storefront.getInstance().getCategoryManager().getCategory(_itemStack);
+            _category = Storefront.getInstance().getCategoryManager().get(_itemStack);
         }
         return _category;
     }

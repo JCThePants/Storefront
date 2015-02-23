@@ -50,13 +50,13 @@ public class AddSubCommand extends AbstractCommand {
 
         CategoryManager catManager = Storefront.getInstance().getCategoryManager();
 
-        Category category = catManager.getCategory(categoryName);
+        Category category = catManager.get(categoryName);
         if (category != null) {
             tellError(sender, "An item category with the name '{0}' already exists.", category.getName());
             return; // finished
         }
 
-        category = catManager.addCategory(categoryName);
+        category = catManager.add(categoryName);
         if (category == null) {
             tellError(sender, "Failed to create category.");
             return; // finished

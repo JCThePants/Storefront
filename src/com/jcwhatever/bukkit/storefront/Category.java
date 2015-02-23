@@ -95,7 +95,6 @@ public class Category implements INamedInsensitive {
         _title = title;
         _categoryNode.set("title", title);
         _categoryNode.save();
-        onCategoryChange();
     }
 
     /**
@@ -114,7 +113,6 @@ public class Category implements INamedInsensitive {
         _description = description;
         _categoryNode.set("description", description);
         _categoryNode.save();
-        onCategoryChange();
     }
 
     /**
@@ -146,7 +144,6 @@ public class Category implements INamedInsensitive {
         _menuItem = item;
         _categoryNode.set("menu-item", item);
         _categoryNode.save();
-        onCategoryChange();
     }
 
     private void loadSettings () {
@@ -159,9 +156,5 @@ public class Category implements INamedInsensitive {
         if (stacks != null && stacks.length > 0) {
             _menuItem = stacks[0];
         }
-    }
-
-    private void onCategoryChange () {
-        Storefront.getInstance().getCategoryManager().onCategoryChange();
     }
 }

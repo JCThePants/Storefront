@@ -284,7 +284,7 @@ public class SellView extends ChestView {
         }
 
         // make sure the item is part of a valid category
-        Category category = categoryManager.getCategory(itemToAdd);
+        Category category = categoryManager.get(itemToAdd);
         if (category == null) {
             Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You cannot sell that item.");
             return ChestEventAction.DENY;
@@ -426,7 +426,7 @@ public class SellView extends ChestView {
                     continue;
 
                 // make sure item has a category
-                Category category = categoryManager.getCategory(stack);
+                Category category = categoryManager.get(stack);
                 if (category == null) {
                     ItemStackUtil.removeTempLore(stack);
                     _inventory.setItem(i, ItemStackUtils.AIR);

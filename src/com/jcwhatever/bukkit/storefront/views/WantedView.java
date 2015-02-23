@@ -196,7 +196,7 @@ public class WantedView extends AbstractMenuView {
         boolean hasItem = snapshot.getAmount(selectedStack) > 0;
         selectedStack.setAmount(1);
 
-        Category category = Storefront.getInstance().getCategoryManager().getCategory(selectedStack);
+        Category category = Storefront.getInstance().getCategoryManager().get(selectedStack);
         if (category == null)
             return false;
 

@@ -51,7 +51,7 @@ public class SetItemSubCommand extends AbstractCommand {
 
         CategoryManager catManager = Storefront.getInstance().getCategoryManager();
 
-        Category category = catManager.getCategory(categoryName);
+        Category category = catManager.get(categoryName);
         if (category == null) {
             tellError(sender, "An item category with the name '{0}' was not found.", categoryName);
             return; // finished
