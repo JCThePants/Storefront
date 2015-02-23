@@ -24,16 +24,22 @@
 
 package com.jcwhatever.bukkit.storefront;
 
+import com.jcwhatever.nucleus.mixins.INamedInsensitive;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.ItemFilterManager;
+import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import com.jcwhatever.nucleus.utils.items.ItemFilterManager;
-import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
-import com.jcwhatever.nucleus.storage.IDataNode;
-
-public class Category {
+/**
+ * An item category.
+ */
+public class Category implements INamedInsensitive {
 
     private String _name;
+    private String _searchName;
     private String _title;
     private String _description = "Click to view items in category.";
 
@@ -44,10 +50,16 @@ public class Category {
 
     private static final ItemStack DEFAULT_MENU_ITEM = new ItemStack(Material.STONE);
 
-
+    /**
+     * Constructor.
+     *
+     * @param name          The category name.
+     * @param categoryNode
+     */
     Category(String name, IDataNode categoryNode) {
 
         _name = name;
+        _searchName = name.toLowerCase();
         _categoryNode = categoryNode;
         _filterManager = new ItemFilterManager(Storefront.getInstance(),
                 categoryNode.getNode("item-filter"), ItemStackMatcher.MATCH_TYPE);
@@ -55,20 +67,30 @@ public class Category {
         loadSettings();
     }
 
-
+    @Override
     public String getName () {
-
         return _name;
     }
 
+    @Override
+    public String getSearchName() {
+        return _searchName;
+    }
 
+    /**
+     * Get the display title of the category.
+     */
     public String getTitle () {
-
         return _title;
     }
 
-
+    /**
+     * Set the display title of the category.
+     *
+     * @param title  The display title.
+     */
     public void setTitle (String title) {
+        PreCon.notNullOrEmpty(title);
 
         _title = title;
         _categoryNode.set("title", title);
@@ -76,44 +98,56 @@ public class Category {
         onCategoryChange();
     }
 
-
+    /**
+     * Get the category description.
+     */
     public String getDescription () {
-
         return _description;
     }
 
-
+    /**
+     * Set the category description.
+     *
+     * @param description  The description.
+     */
     public void setDescription (String description) {
-
         _description = description;
         _categoryNode.set("description", description);
         _categoryNode.save();
         onCategoryChange();
     }
 
-
+    /**
+     * Get the category item filter manager.
+     *
+     * <p>Defines what items the category encompasses.</p>
+     */
     public ItemFilterManager getFilterManager () {
-
         return _filterManager;
     }
 
-
+    /**
+     * Get the {@link ItemStack} used in inventory menus.
+     */
     public ItemStack getMenuItem () {
-
         return _menuItem != null
                 ? _menuItem
                 : DEFAULT_MENU_ITEM;
     }
 
-
+    /**
+     * Set the {@link ItemStack} used in inventory menus.
+     *
+     * @param item  The {@link ItemStack}.
+     */
     public void setMenuItem (ItemStack item) {
+        PreCon.notNull(item);
 
         _menuItem = item;
         _categoryNode.set("menu-item", item);
         _categoryNode.save();
         onCategoryChange();
     }
-
 
     private void loadSettings () {
 
@@ -127,10 +161,7 @@ public class Category {
         }
     }
 
-
     private void onCategoryChange () {
-
         Storefront.getInstance().getCategoryManager().onCategoryChange();
     }
-
 }
