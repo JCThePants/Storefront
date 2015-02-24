@@ -24,38 +24,72 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.nucleus.storage.IDataNode;
+
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
+import javax.annotation.Nullable;
 
+/**
+ * A {@link SaleItem} that represents an item that is wanted for purchase
+ * by a store owner.
+ */
 public class WantedItem extends SaleItem {
 
+    /**
+     * Constructor.
+     *
+     * <p>Used for creating a new transient item.</p>
+     *
+     * @param store         The store the item is wanted for.
+     * @param sellerId      The ID of the seller that wants the item.
+     * @param itemId        The item ID.
+     * @param itemStack     The {@link org.bukkit.inventory.ItemStack} the seller wants.
+     * @param qty           The quantity desired.
+     * @param pricePerUnit  The price per unit.
+     */
     public WantedItem(IStore store, UUID sellerId, UUID itemId, ItemStack itemStack, int qty,
                       double pricePerUnit) {
 
         this(store, sellerId, itemId, itemStack, qty, pricePerUnit, null);
     }
 
-
+    /**
+     * Constructor.
+     *
+     * <p>Used for create a new item that is stored to data node.</p>
+     *
+     * @param store         The store the item is wanted for.
+     * @param sellerId      The ID of the seller that wants the item.
+     * @param itemId        The item ID.
+     * @param itemStack     The {@link org.bukkit.inventory.ItemStack} the seller wants.
+     * @param qty           The quantity desired.
+     * @param pricePerUnit  The price per unit.
+     * @param dataNode      The items data node.
+     */
     public WantedItem(IStore store, UUID sellerId, UUID itemId, ItemStack itemStack, int qty,
-                      double pricePerUnit, IDataNode dataNode) {
+                      double pricePerUnit, @Nullable IDataNode dataNode) {
 
         super(store, sellerId, itemId, itemStack, qty, pricePerUnit, dataNode);
     }
 
-
+    /**
+     * Constructor.
+     *
+     * <p>Used to load an existing item from a data node.</p>
+     *
+     * @param store     The store the item is wanted for.
+     * @param itemId    The ID of the seller that wants the item.
+     * @param dataNode  The items data node.
+     */
     public WantedItem(IStore store, UUID itemId, IDataNode dataNode) {
-
         super(store, itemId, dataNode);
     }
 
-
     @Override
     protected void onRemove (UUID itemId) {
-
         getStore().getWantedItems().remove(itemId);
     }
-
 }

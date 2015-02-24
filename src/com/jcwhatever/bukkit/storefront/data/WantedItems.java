@@ -43,17 +43,27 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+/**
+ * Manages {@link WantedItem}'s for a specific {@link IStore}.
+ */
 public class WantedItems {
 
-    private Map<Category, SaleItemIDMap> _wantedCategoryMap = new HashMap<Category, SaleItemIDMap>(25);
-    private Map<UUID, ISaleItem> _wantedIdMap = new HashMap<>(25);
-    private Map<MatchableItem, ISaleItem> _wantedMap = new HashMap<>(25);
+    private final IStore _store;
+    private final IDataNode _wantedNode;
 
-    private IDataNode _wantedNode;
-    private IStore _store;
+    private final Map<Category, SaleItemIDMap> _wantedCategoryMap = new HashMap<Category, SaleItemIDMap>(25);
+    private final Map<UUID, ISaleItem> _wantedIdMap = new HashMap<>(25);
+    private final Map<MatchableItem, ISaleItem> _wantedMap = new HashMap<>(25);
 
-
+    /**
+     * Constructor.
+     *
+     * @param store       The store the instance is for.
+     * @param wantedNode  The data storage node.
+     */
     public WantedItems(IStore store, IDataNode wantedNode) {
+        PreCon.notNull(store);
+        PreCon.notNull(wantedNode);
 
         _wantedNode = wantedNode;
         _store = store;
@@ -61,11 +71,20 @@ public class WantedItems {
         loadSettings();
     }
 
-    public List<ISaleItem> getAll () {
+    /**
+     * Get all wanted items as {@link ISaleItem}'s.
+     */
+    public List<ISaleItem> getAll() {
         return new ArrayList<>(_wantedIdMap.values());
     }
 
-    public List<ISaleItem> get (Category category) {
+    /**
+     * Get all wanted items for the specified category as
+     * {@link ISaleItem}'s.
+     *
+     * @param category  The {@link Category} of the items to get.
+     */
+    public List<ISaleItem> get(Category category) {
 
         SaleItemIDMap map = _wantedCategoryMap.get(category);
         if (map == null)
@@ -74,25 +93,52 @@ public class WantedItems {
         return new ArrayList<>(map.values());
     }
 
-    public ISaleItem get (UUID itemId) {
+    /**
+     * Get a wanted item by item ID.
+     *
+     * @param itemId  The ID of the item.
+     *
+     * @return  The wanted item as a {@link ISaleItem} or null if not found.
+     */
+    @Nullable
+    public ISaleItem get(UUID itemId) {
+        PreCon.notNull(itemId);
 
         return _wantedIdMap.get(itemId);
     }
 
-    public ISaleItem get (ItemStack item) {
-
+    /**
+     * Get a wanted item by {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} is matched by type and meta.</p>
+     *
+     * @param item  The {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @return  The wanted item as a {@link ISaleItem} or null if not found.
+     */
+    @Nullable
+    public ISaleItem get(ItemStack item) {
         PreCon.notNull(item);
 
-        MatchableItem wrapper = new MatchableItem(item, StoreStackMatcher.getDefault());
-
-        return _wantedMap.get(wrapper);
+        MatchableItem matchable = new MatchableItem(item, StoreStackMatcher.getDefault());
+        return _wantedMap.get(matchable);
     }
 
-
+    /**
+     * Add a wanted item.
+     *
+     * @param itemStack     The {@link ItemStack} that represents the item wanted.
+     * @param qty           The quantity of items wanted.
+     * @param pricePerUnit  The price to be payed per item.
+     *
+     * @return  The new wanted item as a {@link ISaleItem} or null if no category was
+     * found for the item.
+     */
     @Nullable
-    public SaleItem add (ItemStack itemStack, int qty, double pricePerUnit) {
-
+    public ISaleItem add(ItemStack itemStack, int qty, double pricePerUnit) {
         PreCon.notNull(itemStack);
+        PreCon.greaterThanZero(qty);
+        PreCon.greaterThanZero(pricePerUnit);
 
         Category category = Storefront.getCategoryManager().get(itemStack);
         if (category == null)
@@ -121,9 +167,15 @@ public class WantedItems {
         return item;
     }
 
+    /**
+     * Remove a wanted item by item ID.
+     *
+     * @param itemId  The ID of the item to remove.
+     *
+     * @return  The removed item or null if not found.
+     */
     @Nullable
-    public ISaleItem remove (UUID itemId) {
-
+    public ISaleItem remove(UUID itemId) {
         PreCon.notNull(itemId);
 
         ISaleItem item = _wantedIdMap.remove(itemId);
@@ -144,10 +196,7 @@ public class WantedItems {
         return item;
     }
 
-
     private SaleItemIDMap getCategoryMap (Category category) {
-
-        PreCon.notNull(category);
 
         SaleItemIDMap saleItems = _wantedCategoryMap.get(category);
         if (saleItems == null) {
@@ -157,7 +206,6 @@ public class WantedItems {
 
         return saleItems;
     }
-
 
     private void loadSettings () {
 
@@ -184,7 +232,6 @@ public class WantedItems {
 
             SaleItemIDMap categoryMap = getCategoryMap(saleItem.getCategory());
             categoryMap.put(saleItem.getId(), saleItem);
-
         }
     }
 }
