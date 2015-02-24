@@ -24,57 +24,141 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
+import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
+
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import javax.annotation.Nullable;
 
+/**
+ * Maps {@link org.bukkit.inventory.ItemStack}'s to {@link ISaleItem}'s
+ * using {@link com.jcwhatever.nucleus.utils.items.MatchableItem}'s as key.
+ */
+@SuppressWarnings("serial")
 public class SaleItemMap extends HashMap<MatchableItem, ISaleItem> {
 
     /**
-     * 
+     * Get an {@link ISaleItem} from the map using an
+     * {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} is matched based
+     * on type and meta.</p>
+     *
+     * @param key  The {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @return  The {@link ISaleItem} or null if not found.
      */
-    private static final long serialVersionUID = 1L;
-
-
-    public SaleItemMap() {
-    }
-
-
-    public ISaleItem get (ItemStack key) {
+    @Nullable
+    public ISaleItem get(ItemStack key) {
         return get(key, StoreStackMatcher.getDefault());
     }
-    
-    public ISaleItem get (ItemStack key, ItemStackMatcher comparer) {
-        MatchableItem wrapper = new MatchableItem(key, comparer);
+
+    /**
+     * Get an {@link ISaleItem} from the map using an
+     * {@link org.bukkit.inventory.ItemStack} that is matched using
+     * the specified {@link com.jcwhatever.nucleus.utils.items.ItemStackMatcher}.
+     *
+     * @param key      The {@link org.bukkit.inventory.ItemStack}.
+     * @param matcher  The {@link com.jcwhatever.nucleus.utils.items.ItemStackMatcher}.
+     *
+     * @return  The {@link ISaleItem} or null if not found.
+     */
+    @Nullable
+    public ISaleItem get(ItemStack key, ItemStackMatcher matcher) {
+        PreCon.notNull(key);
+        PreCon.notNull(matcher);
+
+        MatchableItem wrapper = new MatchableItem(key, matcher);
         return super.get(wrapper);
     }
 
-    public ISaleItem put (ItemStack key, SaleItem value) {
+    /**
+     * Put an {@link ISaleItem} into the map keyed to the specified
+     * {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The provided item is wrapped in a {@link com.jcwhatever.nucleus.utils.items.MatchableItem}</p>
+     *
+     * @param key    The {@link org.bukkit.inventory.ItemStack} key.
+     * @param value  The {@link ISaleItem} value.
+     *
+     * @return  The previous value.
+     */
+    @Nullable
+    public ISaleItem put(ItemStack key, SaleItem value) {
+        PreCon.notNull(key);
+        PreCon.notNull(value);
 
-        MatchableItem wrapper = new MatchableItem(key);
-        return super.put(wrapper, value);
+        MatchableItem matchable = new MatchableItem(key);
+        return super.put(matchable, value);
     }
 
-    public ISaleItem remove (ItemStack key) {
+    /**
+     * Remove a {@link ISaleItem} from the map using the specified
+     * {@link org.bukkit.inventory.ItemStack} as key.
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} is matched based
+     * on type and meta.</p>
+     *
+     * @param key  The {@link org.bukkit.inventory.ItemStack} key.
+     *
+     * @return  The removed value or null if not found.
+     */
+    @Nullable
+    public ISaleItem remove(ItemStack key) {
+        PreCon.notNull(key);
+
         return remove(key, StoreStackMatcher.getDefault());
     }
-    
-    public ISaleItem remove (ItemStack key, ItemStackMatcher comparer) {
-        MatchableItem wrapper = new MatchableItem(key);
-        return super.remove(wrapper);
+
+    /**
+     * Remove a {@link ISaleItem} from the map using the specified
+     * {@link org.bukkit.inventory.ItemStack} that is matched using
+     * the specified {@link com.jcwhatever.nucleus.utils.items.ItemStackMatcher}.
+     *
+     * @param key      The {@link org.bukkit.inventory.ItemStack} key.
+     * @param matcher  The {@link com.jcwhatever.nucleus.utils.items.ItemStackMatcher}.
+     *
+     * @return  The removed value or null if not found.
+     */
+    @Nullable
+    public ISaleItem remove(ItemStack key, ItemStackMatcher matcher) {
+        PreCon.notNull(key);
+        PreCon.notNull(matcher);
+
+        MatchableItem matchable = new MatchableItem(key, matcher);
+        return super.remove(matchable);
     }
 
+    /**
+     * Determine if the map contains a {@link ISaleItem} of the
+     * specified {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} is matched based
+     * on type and meta.</p>
+     *
+     * @param key  The {@link org.bukkit.inventory.ItemStack} key.
+     */
     public boolean containsKey (ItemStack key) {
         return containsKey(key, StoreStackMatcher.getDefault());
     }
-        
-    public boolean containsKey (ItemStack key, ItemStackMatcher comparer) {
 
-        MatchableItem wrapper = new MatchableItem(key, comparer);
-        return super.containsKey(wrapper);
+    /**
+     * Determine if the map contains an {@link ISaleItem} of the
+     * specified {@link org.bukkit.inventory.ItemStack} matched using
+     * the specified {@link com.jcwhatever.nucleus.utils.items.ItemStackMatcher}.
+     *
+     * @param key      The {@link org.bukkit.inventory.ItemStack} key.
+     * @param matcher  The {@link com.jcwhatever.nucleus.utils.items.ItemStackMatcher}.
+     */
+    public boolean containsKey (ItemStack key, ItemStackMatcher matcher) {
+        PreCon.notNull(key);
+        PreCon.notNull(matcher);
+
+        MatchableItem matchable = new MatchableItem(key, matcher);
+        return super.containsKey(matchable);
     }
-
 }
