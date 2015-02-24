@@ -28,26 +28,25 @@ import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
-import com.jcwhatever.bukkit.storefront.data.PriceMap;
-import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+/**
+ * Interface for a store.
+ */
 public interface IStore extends INamedInsensitive, ISaleItemGetter {
 
     /**
@@ -197,7 +196,6 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      */
     SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack);
 
-
     /**
      * Remove a sale item from the store.
      *
@@ -206,7 +204,6 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty        The number of items to remove.
      */
     SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack, int qty);
-
 
     /**
      * Removes items from player and transfers money from store owner to player.
@@ -217,7 +214,6 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param price   The total price of the transaction.
      */
     boolean sellToStore(Player seller, ISaleItem stack, int qty, double price);
-
 
     /**
      * Remove item from store and give to the specified buyer. Creates economy transaction
@@ -232,45 +228,6 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      */
     boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
 
-
-    /**
-     * Update quantities and prices on items using a current inventory and a snapshot
-     * of the starting inventory.
-     *
-     * @param seller            The player who is selling the items
-     * @param priceMap          The price map containing prices for the inventory items.
-     * @param currentInventory  The current inventory.
-     * @param startSnapshot     A snapshot of the inventory before it was modified.
-     */
-    void updateFromInventory (Player seller, PriceMap priceMap, Inventory currentInventory,
-                                     InventorySnapshot startSnapshot);
-
-
-    /**
-     * Update quantities and prices on wanted items using a current inventory and a snapshot
-     * of the starting inventory.
-     *
-     * @param seller            The player who is selling the items
-     * @param priceMap          The price map containing prices for the inventory items.
-     * @param qtyMap            The quantity map containing item quantities for the inventory items.
-     * @param currentInventory  The current inventory.
-     * @param startSnapshot     A snapshot of the inventory before it was modified.
-     */
-    void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
-                                           Inventory currentInventory,
-                                           InventorySnapshot startSnapshot);
-
-    /**
-     * Update quantities of removed items using a current inventory and a snapshot of the
-     * starting inventory.
-     *
-     * @param seller            The player who is selling the items.
-     * @param currentInventory  The current inventory.
-     * @param startSnapshot     A snapshot of the inventory before it was modified.
-     */
-    void updateRemovedFromInventory (Player seller, Inventory currentInventory,
-                                            InventorySnapshot startSnapshot);
-
     /**
      * Remove all sale items from the specified seller.
      *
@@ -280,28 +237,23 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      */
     boolean clearSaleItems (UUID sellerId);
 
-
     /**
      * Get Categories that players can sell to in the store.
      */
-    public List<Category> getSellCategories ();
-
+    List<Category> getSellCategories ();
 
     /**
      * Get Categories that have items for sale in the store.
      */
-    public List<Category> getBuyCategories ();
-
+    List<Category> getBuyCategories ();
 
     /**
      * Get items the store owner wants to buy.
      */
-    public WantedItems getWantedItems ();
-
+    WantedItems getWantedItems ();
 
     /**
      * Get the stores data storage node.
      */
-    public IDataNode getDataNode ();
-
+    IDataNode getDataNode ();
 }

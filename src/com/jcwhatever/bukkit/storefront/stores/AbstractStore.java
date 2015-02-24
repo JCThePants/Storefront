@@ -29,8 +29,6 @@ import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.PriceMap;
-import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
@@ -39,15 +37,12 @@ import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
 import com.jcwhatever.nucleus.regions.IRegion;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
-import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
 import org.bukkit.Location;
@@ -56,10 +51,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
@@ -316,71 +308,6 @@ public abstract class AbstractStore implements IStore {
         return true;
     }
 
-    @Override
-    public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
-                                           Inventory currentInventory,
-                                           InventorySnapshot startSnapshot) {
-
-        updateFromInventory(true, seller, priceMap, qtyMap, currentInventory, startSnapshot);
-    }
-
-    @Override
-    public void updateFromInventory (Player seller, PriceMap priceMap,
-                                     Inventory currentInventory,
-                                     InventorySnapshot startSnapshot) {
-
-        updateFromInventory(false, seller, priceMap, null, currentInventory, startSnapshot);
-    }
-
-    @Override
-    public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
-                                            final InventorySnapshot startSnapshot) {
-
-        getDataNode().runBatchOperation(new DataBatchOperation() {
-
-            @Override
-            public void run (IDataNode dataNode) {
-
-                List<MatchableItem> originalItems = startSnapshot.getWrappers();
-
-                Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
-
-                // search for less than total amount items
-                for (MatchableItem startWrapper : originalItems) {
-
-                    if (processed.contains(startWrapper))
-                        continue;
-
-                    processed.add(startWrapper);
-
-                    SaleItem saleItem = getSaleItem(seller.getUniqueId(), startWrapper.getItem());
-
-                    if (saleItem == null)
-                        continue;
-
-                    int startQty = InventoryUtils.count(
-                            startSnapshot.getItemStacks(), startWrapper.getItem(),
-                            StoreStackMatcher.getDefault());
-
-                    int currQty = InventoryUtils.count(
-                            currentInventory.getContents(), startWrapper.getItem(),
-                            StoreStackMatcher.getDefault());
-
-                    if (currQty >= startQty)
-                        continue;
-
-                    int delta = Math.abs(startQty - currQty);
-
-                    int qty = saleItem.getQty();
-                    qty -= delta;
-                    saleItem.setQty(qty);
-                }
-
-            }
-
-        });
-    }
-
     protected SaleItemIDMap getCategoryMap (Category category) {
 
         SaleItemIDMap saleItems = _categoryMap.get(category);
@@ -390,102 +317,6 @@ public abstract class AbstractStore implements IStore {
         }
 
         return saleItems;
-    }
-
-    private void updateFromInventory (final boolean isWanted, final Player seller,
-                                      final PriceMap priceMap, final QtyMap qtyMap, final Inventory currentInventory,
-                                      final InventorySnapshot startSnapshot) {
-
-        getDataNode().runBatchOperation(new DataBatchOperation() {
-
-            @Override
-            public void run (IDataNode dataNode) {
-
-                InventorySnapshot currentSnapshot = new InventorySnapshot(
-                        currentInventory, StoreStackMatcher.getDefault());
-
-                List<MatchableItem> originalItems = startSnapshot.getWrappers();
-                List<MatchableItem> currentItems = currentSnapshot.getWrappers();
-
-                Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
-
-                // modify original items
-                for (MatchableItem wrapper : originalItems) {
-
-                    SaleItem saleItem = (SaleItem)(isWanted
-                            ? getWantedItems().get(wrapper.getItem())
-                            : getSaleItem(seller.getUniqueId(), wrapper.getItem()));
-
-                    if (saleItem == null)
-                        continue;
-
-                    int originalAmount = startSnapshot.getAmount(wrapper);
-                    int newAmount = currentSnapshot.getAmount(wrapper);
-                    int delta = newAmount - originalAmount;
-
-                    Double price = priceMap.get(wrapper);
-                    if (price != null) {
-                        saleItem.setPricePerUnit(price);
-                    }
-
-                    if (qtyMap != null) {
-                        Integer qty = qtyMap.get(wrapper);
-                        if (qty != null) {
-                            saleItem.setQty(qty);
-                        }
-                    }
-                    else if (delta != 0) {
-                        int qty = saleItem.getQty();
-                        qty += delta;
-                        saleItem.setQty(qty);
-                    }
-
-                    processed.add(wrapper);
-                }
-
-                // add new Items
-                for (MatchableItem wrapper : currentItems) {
-                    if (processed.contains(wrapper))
-                        continue;
-
-                    Double price = priceMap.get(wrapper);
-                    if (price == null)
-                        throw new IllegalStateException(
-                                "Failed to get a price from the supplied price map.");
-
-                    SaleItem saleItem = (SaleItem)(isWanted
-                            ? getWantedItems().get(wrapper.getItem())
-                            : getSaleItem(seller.getUniqueId(), wrapper.getItem()));
-
-                    // add new item
-                    if (saleItem == null) {
-
-                        //noinspection ConstantConditions
-                        Integer qty = qtyMap != null
-                                ? qtyMap.get(wrapper)
-                                : wrapper.getItem().getAmount();
-
-                        if (isWanted)
-                            getWantedItems().add(wrapper.getItem(), qty, price);
-                        else
-                            addSaleItem(seller, wrapper.getItem(), qty, price);
-                    }
-
-                    // merge item with existing
-                    else {
-
-                        //noinspection ConstantConditions
-                        Integer qty = qtyMap != null
-                                ? qtyMap.get(wrapper)
-                                : currentSnapshot.getAmount(wrapper) + saleItem.getQty();
-
-                        saleItem.setQty(qty);
-                        saleItem.setPricePerUnit(price);
-                    }
-                }
-            }
-
-        });
     }
 
     private void clearExternalRegion() {

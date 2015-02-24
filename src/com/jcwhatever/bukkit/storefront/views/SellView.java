@@ -38,6 +38,7 @@ import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
+import com.jcwhatever.bukkit.storefront.utils.StoreInventoryUpdater;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.Permissions;
 import com.jcwhatever.nucleus.utils.PreCon;
@@ -140,7 +141,12 @@ public class SellView extends ChestView {
         if (reason == ViewCloseReason.PREV ||
                 reason == ViewCloseReason.ESCAPE) {
 
-            _store.updateFromInventory(getPlayer(), _priceMap, _inventory, _snapshot);
+            new StoreInventoryUpdater(_store)
+                    .seller(getPlayer())
+                    .priceMap(_priceMap)
+                    .inventory(_inventory)
+                    .snapshot(_snapshot)
+                    .update();
         }
     }
 
@@ -210,7 +216,11 @@ public class SellView extends ChestView {
         if (startQty > 0) { // check if item was present at beginning
 
             // prevent sale of removed item
-            _store.updateRemovedFromInventory(getPlayer(), _inventory, _snapshot);
+            new StoreInventoryUpdater(_store)
+                    .seller(getPlayer())
+                    .inventory(_inventory)
+                    .snapshot(_snapshot)
+                    .updateRemoved();
         }
 
         return ChestEventAction.ALLOW;
