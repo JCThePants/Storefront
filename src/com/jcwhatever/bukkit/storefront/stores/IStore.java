@@ -118,10 +118,10 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
     /**
      * Open the stores main menu to a player.
      *
-     * @param sourceBlock  The block clicked on to open the store, if any.
      * @param player       The player to show the stores main menu to.
+     * @param sourceBlock  The block clicked on to open the store, if any.
      */
-    void view (Block sourceBlock, Player player);
+    void view (Player player, @Nullable Block sourceBlock);
 
     /**
      * Get a sale item from the store by item id.

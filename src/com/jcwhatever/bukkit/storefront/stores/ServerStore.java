@@ -41,10 +41,12 @@ import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.Rand;
+import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.views.ViewSession;
 
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -57,11 +59,14 @@ import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+/**
+ * Server store implementation of {@link AbstractStore}
+ * where any player can buy or sell items.
+ */
 public class ServerStore extends AbstractStore {
 
     private static ExpireChecker _expireChecker;
 
-    private Map<UUID, ISaleItem> _idMap;
     private Map<UUID, SaleItemMap> _playerMap;
 
     public ServerStore(String name, IDataNode storeNode) {
@@ -71,7 +76,8 @@ public class ServerStore extends AbstractStore {
         if (_expireChecker == null) {
             _expireChecker = new ExpireChecker();
 
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(Storefront.getPlugin(), _expireChecker, 20, 20 * 60);
+            Scheduler.runTaskRepeat(
+                    Storefront.getPlugin(), Rand.getInt(1, 20), 20 * 60, _expireChecker);
         }
     }
 
@@ -81,22 +87,18 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    public void view (Block sourceBlock, Player p) {
+    public void view (Player player, @Nullable Block sourceBlock) {
+        PreCon.notNull(player);
 
-        ViewSession session = ViewSession.get(p, sourceBlock);
-
+        ViewSession session = ViewSession.get(player, sourceBlock);
         session.next(new MainMenuView());
     }
 
     @Override
-    public SaleItem getSaleItem (UUID itemId) {
-
-        return (SaleItem)_idMap.get(itemId);
-    }
-
-    @Override
     @Nullable
-    public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack) {
+    public SaleItem getSaleItem(UUID sellerId, ItemStack itemStack) {
+        PreCon.notNull(sellerId);
+        PreCon.notNull(itemStack);
 
         SaleItemMap map = _playerMap.get(sellerId);
         if (map == null)
@@ -106,22 +108,8 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    public List<ISaleItem> getSaleItems () {
-        return new ArrayList<>(_idMap.values());
-    }
-
-    @Override
-    public List<ISaleItem> getSaleItems (Category category) {
-
-        SaleItemIDMap map = getCategoryMap(category);
-        if (map == null)
-            return new ArrayList<>(0);
-
-        return new ArrayList<>(map.values());
-    }
-
-    @Override
-    public List<ISaleItem> getSaleItems (UUID sellerId) {
+    public List<ISaleItem> getSaleItems(UUID sellerId) {
+        PreCon.notNull(sellerId);
 
         SaleItemMap map = _playerMap.get(sellerId);
         if (map == null)
@@ -132,10 +120,12 @@ public class ServerStore extends AbstractStore {
 
     @Override
     @Nullable
-    public SaleItem addSaleItem (Player p, ItemStack itemStack, int qty, double pricePerUnit) {
+    public SaleItem addSaleItem(Player player, ItemStack itemStack, int qty, double pricePerUnit) {
+        PreCon.notNull(player);
+        PreCon.notNull(itemStack);
 
         // make sure the item does not already exist
-        SaleItem saleItem = getSaleItem(p.getUniqueId(), itemStack);
+        SaleItem saleItem = getSaleItem(player.getUniqueId(), itemStack);
         if (saleItem != null) {
             // update item
             return updateAddSaleItem(saleItem, qty, pricePerUnit);
@@ -150,7 +140,7 @@ public class ServerStore extends AbstractStore {
         UUID itemId = null;
         while (itemId == null) {
             itemId = UUID.randomUUID();
-            if (_idMap.containsKey(itemId))
+            if (getIDMap().containsKey(itemId))
                 itemId = null;
         }
 
@@ -158,23 +148,24 @@ public class ServerStore extends AbstractStore {
         IDataNode itemNode = getItemNode(itemId);
 
         // create new sale item, constructor saves info to itemNode
-        SaleItem item = new SaleItem(this, p.getUniqueId(), itemId, itemStack, qty, pricePerUnit,
+        SaleItem item = new SaleItem(this, player.getUniqueId(), itemId, itemStack, qty, pricePerUnit,
                 itemNode);
 
         // put sale item into maps
-        _idMap.put(itemId, item);
+        getIDMap().put(itemId, item);
 
         SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.put(itemId, item);
 
-        SaleItemMap playerMap = getPlayerMap(p.getUniqueId());
+        SaleItemMap playerMap = getPlayerMap(player.getUniqueId());
         playerMap.put(itemStack, item);
 
         return item;
     }
 
-    private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
+    private SaleItem updateAddSaleItem(final SaleItem saleItem, final int qty,
                                         final double pricePerUnit) {
+        PreCon.notNull(saleItem);
 
         getDataNode().runBatchOperation(new DataBatchOperation() {
 
@@ -194,9 +185,10 @@ public class ServerStore extends AbstractStore {
 
     @Override
     @Nullable
-    public SaleItem removeSaleItem (UUID itemId) {
+    public SaleItem removeSaleItem(UUID itemId) {
+        PreCon.notNull(itemId);
 
-        SaleItem item = (SaleItem)_idMap.remove(itemId);
+        SaleItem item = (SaleItem)getIDMap().remove(itemId);
         if (item == null)
             return null;
 
@@ -219,7 +211,9 @@ public class ServerStore extends AbstractStore {
 
     @Override
     @Nullable
-    public SaleItem removeSaleItem (UUID playerId, ItemStack itemStack) {
+    public SaleItem removeSaleItem(UUID playerId, ItemStack itemStack) {
+        PreCon.notNull(playerId);
+        PreCon.notNull(itemStack);
 
         // get player item map
         SaleItemMap map = _playerMap.get(playerId);
@@ -232,7 +226,7 @@ public class ServerStore extends AbstractStore {
             return null;
 
         // remove from maps
-        _idMap.remove(saleItem.getId());
+        getIDMap().remove(saleItem.getId());
         SaleItemIDMap catMap = getCategoryMap(saleItem.getCategory());
         if (catMap != null) {
             catMap.remove(saleItem.getId());
@@ -248,7 +242,9 @@ public class ServerStore extends AbstractStore {
 
     @Override
     @Nullable
-    public SaleItem removeSaleItem (UUID playerId, ItemStack itemStack, int qty) {
+    public SaleItem removeSaleItem(UUID playerId, ItemStack itemStack, int qty) {
+        PreCon.notNull(playerId);
+        PreCon.notNull(itemStack);
 
         // get player item map
         SaleItemMap map = _playerMap.get(playerId);
@@ -272,25 +268,8 @@ public class ServerStore extends AbstractStore {
         return saleItem;
     }
 
-    private void removeExpired(SaleItem saleItem) {
-
-        if (!saleItem.isExpired())
-            return;
-
-        IBankItemsAccount account = BankItems.getAccount(saleItem.getSellerId());
-        account.deposit(saleItem.getItemStack(), saleItem.getQty());
-
-        saleItem.setQty(0);
-
-        removeSaleItem(saleItem.getId());
-        
-        Msg.tellImportant(saleItem.getSellerId(), "storefront-sale-expired-" + this.getName(), 
-                "1 or more items you were selling at the store '{0}' expired and were sent to your item bank account.",
-                this.getTitle());
-    }
-
     @Override
-    public boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price) {
+    public boolean buySaleItem(Player buyer, ISaleItem stack, int qty, double price) {
 
         SaleItem saleItem = getSaleItem(stack.getId());
         if (saleItem == null || saleItem.getQty() < qty) {
@@ -341,7 +320,7 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    public boolean clearSaleItems (final UUID playerId) {
+    public boolean clearSaleItems(final UUID playerId) {
 
         // get player item map
         final SaleItemMap map = _playerMap.get(playerId);
@@ -366,26 +345,22 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    public List<Category> getSellCategories () {
+    public List<Category> getSellCategories() {
         return new ArrayList<>(Storefront.getCategoryManager().getAll());
     }
 
     @Override
-    public List<Category> getBuyCategories () {
+    public List<Category> getBuyCategories() {
         return new ArrayList<>(Storefront.getCategoryManager().getAll());
     }
 
     @Override
-    protected void onInit () {
-
-        _idMap = new HashMap<UUID, ISaleItem>(50);
+    protected void onInit() {
         _playerMap = new HashMap<UUID, SaleItemMap>(50);
     }
 
     @Override
-    protected void onSaleItemLoaded (SaleItem saleItem) {
-
-        _idMap.put(saleItem.getId(), saleItem);
+    protected void onSaleItemLoaded(SaleItem saleItem) {
 
         SaleItemIDMap categoryMap = getCategoryMap(saleItem.getCategory());
         categoryMap.put(saleItem.getId(), saleItem);
@@ -395,11 +370,11 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    protected void onLoadSettings (IDataNode storeNode) {
+    protected void onLoadSettings(IDataNode storeNode) {
         // do nothing
     }
 
-    private SaleItemMap getPlayerMap (UUID playerId) {
+    private SaleItemMap getPlayerMap(UUID playerId) {
 
         SaleItemMap saleItems = _playerMap.get(playerId);
         if (saleItems == null) {
@@ -408,6 +383,23 @@ public class ServerStore extends AbstractStore {
         }
 
         return saleItems;
+    }
+
+    private void removeExpired(SaleItem saleItem) {
+
+        if (!saleItem.isExpired())
+            return;
+
+        IBankItemsAccount account = BankItems.getAccount(saleItem.getSellerId());
+        account.deposit(saleItem.getItemStack(), saleItem.getQty());
+
+        saleItem.setQty(0);
+
+        removeSaleItem(saleItem.getId());
+
+        Msg.tellImportant(saleItem.getSellerId(), "storefront-sale-expired-" + this.getName(),
+                "1 or more items you were selling at the store '{0}' expired and were sent to your item bank account.",
+                this.getTitle());
     }
 
     private static class ExpireChecker implements Runnable {

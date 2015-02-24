@@ -36,6 +36,7 @@ import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
 import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.views.ViewSession;
 
@@ -50,15 +51,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
+/**
+ * Player ownable implementation of {@link AbstractStore}.
+ */
 public class PlayerStore extends AbstractStore {
 
-    private Map<UUID, ISaleItem> _idMap;
     private Map<MatchableItem, ISaleItem> _stackMap;
 
-
+    /**
+     * Constructor.
+     *
+     * @param name       The node name of the store.
+     * @param storeNode  The stores data node.
+     */
     public PlayerStore(String name, IDataNode storeNode) {
-
         super(name, storeNode);
     }
 
@@ -68,35 +76,33 @@ public class PlayerStore extends AbstractStore {
     }
 
     @Override
-    public void view (Block sourceBlock, Player p) {
+    public void view (Player player, @Nullable Block sourceBlock) {
+        PreCon.notNull(player);
 
         assert getOwnerId() != null;
         
         if (!hasOwner()) {
 
-            Msg.tell(p, "This store is out of business.");
+            Msg.tell(player, "This store is out of business.");
             return;
         }
 
-        if (!getOwnerId().equals(p.getUniqueId()) &&
+        if (!getOwnerId().equals(player.getUniqueId()) &&
                 getSaleItems().size() == 0 &&
                 getWantedItems().getAll().size() == 0) {
             
-            Msg.tell(p, "Out of stock.");
+            Msg.tell(player, "Out of stock.");
             return;
         }
 
-        ViewSession session = ViewSession.get(p, sourceBlock);
+        ViewSession session = ViewSession.get(player, sourceBlock);
         session.next(new MainMenuView());
     }
 
     @Override
-    public SaleItem getSaleItem (UUID itemId) {
-        return (SaleItem)_idMap.get(itemId);
-    }
-
-    @Override
     public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack) {
+        PreCon.notNull(sellerId);
+        PreCon.notNull(itemStack);
 
         if (!sellerId.equals(getOwnerId()))
             throw new RuntimeException("The seller is not the owner of the store.");
@@ -107,31 +113,19 @@ public class PlayerStore extends AbstractStore {
     }
 
     @Override
-    public List<ISaleItem> getSaleItems () {
-        return new ArrayList<>(_idMap.values());
-    }
-
-    @Override
-    public List<ISaleItem> getSaleItems (Category category) {
-
-        SaleItemIDMap map = getCategoryMap(category);
-        if (map == null)
-            return new ArrayList<>(0);
-
-        return new ArrayList<>(map.values());
-    }
-
-    @Override
     public List<ISaleItem> getSaleItems (UUID sellerId) {
+        PreCon.notNull(sellerId);
 
         if (!sellerId.equals(getOwnerId()))
             return new ArrayList<>(0);
 
-        return new ArrayList<>(_idMap.values());
+        return getSaleItems();
     }
 
     @Override
     public SaleItem addSaleItem (Player seller, ItemStack itemStack, int qty, double pricePerUnit) {
+        PreCon.notNull(seller);
+        PreCon.notNull(itemStack);
 
         // make sure the item does not already exist
         SaleItem saleItem = getSaleItem(getOwnerId(), itemStack);
@@ -149,7 +143,7 @@ public class PlayerStore extends AbstractStore {
         UUID itemId = null;
         while (itemId == null) {
             itemId = UUID.randomUUID();
-            if (_idMap.containsKey(itemId))
+            if (getIDMap().containsKey(itemId))
                 itemId = null;
         }
 
@@ -161,7 +155,7 @@ public class PlayerStore extends AbstractStore {
                 itemNode);
 
         // put sale item into maps
-        _idMap.put(itemId, item);
+        getIDMap().put(itemId, item);
         _stackMap.put(item.getMatchable(), item);
 
         SaleItemIDMap categoryMap = getCategoryMap(category);
@@ -170,29 +164,11 @@ public class PlayerStore extends AbstractStore {
         return item;
     }
 
-    private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
-                                        final double pricePerUnit) {
-
-        getDataNode().runBatchOperation(new DataBatchOperation() {
-
-            @Override
-            public void run (IDataNode dataNode) {
-
-                int newQty = saleItem.getQty() + qty;
-
-                saleItem.setPricePerUnit(pricePerUnit);
-                saleItem.setQty(newQty);
-            }
-
-        });
-
-        return saleItem;
-    }
-
     @Override
     public SaleItem removeSaleItem (UUID itemId) {
+        PreCon.notNull(itemId);
 
-        SaleItem item = (SaleItem)_idMap.remove(itemId);
+        SaleItem item = (SaleItem)getIDMap().remove(itemId);
         if (item == null)
             return null;
 
@@ -212,9 +188,10 @@ public class PlayerStore extends AbstractStore {
         return item;
     }
 
-
     @Override
     public SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack) {
+        PreCon.notNull(sellerId);
+        PreCon.notNull(itemStack);
 
         if (!sellerId.equals(getOwnerId()))
             return null;
@@ -227,7 +204,7 @@ public class PlayerStore extends AbstractStore {
             return null;
 
         // remove from maps
-        _idMap.remove(saleItem.getId());
+        getIDMap().remove(saleItem.getId());
         SaleItemIDMap catMap = this.getCategoryMap(saleItem.getCategory());
         if (catMap != null) {
             catMap.remove(saleItem.getId());
@@ -241,9 +218,10 @@ public class PlayerStore extends AbstractStore {
         return saleItem;
     }
 
-
     @Override
     public SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack, int qty) {
+        PreCon.notNull(sellerId);
+        PreCon.notNull(itemStack);
 
         if (!sellerId.equals(getOwnerId()))
             return null;
@@ -267,9 +245,9 @@ public class PlayerStore extends AbstractStore {
         return saleItem;
     }
 
-
     @Override
     public boolean clearSaleItems (final UUID sellerId) {
+        PreCon.notNull(sellerId);
 
         if (!sellerId.equals(getOwnerId()))
             return false;
@@ -289,12 +267,10 @@ public class PlayerStore extends AbstractStore {
         });
 
         return true;
-
     }
 
     @Override
     protected void onLoadSettings (IDataNode storeNode) {
-
         // do nothing
     }
 
@@ -313,7 +289,6 @@ public class PlayerStore extends AbstractStore {
         return new ArrayList<Category>(categories);
     }
 
-
     @Override
     public List<Category> getBuyCategories () {
 
@@ -328,23 +303,37 @@ public class PlayerStore extends AbstractStore {
         return new ArrayList<Category>(categories);
     }
 
-
     @Override
     protected void onInit () {
-
-        _idMap = new HashMap<>(100);
         _stackMap = new HashMap<>(100);
     }
-
 
     @Override
     protected void onSaleItemLoaded (SaleItem saleItem) {
 
-        _idMap.put(saleItem.getId(), saleItem);
         _stackMap.put(saleItem.getMatchable(), saleItem);
 
         SaleItemIDMap categoryMap = getCategoryMap(saleItem.getCategory());
         categoryMap.put(saleItem.getId(), saleItem);
     }
-    
+
+    private SaleItem updateAddSaleItem (final SaleItem saleItem, final int qty,
+                                        final double pricePerUnit) {
+        PreCon.notNull(saleItem);
+
+        getDataNode().runBatchOperation(new DataBatchOperation() {
+
+            @Override
+            public void run (IDataNode dataNode) {
+
+                int newQty = saleItem.getQty() + qty;
+
+                saleItem.setPricePerUnit(pricePerUnit);
+                saleItem.setQty(newQty);
+            }
+
+        });
+
+        return saleItem;
+    }
 }

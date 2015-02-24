@@ -50,7 +50,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.annotation.Nullable;
@@ -68,6 +70,7 @@ public abstract class AbstractStore implements IStore {
 
     private String _title;
     private WantedItems _wantedItems;
+    private final Map<UUID, ISaleItem> _idMap = new HashMap<>(50);
 
     /**
      * Constructor.
@@ -151,7 +154,6 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public void setExternalRegion (IRegion region) {
-
         IDataNode ownRegionNode = _dataNode.getNode("region");
 
         boolean isOwn = region.getPlugin() == Storefront.getPlugin();
@@ -190,8 +192,30 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public IDataNode getDataNode () {
-
         return _dataNode;
+    }
+
+    @Nullable
+    @Override
+    public SaleItem getSaleItem (UUID itemId) {
+        PreCon.notNull(itemId);
+
+        return (SaleItem)_idMap.get(itemId);
+    }
+
+    @Override
+    public List<ISaleItem> getSaleItems () {
+        return new ArrayList<>(_idMap.values());
+    }
+
+    @Override
+    public List<ISaleItem> getSaleItems (Category category) {
+
+        SaleItemIDMap map = getCategoryMap(category);
+        if (map == null)
+            return new ArrayList<>(0);
+
+        return new ArrayList<>(map.values());
     }
 
     @Override
@@ -357,6 +381,8 @@ public abstract class AbstractStore implements IStore {
             if (saleItem.getCategory() == null)
                 continue;
 
+            getIDMap().put(saleItem.getId(), saleItem);
+
             onSaleItemLoaded(saleItem);
         }
 
@@ -377,9 +403,14 @@ public abstract class AbstractStore implements IStore {
         return _dataNode.getNode("sale-items." + itemId);
     }
 
+    protected Map<UUID, ISaleItem> getIDMap() {
+        return _idMap;
+    }
+
     protected abstract void onInit ();
 
     protected abstract void onSaleItemLoaded (SaleItem saleItem);
 
     protected abstract void onLoadSettings (IDataNode storeNode);
+
 }

@@ -110,7 +110,7 @@ public class GlobalListener implements Listener {
             IStore store = region.getMeta(StoreRegion.REGION_STORE);
             if (store != null) {
                 event.setCancelled(true);
-                store.view(event.getClickedBlock(), event.getPlayer());
+                store.view(event.getPlayer(), event.getClickedBlock());
                 break;
             }
         }
