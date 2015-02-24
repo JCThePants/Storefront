@@ -53,42 +53,42 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
     /**
      * Get the stores display title.
      */
-    public String getTitle ();
+    String getTitle ();
 
     /**
      * Set the stores display title.
      *
      * @param title  The title text.
      */
-    public void setTitle (String title);
+    void setTitle (String title);
 
     /**
      * Get the player owner of the store, if any.
      */
     @Nullable
-    public UUID getOwnerId ();
+    UUID getOwnerId ();
 
     /**
      * Set the id of the player that owns the store.
      *
      * @param ownerId The id of the player owner.
      */
-    public void setOwnerId (@Nullable UUID ownerId);
+    void setOwnerId (@Nullable UUID ownerId);
 
     /**
      * Determine if the store has an owner.
      */
-    public boolean hasOwner ();
+    boolean hasOwner ();
 
     /**
      * Get the stores region, external or internal.
      */
-    public IRegion getRegion();
+    IRegion getRegion();
 
     /**
      * Get the stores region wrapper.
      */
-    public StoreRegion getStoreRegion();
+    StoreRegion getStoreRegion();
 
     /**
      * Sets the region coordinates and sets the store
@@ -97,24 +97,24 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param p1  The first region point location.
      * @param p2  The seconds region point location.
      */
-    public void setRegionCoords(Location p1, Location p2);
+    void setRegionCoords(Location p1, Location p2);
 
     /**
      * Determine if the store defines its own region or uses an external region.
      */
-    public boolean hasOwnRegion();
+    boolean hasOwnRegion();
 
     /**
      * Set an external region for the store. Null to remove.
      *
      * @param region  External region to set
      */
-    public void setExternalRegion(IRegion region);
+    void setExternalRegion(IRegion region);
 
     /**
      * Get the type of store.
      */
-    public StoreType getStoreType ();
+    StoreType getStoreType ();
 
     /**
      * Open the stores main menu to a player.
@@ -122,14 +122,14 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param sourceBlock  The block clicked on to open the store, if any.
      * @param player       The player to show the stores main menu to.
      */
-    public void view (Block sourceBlock, Player player);
+    void view (Block sourceBlock, Player player);
 
     /**
      * Get a sale item from the store by item id.
      *
      * @param itemId  The id of the sale item.
      */
-    public SaleItem getSaleItem (UUID itemId);
+    SaleItem getSaleItem (UUID itemId);
 
     /**
      * Get a sale item from the store being sold by the specified seller 
@@ -138,21 +138,21 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param sellerId   The id of the seller
      * @param itemStack  The item stack
      */
-    public SaleItem getSaleItem (UUID sellerId, ItemStack itemStack);
+    SaleItem getSaleItem (UUID sellerId, ItemStack itemStack);
 
     /**
      * Get all sale items in the specified category from the store.
      *
      * @param category  The category to search in
      */
-    public List<ISaleItem> getSaleItems (Category category);
+    List<ISaleItem> getSaleItems (Category category);
 
     /**
      * Get sale items to be viewed by the specified seller.
      *
      * @param sellerId  The id of the seller
      */
-    public List<ISaleItem> getSaleItems (UUID sellerId);
+    List<ISaleItem> getSaleItems (UUID sellerId);
 
     /**
      * Determine if there is room to add a sale item represented by the 
@@ -162,7 +162,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param itemStack  The item stack
      * @param qty        The amount that needs to fit
      */
-    public boolean canAdd(UUID sellerId, ItemStack itemStack, int qty);
+    boolean canAdd(UUID sellerId, ItemStack itemStack, int qty);
 
     /**
      * Get the amount of space available to add the specified item.
@@ -170,7 +170,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param sellerId   The id of the seller who wants to add a sale item.
      * @param itemStack  The item stack.
      */
-    public int getSpaceAvailable(UUID sellerId, ItemStack itemStack);
+    int getSpaceAvailable(UUID sellerId, ItemStack itemStack);
 
     /**
      * Add a sale item to the store.
@@ -180,16 +180,14 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty           The number of items that will be sold.
      * @param pricePerUnit  The price per unit of the items to be sold.
      */
-    public SaleItem addSaleItem (Player seller, ItemStack itemStack, int qty, double pricePerUnit);
-
+    SaleItem addSaleItem (Player seller, ItemStack itemStack, int qty, double pricePerUnit);
 
     /**
      * Remove a sale item from the store.
      *
      * @param itemId  The id of the item to remove.
      */
-    public SaleItem removeSaleItem (UUID itemId);
-
+    SaleItem removeSaleItem (UUID itemId);
 
     /**
      * Remove a sale item from the store.
@@ -197,7 +195,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param sellerId   The id of the seller whose item is being removed.
      * @param itemStack  An item stack that represents the sale item to be removed.
      */
-    public SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack);
+    SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack);
 
 
     /**
@@ -207,7 +205,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param itemStack  An item stack that represents the sale item to be removed.
      * @param qty        The number of items to remove.
      */
-    public SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack, int qty);
+    SaleItem removeSaleItem (UUID sellerId, ItemStack itemStack, int qty);
 
 
     /**
@@ -218,7 +216,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty     The number of items to sell.
      * @param price   The total price of the transaction.
      */
-    public boolean sellToStore(Player seller, ISaleItem stack, int qty, double price);
+    boolean sellToStore(Player seller, ISaleItem stack, int qty, double price);
 
 
     /**
@@ -232,7 +230,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      *
      * @return  True if successful
      */
-    public boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
+    boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
 
 
     /**
@@ -244,7 +242,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param currentInventory  The current inventory.
      * @param startSnapshot     A snapshot of the inventory before it was modified.
      */
-    public void updateFromInventory (Player seller, PriceMap priceMap, Inventory currentInventory,
+    void updateFromInventory (Player seller, PriceMap priceMap, Inventory currentInventory,
                                      InventorySnapshot startSnapshot);
 
 
@@ -258,21 +256,20 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param currentInventory  The current inventory.
      * @param startSnapshot     A snapshot of the inventory before it was modified.
      */
-    public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
+    void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
                                            Inventory currentInventory,
                                            InventorySnapshot startSnapshot);
 
-
     /**
-     * update quantities of removed items using a current inventory and a snapshot of the
+     * Update quantities of removed items using a current inventory and a snapshot of the
      * starting inventory.
      *
      * @param seller            The player who is selling the items.
      * @param currentInventory  The current inventory.
      * @param startSnapshot     A snapshot of the inventory before it was modified.
      */
-    public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
-                                            final InventorySnapshot startSnapshot);
+    void updateRemovedFromInventory (Player seller, Inventory currentInventory,
+                                            InventorySnapshot startSnapshot);
 
     /**
      * Remove all sale items from the specified seller.
@@ -281,7 +278,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      *
      * @return  True if successful
      */
-    public boolean clearSaleItems (UUID sellerId);
+    boolean clearSaleItems (UUID sellerId);
 
 
     /**

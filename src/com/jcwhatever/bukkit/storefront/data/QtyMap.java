@@ -75,7 +75,7 @@ public class QtyMap {
      * @param itemStack  The {@link ItemStack} to check.
      */
     @Nullable
-    public int get(ItemStack itemStack) {
+    public Integer get(ItemStack itemStack) {
         return get(getMatchable(itemStack));
     }
 
@@ -86,7 +86,8 @@ public class QtyMap {
      * @param matchable  The {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to match
      *                   against stored {@link org.bukkit.inventory.ItemStack} quantities.
      */
-    public int get(MatchableItem matchable) {
+    @Nullable
+    public Integer get(MatchableItem matchable) {
 
         Integer qty = _qtyMap.get(matchable);
 
@@ -98,7 +99,7 @@ public class QtyMap {
                 _qtyMap.put(matchable, qty);
             }
             else {
-                return 0;
+                return null;
             }
 
         }

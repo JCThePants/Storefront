@@ -36,7 +36,6 @@ import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
-import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
 import com.jcwhatever.nucleus.regions.IRegion;
@@ -52,7 +51,6 @@ import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -65,31 +63,33 @@ import java.util.Set;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+/**
+ * Abstract implementation of a store.
+ */
 public abstract class AbstractStore implements IStore {
 
-    private Map<Category, SaleItemIDMap> _categoryMap;
+    private final String _name;
+    private final String _searchName;
+    private final Map<Category, SaleItemIDMap> _categoryMap;
+    private final IDataNode _dataNode;
+    private final StoreRegion _region;
 
-    private String _name;
-    private String _searchName;
     private String _title;
-
-    private IDataNode _storeNode;
-
-    private StoreRegion _region;
-
     private WantedItems _wantedItems;
 
-    private String _regionName;
-    private Location _regionP1;
-    private Location _regionP2;
-
+    /**
+     * Constructor.
+     *
+     * @param name       The node name of the store.
+     * @param storeNode  The stores data node.
+     */
     public AbstractStore(String name, IDataNode storeNode) {
         PreCon.notNullOrEmpty(name);
         PreCon.notNull(storeNode);
 
         _name = name;
         _searchName = name.toLowerCase();
-        _storeNode = storeNode;
+        _dataNode = storeNode;
         _categoryMap = new HashMap<Category, SaleItemIDMap>(25);
 
         _region = new StoreRegion(this);
@@ -109,21 +109,18 @@ public abstract class AbstractStore implements IStore {
         return _searchName;
     }
 
-
-
     @Override
     public final String getTitle () {
-
         return _title;
     }
 
-
     @Override
     public final void setTitle (String title) {
+        PreCon.notNull(title);
 
         _title = title;
-        _storeNode.set("title", title);
-        _storeNode.save();
+        _dataNode.set("title", title);
+        _dataNode.save();
     }
 
     @Override
@@ -137,7 +134,6 @@ public abstract class AbstractStore implements IStore {
         return region.getOwnerId();
     }
 
-
     @Override
     public void setOwnerId (UUID ownerId) {
         IRegion region = getRegion();
@@ -148,9 +144,7 @@ public abstract class AbstractStore implements IStore {
             throw new IllegalStateException("Cannot set owner on a store with an external region.");
 
         region.setOwner(ownerId);
-
     }
-
 
     @Override
     public boolean hasOwner () {
@@ -158,17 +152,15 @@ public abstract class AbstractStore implements IStore {
         return region != null && region.hasOwner();
     }
 
-
     @Override
     public boolean hasOwnRegion () {
         return _region.hasOwnRegion();
     }
 
-
     @Override
     public void setExternalRegion (IRegion region) {
 
-        IDataNode ownRegionNode = _storeNode.getNode("region");
+        IDataNode ownRegionNode = _dataNode.getNode("region");
 
         boolean isOwn = region.getPlugin() == Storefront.getPlugin();
 
@@ -178,46 +170,20 @@ public abstract class AbstractStore implements IStore {
         if (!region.isDefined())
             throw new IllegalStateException("Region must be defined.");
 
-        _storeNode.set("region-name", region.getName());
-        _storeNode.set("region-p1", region.getP1());
-        _storeNode.set("region-p2", region.getP2());
+        _dataNode.set("region-name", region.getName());
+        _dataNode.set("region-p1", region.getP1());
+        _dataNode.set("region-p2", region.getP2());
 
         ownRegionNode.remove();
 
         _region.setRegion(region);
 
-        _storeNode.save();
+        _dataNode.save();
     }
-
-
 
     @Override
     public final IRegion getRegion() {
-
-        IRegion currentRegion = _region.getRegion();
-
-        if (!currentRegion.isDefined()) {
-
-            // check if an external region is set.
-            if (_regionName != null && _regionP1 != null && _regionP2 != null) {
-
-                // find external region
-                List<IRegion> regions = Nucleus.getRegionManager().getRegions(_regionP1);
-
-                for (IRegion region : regions) {
-                    //noinspection ConstantConditions
-                    if (region.getP1().equals(_regionP1) &&
-                            region.getP2().equals(_regionP2) &&
-                            region.getName().equals(_regionName)) {
-
-                        _region.setRegion(region);
-                        break;
-                    }
-                }
-            }
-        }
-
-        return currentRegion;
+        return _region.getRegion();
     }
 
     @Override
@@ -233,13 +199,8 @@ public abstract class AbstractStore implements IStore {
     @Override
     public IDataNode getDataNode () {
 
-        return _storeNode;
+        return _dataNode;
     }
-
-
-    @Override
-    public abstract void view (Block sourceBlock, Player p);
-
 
     @Override
     public WantedItems getWantedItems () {
@@ -249,12 +210,11 @@ public abstract class AbstractStore implements IStore {
         }
 
         if (_wantedItems == null) {
-            _wantedItems = new WantedItems(this, _storeNode.getNode("wanted-items"));
+            _wantedItems = new WantedItems(this, _dataNode.getNode("wanted-items"));
         }
 
         return _wantedItems;
     }
-
 
     @Override
     public boolean canAdd (UUID sellerId, ItemStack itemStack, int qty) {
@@ -267,7 +227,6 @@ public abstract class AbstractStore implements IStore {
         return map.canAdd(sellerId, itemStack, qty);
     }
 
-
     @Override
     public int getSpaceAvailable (UUID sellerId, ItemStack itemStack) {
         Category category = Storefront.getCategoryManager().get(itemStack);
@@ -278,7 +237,6 @@ public abstract class AbstractStore implements IStore {
 
         return map.getAvailableSpace(sellerId, itemStack);
     }
-
 
     @Override
     public boolean sellToStore(Player seller, ISaleItem stack, int qty, double price) {
@@ -319,11 +277,8 @@ public abstract class AbstractStore implements IStore {
         IBankItemsAccount account = BankItems.getAccount(getOwnerId());
         account.deposit(saleItem.getItemStack(), qty);
 
-        // TODO
-
         return true;
     }
-
 
     @Override
     public boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price) {
@@ -356,12 +311,10 @@ public abstract class AbstractStore implements IStore {
         }
 
         stack.increment(-qty);
-
         buyer.getInventory().addItem(purchasedStack);
 
         return true;
     }
-
 
     @Override
     public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
@@ -371,7 +324,6 @@ public abstract class AbstractStore implements IStore {
         updateFromInventory(true, seller, priceMap, qtyMap, currentInventory, startSnapshot);
     }
 
-
     @Override
     public void updateFromInventory (Player seller, PriceMap priceMap,
                                      Inventory currentInventory,
@@ -379,19 +331,6 @@ public abstract class AbstractStore implements IStore {
 
         updateFromInventory(false, seller, priceMap, null, currentInventory, startSnapshot);
     }
-
-
-    protected SaleItemIDMap getCategoryMap (Category category) {
-
-        SaleItemIDMap saleItems = _categoryMap.get(category);
-        if (saleItems == null) {
-            saleItems = new SaleItemIDMap();
-            _categoryMap.put(category, saleItems);
-        }
-
-        return saleItems;
-    }
-
 
     @Override
     public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
@@ -440,6 +379,17 @@ public abstract class AbstractStore implements IStore {
             }
 
         });
+    }
+
+    protected SaleItemIDMap getCategoryMap (Category category) {
+
+        SaleItemIDMap saleItems = _categoryMap.get(category);
+        if (saleItems == null) {
+            saleItems = new SaleItemIDMap();
+            _categoryMap.put(category, saleItems);
+        }
+
+        return saleItems;
     }
 
     private void updateFromInventory (final boolean isWanted, final Player seller,
@@ -510,13 +460,10 @@ public abstract class AbstractStore implements IStore {
                     // add new item
                     if (saleItem == null) {
 
+                        //noinspection ConstantConditions
                         Integer qty = qtyMap != null
                                 ? qtyMap.get(wrapper)
                                 : wrapper.getItem().getAmount();
-
-                        if (qty == null)
-                            throw new IllegalStateException(
-                                    "Failed to get a quantity from the supplied quantity map.");
 
                         if (isWanted)
                             getWantedItems().add(wrapper.getItem(), qty, price);
@@ -526,13 +473,11 @@ public abstract class AbstractStore implements IStore {
 
                     // merge item with existing
                     else {
+
+                        //noinspection ConstantConditions
                         Integer qty = qtyMap != null
                                 ? qtyMap.get(wrapper)
                                 : currentSnapshot.getAmount(wrapper) + saleItem.getQty();
-
-                        if (qty == null)
-                            throw new IllegalStateException(
-                                    "Failed to get quantity from the supplied quantity map.");
 
                         saleItem.setQty(qty);
                         saleItem.setPricePerUnit(price);
@@ -545,32 +490,23 @@ public abstract class AbstractStore implements IStore {
 
     private void clearExternalRegion() {
 
-        _storeNode.set("region-name", null);
-        _storeNode.set("region-p1", null);
-        _storeNode.set("region-p2", null);
+        _dataNode.set("region-name", null);
+        _dataNode.set("region-p1", null);
+        _dataNode.set("region-p2", null);
 
-        _regionName = null;
-        _regionP1 = null;
-        _regionP2 = null;
-
-        IDataNode ownRegionNode = _storeNode.getNode("region");
+        IDataNode ownRegionNode = _dataNode.getNode("region");
         ownRegionNode.remove();
 
         _region.setOwnRegion();
 
-        _storeNode.save();
+        _dataNode.save();
     }
-
 
     private void loadSettings () {
 
-        _title = _storeNode.getString("title", _name);
+        _title = _dataNode.getString("title", _name);
 
-        _regionName = _storeNode.getString("region-name");
-        _regionP1 = _storeNode.getLocation("region-p1");
-        _regionP2 = _storeNode.getLocation("region-p2");
-
-        IDataNode itemsNode = _storeNode.getNode("sale-items");
+        IDataNode itemsNode = _dataNode.getNode("sale-items");
 
         for (IDataNode node : itemsNode) {
 
@@ -603,22 +539,16 @@ public abstract class AbstractStore implements IStore {
             }
         });
 
-        onLoadSettings(_storeNode);
+        onLoadSettings(_dataNode);
     }
 
-    @Override
-    public abstract StoreType getStoreType ();
-
     protected IDataNode getItemNode (UUID itemId) {
-
-        return _storeNode.getNode("sale-items." + itemId);
+        return _dataNode.getNode("sale-items." + itemId);
     }
 
     protected abstract void onInit ();
 
-
     protected abstract void onSaleItemLoaded (SaleItem saleItem);
-
 
     protected abstract void onLoadSettings (IDataNode storeNode);
 }
