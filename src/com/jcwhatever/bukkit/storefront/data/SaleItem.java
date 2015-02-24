@@ -39,33 +39,62 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
+/**
+ * Implementation of {@link ISaleItem}.
+ *
+ * <p>Represents all quantities of a specific type of item for sale by a specific seller
+ * from a specific store.</p>
+ */
 public class SaleItem implements ISaleItem {
 
-    private UUID _itemId;
+    private final UUID _itemId;
+    private final IStore _store;
+
     private UUID _sellerId;
-    private IStore _store;
     private Category _category;
     private ItemStack _itemStack;
     private double _pricePerUnit = 1.0D;
     private int _qty;
-
     private IDataNode _dataNode;
     private MatchableItem _wrapper;
-
     private boolean _removed;
     private Date _expires;
-    
 
-    public SaleItem(IStore store, UUID sellerId, UUID itemId, ItemStack itemStack, int qty,
+    /**
+     * Constructor.
+     *
+     * <p>Used for creating new sale item.</p>
+     *
+     * @param store         The {@link IStore} the item is for.
+     * @param sellerId      The ID of the seller.
+     * @param itemId        The ID of the sale item.
+     * @param itemStack     The {@link org.bukkit.inventory.ItemStack} that represents the item for sale.
+     * @param qty           The total quantity of items for sale.
+     * @param pricePerUnit  The price per unit.
+     */
+    public SaleItem(IStore store, @Nullable UUID sellerId, UUID itemId, ItemStack itemStack, int qty,
                     double pricePerUnit) {
 
         this(store, sellerId, itemId, itemStack, qty, pricePerUnit, null);
     }
 
-
-    public SaleItem(IStore store, UUID sellerId, UUID itemId, ItemStack itemStack, int qty,
-                    double pricePerUnit, IDataNode dataNode) {
+    /**
+     * Constructor.
+     *
+     * <p>Used for creating new sale item.</p>
+     *
+     * @param store         The {@link IStore} the item is for.
+     * @param sellerId      The ID of the seller.
+     * @param itemId        The ID of the sale item.
+     * @param itemStack     The {@link org.bukkit.inventory.ItemStack} that represents the item for sale.
+     * @param qty           The total quantity of items for sale.
+     * @param pricePerUnit  The price per unit.
+     * @param dataNode      The data node to save data to.
+     */
+    public SaleItem(IStore store, @Nullable UUID sellerId, UUID itemId, ItemStack itemStack, int qty,
+                    double pricePerUnit, @Nullable IDataNode dataNode) {
 
         PreCon.notNull(store);
         PreCon.notNull(itemId);
@@ -84,9 +113,16 @@ public class SaleItem implements ISaleItem {
         saveSettings();
     }
 
-
+    /**
+     * Constructor.
+     *
+     * <p>Used to load an existing sale item from a data node.</p>
+     *
+     * @param store     The {@link IStore} the item is for.
+     * @param itemId    The ID of the item.
+     * @param dataNode  The items data node.
+     */
     public SaleItem(IStore store, UUID itemId, IDataNode dataNode) {
-
         _itemId = itemId;
         _store = store;
         _dataNode = dataNode;
@@ -96,13 +132,11 @@ public class SaleItem implements ISaleItem {
 
     @Override
     public UUID getId() {
-
         return _itemId;
     }
 
     @Override
     public UUID getSellerId () {
-
         return _sellerId;
     }
 
@@ -125,10 +159,8 @@ public class SaleItem implements ISaleItem {
         return _category;
     }
 
-
     @Override
     public boolean isRemoved () {
-
         return _removed;
     }
     
@@ -157,6 +189,9 @@ public class SaleItem implements ISaleItem {
         return _qty;
     }
 
+    /**
+     * Set the quantity.
+     */
     public void setQty (int qty) {
 
         _qty = Math.max(qty, 0);
@@ -181,6 +216,9 @@ public class SaleItem implements ISaleItem {
         return _pricePerUnit;
     }
 
+    /**
+     * Set the price per unit.
+     */
     public void setPricePerUnit (double pricePerUnit) {
 
         _pricePerUnit = pricePerUnit;
@@ -196,6 +234,40 @@ public class SaleItem implements ISaleItem {
     public void increment (int amount) {
         int qty = _qty + amount;
         setQty(qty);
+    }
+
+    @Override
+    public List<ISaleItem> getStacks() {
+
+        int maxPerStack = _wrapper.getMaterialExt().getMaxStackSize();
+        if (maxPerStack == 0)
+            return new ArrayList<>(0);
+
+        int totalStacks = (int) Math.ceil((double) _qty / maxPerStack);
+
+        if (_qty < 1) {
+            onRemove(this.getId());
+            return new ArrayList<>(0);
+        }
+
+        List<ISaleItem> result = new ArrayList<>(totalStacks);
+
+        int itemsLeft = _qty;
+        for (int i = 0; i < totalStacks; i++) {
+
+            int qty = Math.min(maxPerStack, itemsLeft);
+
+            SubSaleItem stack = new SubSaleItem(this, qty);
+
+            result.add(stack);
+
+            itemsLeft -= qty;
+        }
+        return result;
+    }
+
+    protected void onRemove (UUID itemId) {
+        getStore().removeSaleItem(itemId);
     }
 
     private void loadSettings () {
@@ -220,7 +292,6 @@ public class SaleItem implements ISaleItem {
                 : new Date(expireLong);
     }
 
-
     private void saveSettings () {
 
         if (_dataNode == null || _removed)
@@ -235,46 +306,15 @@ public class SaleItem implements ISaleItem {
         _dataNode.save();
     }
 
-    @Override
-    public List<ISaleItem> getStacks() {
-
-        int maxPerStack = _wrapper.getMaterialExt().getMaxStackSize();
-        if (maxPerStack == 0)
-            return new ArrayList<>(0);
-
-        int totalStacks = (int) Math.ceil((double) _qty / maxPerStack);
-
-        if (_qty < 1) {
-            onRemove(this.getId());
-            return new ArrayList<>(0);
-        }
-
-        List<ISaleItem> result = new ArrayList<>(totalStacks);
-
-        int itemsLeft = _qty;
-        for (int i = 0; i < totalStacks; i++) {
-
-            int qty = Math.min(maxPerStack, itemsLeft);
-
-            SaleItemStack stack = new SaleItemStack(this, qty);
-
-            result.add(stack);
-
-            itemsLeft -= qty;
-        }
-        return result;
-    }
-
-    protected void onRemove (UUID itemId) {
-        getStore().removeSaleItem(itemId);
-    }
-
-    public class SaleItemStack implements ISaleItem {
+    /**
+     * Represents a sub quantity of items from a parent {@link SaleItem}.
+     */
+    public class SubSaleItem implements ISaleItem {
 
         private SaleItem _parent;
         private int _qty;
 
-        SaleItemStack(SaleItem parent, int qty) {
+        SubSaleItem(SaleItem parent, int qty) {
             _parent = parent;
             _qty = qty;
         }
