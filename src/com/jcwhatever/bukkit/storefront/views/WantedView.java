@@ -167,8 +167,8 @@ public class WantedView extends AbstractMenuView {
     private void updateItem(MenuItem menuItem, int qty, double price) {
 
         menuItem.setAmount(qty);
-        _priceMap.setPrice(menuItem, price);
-        _qtyMap.setQty(menuItem, qty);
+        _priceMap.set(menuItem, price);
+        _qtyMap.set(menuItem, qty);
 
         ItemStackUtil.removeTempLore(menuItem);
         ItemStackUtil.setPriceLore(menuItem, price, PriceType.PER_ITEM);
@@ -216,13 +216,13 @@ public class WantedView extends AbstractMenuView {
             .build(slotInfo.getSlot());
 
         if (!hasItem) {
-            _priceMap.setPrice(selectedStack, 1.0D);
-            _qtyMap.setQty(selectedStack, 1);
+            _priceMap.set(selectedStack, 1.0D);
+            _qtyMap.set(selectedStack, 1);
         }
 
         getViewSession().setMeta(ITEM_TASKED_MENU_ITEM, menuItem);
 
-        getViewSession().next(new ItemTaskView(itemStack, _priceMap.getPrice(itemStack), _qtyMap.getQty(itemStack), 64));
+        getViewSession().next(new ItemTaskView(itemStack, _priceMap.get(itemStack), _qtyMap.get(itemStack), 64));
 
         return false; // cancel underlying event
     }

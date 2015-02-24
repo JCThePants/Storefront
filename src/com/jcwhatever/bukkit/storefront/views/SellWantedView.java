@@ -208,7 +208,7 @@ public class SellWantedView extends AbstractMenuView {
         ISaleItem selectedItem = menuItem.getMeta(SALE_ITEM);
         _selectedMenuItem = menuItem;
 
-        getViewSession().next(new QuantityView(selectedItem.getItemStack(), 1, playerQty, _priceMap.getPrice(clone)));
+        getViewSession().next(new QuantityView(selectedItem.getItemStack(), 1, playerQty, _priceMap.get(clone)));
     }
 
 
@@ -216,7 +216,7 @@ public class SellWantedView extends AbstractMenuView {
     private void updateItem(ItemStack itemStack, int qty, double price) {
 
         itemStack.setAmount(qty);
-        _priceMap.setPrice(itemStack, price);
+        _priceMap.set(itemStack, price);
 
         ItemStackUtil.removeTempLore(itemStack);
         ItemStackUtil.setPriceLore(itemStack, price, PriceType.PER_ITEM);

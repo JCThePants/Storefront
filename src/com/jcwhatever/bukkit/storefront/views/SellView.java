@@ -115,14 +115,14 @@ public class SellView extends ChestView {
                 ItemStack item = priceView.getItemToPrice();
 
                 Double price = priceView.getSelectedPrice();
-                if (price == null && _priceMap.getPrice(item) != null)
+                if (price == null && _priceMap.get(item) != null)
                     return;
 
                 price = price != null ? price : 1.0D;
 
                 ItemStackUtil.removeTempLore(item);
 
-                _priceMap.setPrice(item.clone(), price);
+                _priceMap.set(item.clone(), price);
 
                 ItemStackUtil.setPriceLore(_inventory, item,
                         price, PriceType.PER_ITEM, false);
@@ -189,7 +189,7 @@ public class SellView extends ChestView {
 
             inventory.addItem(stack);
 
-            _priceMap.setPrice(saleItem.getMatchable(), saleItem.getPricePerUnit());
+            _priceMap.set(saleItem.getMatchable(), saleItem.getPricePerUnit());
         }
 
         _snapshot = new SaleItemSnapshot(inventory);
@@ -380,7 +380,7 @@ public class SellView extends ChestView {
 
         MatchableItem matchableItem = new MatchableItem(itemClone, StoreStackMatcher.getDefault());
 
-        final Double price = _priceMap.getPrice(matchableItem);
+        final Double price = _priceMap.get(matchableItem);
         if (price == null || force) {
 
             // prevent sledge hammer from running during the delay to show
@@ -442,7 +442,7 @@ public class SellView extends ChestView {
 
                 MatchableItem wrapper = new MatchableItem(stack, StoreStackMatcher.getDefault());
 
-                Double price = _priceMap.getPrice(wrapper);
+                Double price = _priceMap.get(wrapper);
                 if (price == null) {
                     openPriceMenu(stack, false);
                     return;

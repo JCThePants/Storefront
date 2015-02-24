@@ -24,86 +24,157 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
 
+/**
+ * Maps {@link ItemStack}'s to a per unit price.
+ *
+ * <p>Does not set price for specific {@link org.bukkit.inventory.ItemStack} instances. By default,
+ * stores price based on type and meta but item price can be retrieved based on other properties
+ * using {@link com.jcwhatever.nucleus.utils.items.MatchableItem}.</p>
+ */
 public class PriceMap {
 
-    private IStore _store;
-    private Player _seller;
-    private Map<MatchableItem, Double> _priceMap = new HashMap<MatchableItem, Double>(7 * 9);
+    private final IStore _store;
+    private final Player _seller;
+    private final Map<MatchableItem, Double> _priceMap = new HashMap<MatchableItem, Double>(7 * 9);
 
-
+    /**
+     * Constructor.
+     *
+     * @param seller  The seller of the items in the price map.
+     * @param store   The store the price map is for.
+     */
     public PriceMap(Player seller, IStore store) {
+        PreCon.notNull(seller);
+        PreCon.notNull(store);
 
         _store = store;
         _seller = seller;
     }
 
+    /**
+     * Get the per unit price of an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The quantity/amount of the {@link org.bukkit.inventory.ItemStack} is not considered</p>
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} is matched based on type and meta.</p>
+     *
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack} to check.
+     *
+     * @return  The price of the item or null if no price set.
+     */
+    @Nullable
+    public Double get(ItemStack itemStack) {
+        PreCon.notNull(itemStack);
 
-    public Double getPrice (ItemStack itemStack) {
-
-        return getPrice(getWrapper(itemStack));
+        return get(getMatchable(itemStack));
     }
 
+    /**
+     * Get the per unit price of an {@link org.bukkit.inventory.ItemStack} represented
+     * with a {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to match the
+     * item to an item in the price map based on certain properties.
+     *
+     * @param matchable  The {@link com.jcwhatever.nucleus.utils.items.MatchableItem} to check.
+     *
+     * @return  The price of the item or null if no price set.
+     */
+    @Nullable
+    public Double get(MatchableItem matchable) {
+        PreCon.notNull(matchable);
 
-    public Double getPrice (MatchableItem wrapper) {
-
-        Double price = _priceMap.get(wrapper);
+        Double price = _priceMap.get(matchable);
 
         if (price == null) {
-            SaleItem saleItem = _store.getSaleItem(_seller.getUniqueId(), wrapper.getItem());
+            SaleItem saleItem = _store.getSaleItem(_seller.getUniqueId(), matchable.getItem());
 
             if (saleItem != null) {
                 price = saleItem.getPricePerUnit();
-                _priceMap.put(wrapper, price);
+                _priceMap.put(matchable, price);
             }
         }
 
         return price;
     }
 
+    /**
+     * Set the per unit price of an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The quantity/amount of the {@link org.bukkit.inventory.ItemStack} is not considered</p>
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} price is stored based on the items
+     * type and meta.</p>
+     *
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack} to set a price on.
+     * @param price      The per unit price.
+     */
+    public void set(ItemStack itemStack, double price) {
+        PreCon.notNull(itemStack);
 
-    public void setPrice (ItemStack itemStack, double price) {
-
-        setPrice(getWrapper(itemStack), price);
+        set(getMatchable(itemStack), price);
     }
 
+    /**
+     * Set the per unit price of an {@link org.bukkit.inventory.ItemStack} represented
+     * with a {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to match the
+     * item to an item in the price map based on certain properties.
+     *
+     * @param matchable  The {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to
+     *                   set the {@link org.bukkit.inventory.ItemStack} price.
+     * @param price      The per unit price.
+     */
+    public void set(MatchableItem matchable, double price) {
+        PreCon.notNull(matchable);
 
-    public void setPrice (MatchableItem wrapper, double price) {
-
-        _priceMap.put(wrapper, price);
+        _priceMap.put(matchable, price);
     }
 
+    /**
+     * Clear price of the specified {@link org.bukkit.inventory.ItemStack}.
+     *
+     * <p>The quantity/amount of the {@link org.bukkit.inventory.ItemStack} is not considered.</p>
+     *
+     * <p>The {@link org.bukkit.inventory.ItemStack} whose price is cleared is determined based on
+     * the specified items type and meta.</p>
+     *
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack} that represents the item to be cleared.
+     */
+    public void clear(ItemStack itemStack) {
+        PreCon.notNull(itemStack);
 
-    public void clearPrice (ItemStack itemStack) {
-
-        clearPrice(getWrapper(itemStack));
+        clear(getMatchable(itemStack));
     }
 
+    /**
+     * Clear the price of an {@link org.bukkit.inventory.ItemStack} represented
+     * with a {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to match the
+     * item to an item in the price map based on certain properties.
+     *
+     * @param matchable  The {@link com.jcwhatever.nucleus.utils.items.MatchableItem} used to
+     *                   match the {@link ItemStack} whose price is to be cleared.
+     */
+    public void clear(MatchableItem matchable) {
+        PreCon.notNull(matchable);
 
-    public void clearPrice (MatchableItem wrapper) {
-
-        _priceMap.remove(wrapper);
+        _priceMap.remove(matchable);
     }
 
-
-    private MatchableItem getWrapper (ItemStack itemStack) {
+    private MatchableItem getMatchable(ItemStack itemStack) {
 
         itemStack = itemStack.clone();
-
         ItemStackUtil.removeTempLore(itemStack);
-
-        MatchableItem wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDefault());
-
-        return wrapper;
+        return new MatchableItem(itemStack, StoreStackMatcher.getDefault());
     }
-
 }

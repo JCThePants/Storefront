@@ -468,13 +468,13 @@ public abstract class AbstractStore implements IStore {
                     int newAmount = currentSnapshot.getAmount(wrapper);
                     int delta = newAmount - originalAmount;
 
-                    Double price = priceMap.getPrice(wrapper);
+                    Double price = priceMap.get(wrapper);
                     if (price != null) {
                         saleItem.setPricePerUnit(price);
                     }
 
                     if (qtyMap != null) {
-                        Integer qty = qtyMap.getQty(wrapper);
+                        Integer qty = qtyMap.get(wrapper);
                         if (qty != null) {
                             saleItem.setQty(qty);
                         }
@@ -493,7 +493,7 @@ public abstract class AbstractStore implements IStore {
                     if (processed.contains(wrapper))
                         continue;
 
-                    Double price = priceMap.getPrice(wrapper);
+                    Double price = priceMap.get(wrapper);
                     if (price == null)
                         throw new IllegalStateException(
                                 "Failed to get a price from the supplied price map.");
@@ -506,7 +506,7 @@ public abstract class AbstractStore implements IStore {
                     if (saleItem == null) {
 
                         Integer qty = qtyMap != null
-                                ? qtyMap.getQty(wrapper)
+                                ? qtyMap.get(wrapper)
                                 : wrapper.getItem().getAmount();
 
                         if (qty == null)
@@ -522,7 +522,7 @@ public abstract class AbstractStore implements IStore {
                     // merge item with existing
                     else {
                         Integer qty = qtyMap != null
-                                ? qtyMap.getQty(wrapper)
+                                ? qtyMap.get(wrapper)
                                 : currentSnapshot.getAmount(wrapper) + saleItem.getQty();
 
                         if (qty == null)
