@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 
 public class WantedItems {
 
-    private Map<Category, SaleItemCategoryMap> _wantedCategoryMap = new HashMap<Category, SaleItemCategoryMap>(25);
+    private Map<Category, SaleItemIDMap> _wantedCategoryMap = new HashMap<Category, SaleItemIDMap>(25);
     private Map<UUID, ISaleItem> _wantedIdMap = new HashMap<>(25);
     private Map<MatchableItem, ISaleItem> _wantedMap = new HashMap<>(25);
 
@@ -67,7 +67,7 @@ public class WantedItems {
 
     public List<ISaleItem> get (Category category) {
 
-        SaleItemCategoryMap map = _wantedCategoryMap.get(category);
+        SaleItemIDMap map = _wantedCategoryMap.get(category);
         if (map == null)
             return new ArrayList<>(0);
 
@@ -115,7 +115,7 @@ public class WantedItems {
         _wantedIdMap.put(itemId, item);
         _wantedMap.put(item.getMatchable(), item);
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(category);
+        SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.put(itemId, item);
 
         return item;
@@ -138,20 +138,20 @@ public class WantedItems {
 
         _wantedMap.remove(item.getMatchable());
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(category);
+        SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.remove(itemId);
 
         return item;
     }
 
 
-    private SaleItemCategoryMap getCategoryMap (Category category) {
+    private SaleItemIDMap getCategoryMap (Category category) {
 
         PreCon.notNull(category);
 
-        SaleItemCategoryMap saleItems = _wantedCategoryMap.get(category);
+        SaleItemIDMap saleItems = _wantedCategoryMap.get(category);
         if (saleItems == null) {
-            saleItems = new SaleItemCategoryMap();
+            saleItems = new SaleItemIDMap();
             _wantedCategoryMap.put(category, saleItems);
         }
 
@@ -182,7 +182,7 @@ public class WantedItems {
             _wantedMap.put(saleItem.getMatchable(), saleItem);
             _wantedIdMap.put(saleItem.getId(), saleItem);
 
-            SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
+            SaleItemIDMap categoryMap = getCategoryMap(saleItem.getCategory());
             categoryMap.put(saleItem.getId(), saleItem);
 
         }

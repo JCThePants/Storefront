@@ -32,7 +32,7 @@ import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
-import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
+import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
@@ -67,7 +67,7 @@ import javax.annotation.Nullable;
 
 public abstract class AbstractStore implements IStore {
 
-    private Map<Category, SaleItemCategoryMap> _categoryMap;
+    private Map<Category, SaleItemIDMap> _categoryMap;
 
     private String _name;
     private String _searchName;
@@ -90,7 +90,7 @@ public abstract class AbstractStore implements IStore {
         _name = name;
         _searchName = name.toLowerCase();
         _storeNode = storeNode;
-        _categoryMap = new HashMap<Category, SaleItemCategoryMap>(25);
+        _categoryMap = new HashMap<Category, SaleItemIDMap>(25);
 
         _region = new StoreRegion(this);
 
@@ -262,7 +262,7 @@ public abstract class AbstractStore implements IStore {
         if (category == null)
             return false;
 
-        SaleItemCategoryMap map = getCategoryMap(category);
+        SaleItemIDMap map = getCategoryMap(category);
 
         return map.canAdd(sellerId, itemStack, qty);
     }
@@ -274,9 +274,9 @@ public abstract class AbstractStore implements IStore {
         if (category == null)
             return 0;
 
-        SaleItemCategoryMap map = getCategoryMap(category);
+        SaleItemIDMap map = getCategoryMap(category);
 
-        return map.getSpace(sellerId, itemStack);
+        return map.getAvailableSpace(sellerId, itemStack);
     }
 
 
@@ -381,11 +381,11 @@ public abstract class AbstractStore implements IStore {
     }
 
 
-    protected SaleItemCategoryMap getCategoryMap (Category category) {
+    protected SaleItemIDMap getCategoryMap (Category category) {
 
-        SaleItemCategoryMap saleItems = _categoryMap.get(category);
+        SaleItemIDMap saleItems = _categoryMap.get(category);
         if (saleItems == null) {
-            saleItems = new SaleItemCategoryMap();
+            saleItems = new SaleItemIDMap();
             _categoryMap.put(category, saleItems);
         }
 

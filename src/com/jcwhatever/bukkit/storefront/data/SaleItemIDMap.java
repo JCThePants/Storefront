@@ -24,35 +24,63 @@
 
 package com.jcwhatever.bukkit.storefront.data;
 
-import com.jcwhatever.nucleus.utils.extended.MaterialExt;
-import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.extended.MaterialExt;
+
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import javax.annotation.Nullable;
 
+/**
+ * A {@link java.util.HashMap} intended to to store {@link ISaleItem}'s
+ * by a {@link java.util.UUID}.
+ */
 @SuppressWarnings("serial")
-public class SaleItemCategoryMap extends HashMap<UUID, ISaleItem> {
+public class SaleItemIDMap extends HashMap<UUID, ISaleItem> {
     
     private static final int MAX_SLOTS = 2916; // (6 *9) * (6 * 9)
-        
-    
-    public boolean canAdd(UUID sellerId, ItemStack itemStack, int amount) {
+
+    /**
+     * Determine if there is enough room to add a specified amount
+     * of an {@link org.bukkit.inventory.ItemStack} into a paginated inventory
+     * menu view that holds a maximum of 2916 slots.
+     *
+     * <p>Assumes the items in the map are the items already in the paginated inventory view.</p>
+     *
+     * @param viewerId   The ID of the inventory menu viewer. The viewers items are excluded
+     *                   from the result since they are not visible.
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack} to check.
+     * @param amount     The amount.
+     */
+    public boolean canAdd(@Nullable UUID viewerId, ItemStack itemStack, int amount) {
         PreCon.notNull(itemStack);
 
-        int room = getSpace(sellerId, itemStack, amount);
-        
+        int room = getAvailableSpace(viewerId, itemStack, amount);
+
         return room >= amount;
     }
-        
-    public int getSpace(UUID sellerId, ItemStack itemStack) {
-        return getSpace(sellerId, itemStack, -1);
+
+    /**
+     * Determine how many more of a specified {@link org.bukkit.inventory.ItemStack}
+     * can be added to a paginated inventory menu view that holds a maximum of 2916 slots.
+     *
+     * <p>Assumes the items in the map are the items already in the paginated inventory view.</p>
+     *
+     * @param viewerId   The ID of the inventory menu viewer. The viewers items are excluded
+     *                   from the result since they are not visible.
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack} to check.
+     * @return
+     */
+    public int getAvailableSpace(@Nullable UUID viewerId, ItemStack itemStack) {
+        return getAvailableSpace(viewerId, itemStack, -1);
     }
     
-    private int getSpace(UUID sellerId, ItemStack itemStack, int amount) {
+    private int getAvailableSpace(@Nullable UUID viewerId, ItemStack itemStack, int amount) {
         PreCon.notNull(itemStack);
 
         MaterialExt materialExt = MaterialExt.from(itemStack.getType());
@@ -61,33 +89,36 @@ public class SaleItemCategoryMap extends HashMap<UUID, ISaleItem> {
         
         int slotsUsed = 0;
         int partialStackSpace = 0;
-                        
+
+        // iterate all sale items
         for (ISaleItem saleItem : saleItems) {
             
             MaterialExt saleMaterial = MaterialExt.from(saleItem.getItemStack().getType());
             
             int maxStackSize = saleMaterial.getMaxStackSize();            
             int qty = saleItem.getQty();
-            
+
+            // increment slots used
             slotsUsed += (int)Math.ceil((double)qty / maxStackSize);
-            
-            if (StoreStackMatcher.getDefault().isMatch(itemStack, saleItem.getItemStack()) &&
-                    saleItem.getSellerId().equals(sellerId)) {
+
+            boolean isMatch = StoreStackMatcher.getDefault()
+                    .isMatch(itemStack, saleItem.getItemStack());
+
+            // exclude the sellers items since the seller cannot see their own items
+            if (isMatch && saleItem.getSellerId().equals(viewerId)) {
                 
                 partialStackSpace += qty >= maxStackSize ? qty % maxStackSize : maxStackSize - qty;
                 
                 if (amount >= 0 && partialStackSpace >= amount)
                     return partialStackSpace;
             }
-            
+
+            // check if max slots is exceeded
             if (amount >= 0 && slotsUsed >= MAX_SLOTS)
                 return 0;
         }
         
         int emptySlots = MAX_SLOTS - slotsUsed;
-        int totalRoom = (materialExt.getMaxStackSize() * emptySlots) + partialStackSpace;
-        
-        return totalRoom;
+        return (materialExt.getMaxStackSize() * emptySlots) + partialStackSpace;
     }
-
 }

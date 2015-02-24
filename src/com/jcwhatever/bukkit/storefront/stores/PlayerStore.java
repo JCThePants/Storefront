@@ -30,7 +30,7 @@ import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
-import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
+import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
@@ -114,7 +114,7 @@ public class PlayerStore extends AbstractStore {
     @Override
     public List<ISaleItem> getSaleItems (Category category) {
 
-        SaleItemCategoryMap map = getCategoryMap(category);
+        SaleItemIDMap map = getCategoryMap(category);
         if (map == null)
             return new ArrayList<>(0);
 
@@ -164,7 +164,7 @@ public class PlayerStore extends AbstractStore {
         _idMap.put(itemId, item);
         _stackMap.put(item.getMatchable(), item);
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(category);
+        SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.put(itemId, item);
 
         return item;
@@ -206,7 +206,7 @@ public class PlayerStore extends AbstractStore {
         itemNode.remove();
         itemNode.save();
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(category);
+        SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.remove(itemId);
 
         return item;
@@ -228,7 +228,7 @@ public class PlayerStore extends AbstractStore {
 
         // remove from maps
         _idMap.remove(saleItem.getId());
-        SaleItemCategoryMap catMap = this.getCategoryMap(saleItem.getCategory());
+        SaleItemIDMap catMap = this.getCategoryMap(saleItem.getCategory());
         if (catMap != null) {
             catMap.remove(saleItem.getId());
         }
@@ -343,7 +343,7 @@ public class PlayerStore extends AbstractStore {
         _idMap.put(saleItem.getId(), saleItem);
         _stackMap.put(saleItem.getMatchable(), saleItem);
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
+        SaleItemIDMap categoryMap = getCategoryMap(saleItem.getCategory());
         categoryMap.put(saleItem.getId(), saleItem);
     }
     

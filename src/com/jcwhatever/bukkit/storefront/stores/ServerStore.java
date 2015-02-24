@@ -31,7 +31,7 @@ import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
-import com.jcwhatever.bukkit.storefront.data.SaleItemCategoryMap;
+import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItemMap;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.mainmenu.MainMenuView;
@@ -113,7 +113,7 @@ public class ServerStore extends AbstractStore {
     @Override
     public List<ISaleItem> getSaleItems (Category category) {
 
-        SaleItemCategoryMap map = getCategoryMap(category);
+        SaleItemIDMap map = getCategoryMap(category);
         if (map == null)
             return new ArrayList<>(0);
 
@@ -164,7 +164,7 @@ public class ServerStore extends AbstractStore {
         // put sale item into maps
         _idMap.put(itemId, item);
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(category);
+        SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.put(itemId, item);
 
         SaleItemMap playerMap = getPlayerMap(p.getUniqueId());
@@ -208,7 +208,7 @@ public class ServerStore extends AbstractStore {
         itemNode.remove();
         itemNode.save();
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(category);
+        SaleItemIDMap categoryMap = getCategoryMap(category);
         categoryMap.remove(itemId);
 
         SaleItemMap playerMap = getPlayerMap(item.getSellerId());
@@ -233,7 +233,7 @@ public class ServerStore extends AbstractStore {
 
         // remove from maps
         _idMap.remove(saleItem.getId());
-        SaleItemCategoryMap catMap = getCategoryMap(saleItem.getCategory());
+        SaleItemIDMap catMap = getCategoryMap(saleItem.getCategory());
         if (catMap != null) {
             catMap.remove(saleItem.getId());
         }
@@ -387,7 +387,7 @@ public class ServerStore extends AbstractStore {
 
         _idMap.put(saleItem.getId(), saleItem);
 
-        SaleItemCategoryMap categoryMap = getCategoryMap(saleItem.getCategory());
+        SaleItemIDMap categoryMap = getCategoryMap(saleItem.getCategory());
         categoryMap.put(saleItem.getId(), saleItem);
 
         SaleItemMap playerMap = getPlayerMap(saleItem.getSellerId());
