@@ -24,19 +24,19 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
-import com.jcwhatever.nucleus.mixins.INamedInsensitive;
-import com.jcwhatever.nucleus.regions.IRegion;
-import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
+import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
-import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
+import com.jcwhatever.nucleus.mixins.INamedInsensitive;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -223,7 +223,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
 
     /**
      * Remove item from store and give to the specified buyer. Creates economy transaction
-     * between buyer and seller, and transfers items to buyers chest.
+     * between buyer and seller, and transfers items to buyers inventory.
      *
      * @param buyer  The player whose is buying the item
      * @param stack  The SaleItemStack that is being purchased.
@@ -236,43 +236,43 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
 
 
     /**
-     * Update quantities and prices on items using a current chest and a snapshot
-     * of the starting chest.
+     * Update quantities and prices on items using a current inventory and a snapshot
+     * of the starting inventory.
      *
      * @param seller            The player who is selling the items
-     * @param priceMap          The price map containing prices for the chest items.
-     * @param currentInventory  The current chest.
-     * @param startSnapshot     A snapshot of the chest before it was modified.
+     * @param priceMap          The price map containing prices for the inventory items.
+     * @param currentInventory  The current inventory.
+     * @param startSnapshot     A snapshot of the inventory before it was modified.
      */
     public void updateFromInventory (Player seller, PriceMap priceMap, Inventory currentInventory,
-                                     SaleItemSnapshot startSnapshot);
+                                     InventorySnapshot startSnapshot);
 
 
     /**
-     * Update quantities and prices on wanted items using a current chest and a snapshot
-     * of the starting chest.
+     * Update quantities and prices on wanted items using a current inventory and a snapshot
+     * of the starting inventory.
      *
      * @param seller            The player who is selling the items
-     * @param priceMap          The price map containing prices for the chest items.
-     * @param qtyMap            The quantity map containing item quantities for the chest items.
-     * @param currentInventory  The current chest.
-     * @param startSnapshot     A snapshot of the chest before it was modified.
+     * @param priceMap          The price map containing prices for the inventory items.
+     * @param qtyMap            The quantity map containing item quantities for the inventory items.
+     * @param currentInventory  The current inventory.
+     * @param startSnapshot     A snapshot of the inventory before it was modified.
      */
     public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
                                            Inventory currentInventory,
-                                           SaleItemSnapshot startSnapshot);
+                                           InventorySnapshot startSnapshot);
 
 
     /**
-     * update quantities of removed items using a current chest and a snapshot of the
-     * starting chest.
+     * update quantities of removed items using a current inventory and a snapshot of the
+     * starting inventory.
      *
-     * @param seller            The player who is selling the items
-     * @param currentInventory  The current chest.
-     * @param startSnapshot     A snapshot of the chest begore it was modified.
+     * @param seller            The player who is selling the items.
+     * @param currentInventory  The current inventory.
+     * @param startSnapshot     A snapshot of the inventory before it was modified.
      */
     public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
-                                            final SaleItemSnapshot startSnapshot);
+                                            final InventorySnapshot startSnapshot);
 
     /**
      * Remove all sale items from the specified seller.

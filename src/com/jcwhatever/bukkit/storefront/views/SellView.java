@@ -33,7 +33,6 @@ import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
-import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -41,21 +40,21 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.Permissions;
-import com.jcwhatever.nucleus.utils.scheduler.ScheduledTask;
-import com.jcwhatever.nucleus.utils.scheduler.TaskHandler;
-import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
+import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.nucleus.utils.scheduler.ScheduledTask;
+import com.jcwhatever.nucleus.utils.scheduler.TaskHandler;
 import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.chest.ChestEventAction;
 import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
 import com.jcwhatever.nucleus.views.chest.ChestView;
 import com.jcwhatever.nucleus.views.chest.InventoryItemAction.InventoryPosition;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
-import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuInventory;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
@@ -71,25 +70,16 @@ import java.util.Set;
 
 public class SellView extends ChestView {
 
-    private static MetaKey<ItemStack>
-            PRICED_ITEM_STACK = new MetaKey<ItemStack>(ItemStack.class);
-
     private IStore _store;
     private PriceMap _priceMap;
     private ScheduledTask _sledgehammer = null;
-    private List<ISaleItem> _saleItemStacks;
-    private SaleItemSnapshot _snapshot;
+    private InventorySnapshot _snapshot;
     private Inventory _inventory;
 
     private int _page = 1;
-    private PaginatedItems _pagin;
 
     public SellView(PaginatedItems paginatedItems) {
         super(Storefront.getPlugin(), null);
-
-        PreCon.notNull(paginatedItems);
-
-        _pagin = paginatedItems;
     }
 
     @Override
@@ -177,12 +167,12 @@ public class SellView extends ChestView {
 
         PaginatedItems pagin = new PaginatedItems(_store, getPlayer().getUniqueId());
 
-        _saleItemStacks = pagin.getPage(_page);
+        List<ISaleItem> saleItemStacks = pagin.getPage(_page);
 
-        if (_saleItemStacks == null)
+        if (saleItemStacks == null)
             return _inventory = inventory;
 
-        for (ISaleItem saleItem : _saleItemStacks) {
+        for (ISaleItem saleItem : saleItemStacks) {
 
             ItemStack stack = saleItem.getItemStack().clone();
             stack.setAmount(saleItem.getQty());
@@ -192,7 +182,7 @@ public class SellView extends ChestView {
             _priceMap.set(saleItem.getMatchable(), saleItem.getPricePerUnit());
         }
 
-        _snapshot = new SaleItemSnapshot(inventory);
+        _snapshot = new InventorySnapshot(inventory, StoreStackMatcher.getDefault());
 
         if (_sledgehammer != null)
             _sledgehammer.cancel();

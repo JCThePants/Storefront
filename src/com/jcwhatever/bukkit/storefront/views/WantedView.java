@@ -30,7 +30,6 @@ import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
-import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -39,14 +38,15 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.AddToInventoryResult
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.AddToInventoryResult.SlotInfo;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
-import com.jcwhatever.nucleus.utils.extended.MaterialExt;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.extended.MaterialExt;
+import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
@@ -69,7 +69,7 @@ public class WantedView extends AbstractMenuView {
     private static final MetaKey<MenuItem> ITEM_TASKED_MENU_ITEM = new MetaKey<>(MenuItem.class);
 
     private IStore _store;
-    private SaleItemSnapshot _snapshot;
+    private InventorySnapshot _snapshot;
     private PriceMap _priceMap;
     private QtyMap _qtyMap;
 
@@ -156,7 +156,7 @@ public class WantedView extends AbstractMenuView {
     protected void onShow(ViewOpenReason reason) {
 
         // take snapshot of chest
-        _snapshot = new SaleItemSnapshot(getInventoryView().getTopInventory());
+        _snapshot = new InventorySnapshot(getInventoryView().getTopInventory(), StoreStackMatcher.getDefault());
     }
 
     @Override
@@ -192,7 +192,9 @@ public class WantedView extends AbstractMenuView {
             ItemStackUtils.repair(selectedStack);
         }
 
-        SaleItemSnapshot snapshot = new SaleItemSnapshot(getInventoryView().getTopInventory());
+        InventorySnapshot snapshot = new InventorySnapshot(
+                getInventoryView().getTopInventory(), StoreStackMatcher.getDefault());
+
         boolean hasItem = snapshot.getAmount(selectedStack) > 0;
         selectedStack.setAmount(1);
 

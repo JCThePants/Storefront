@@ -33,7 +33,6 @@ import com.jcwhatever.bukkit.storefront.data.PriceMap;
 import com.jcwhatever.bukkit.storefront.data.QtyMap;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
-import com.jcwhatever.bukkit.storefront.data.SaleItemSnapshot;
 import com.jcwhatever.bukkit.storefront.data.WantedItems;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
@@ -47,6 +46,7 @@ import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
+import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
@@ -366,7 +366,7 @@ public abstract class AbstractStore implements IStore {
     @Override
     public void updateWantedFromInventory (Player seller, PriceMap priceMap, QtyMap qtyMap,
                                            Inventory currentInventory,
-                                           SaleItemSnapshot startSnapshot) {
+                                           InventorySnapshot startSnapshot) {
 
         updateFromInventory(true, seller, priceMap, qtyMap, currentInventory, startSnapshot);
     }
@@ -375,7 +375,7 @@ public abstract class AbstractStore implements IStore {
     @Override
     public void updateFromInventory (Player seller, PriceMap priceMap,
                                      Inventory currentInventory,
-                                     SaleItemSnapshot startSnapshot) {
+                                     InventorySnapshot startSnapshot) {
 
         updateFromInventory(false, seller, priceMap, null, currentInventory, startSnapshot);
     }
@@ -395,7 +395,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public void updateRemovedFromInventory (final Player seller, final Inventory currentInventory,
-                                            final SaleItemSnapshot startSnapshot) {
+                                            final InventorySnapshot startSnapshot) {
 
         getDataNode().runBatchOperation(new DataBatchOperation() {
 
@@ -419,9 +419,13 @@ public abstract class AbstractStore implements IStore {
                     if (saleItem == null)
                         continue;
 
-                    int startQty = InventoryUtils.count(startSnapshot.getItemStacks(), startWrapper.getItem(), StoreStackMatcher.getDefault());
+                    int startQty = InventoryUtils.count(
+                            startSnapshot.getItemStacks(), startWrapper.getItem(),
+                            StoreStackMatcher.getDefault());
 
-                    int currQty = InventoryUtils.count(currentInventory.getContents(), startWrapper.getItem(), StoreStackMatcher.getDefault());
+                    int currQty = InventoryUtils.count(
+                            currentInventory.getContents(), startWrapper.getItem(),
+                            StoreStackMatcher.getDefault());
 
                     if (currQty >= startQty)
                         continue;
@@ -440,14 +444,15 @@ public abstract class AbstractStore implements IStore {
 
     private void updateFromInventory (final boolean isWanted, final Player seller,
                                       final PriceMap priceMap, final QtyMap qtyMap, final Inventory currentInventory,
-                                      final SaleItemSnapshot startSnapshot) {
+                                      final InventorySnapshot startSnapshot) {
 
         getDataNode().runBatchOperation(new DataBatchOperation() {
 
             @Override
             public void run (IDataNode dataNode) {
 
-                SaleItemSnapshot currentSnapshot = new SaleItemSnapshot(currentInventory);
+                InventorySnapshot currentSnapshot = new InventorySnapshot(
+                        currentInventory, StoreStackMatcher.getDefault());
 
                 List<MatchableItem> originalItems = startSnapshot.getWrappers();
                 List<MatchableItem> currentItems = currentSnapshot.getWrappers();
