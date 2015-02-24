@@ -45,7 +45,6 @@ import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -183,11 +182,6 @@ public abstract class AbstractStore implements IStore {
     @Override
     public final StoreRegion getStoreRegion() {
         return _region;
-    }
-
-    @Override
-    public void setRegionCoords(Location p1, Location p2) {
-        _region.setCoords(p1, p2);
     }
 
     @Override

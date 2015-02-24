@@ -63,7 +63,7 @@ public class SetSubCommand extends AbstractCommand {
         if (selection == null)
             return; // finished
 
-        store.setRegionCoords(selection.getP1(), selection.getP2());
+        store.getStoreRegion().setCoords(selection);
 
         tellSuccess(sender, "Store '{0}' region set to current region selection.", store.getName());
     }

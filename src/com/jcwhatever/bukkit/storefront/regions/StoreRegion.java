@@ -1,5 +1,8 @@
 package com.jcwhatever.bukkit.storefront.regions;
 
+import com.jcwhatever.bukkit.storefront.Msg;
+import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.nucleus.mixins.IDisposable;
 import com.jcwhatever.nucleus.regions.BasicRegion;
 import com.jcwhatever.nucleus.regions.IRegion;
@@ -7,19 +10,19 @@ import com.jcwhatever.nucleus.regions.IRegionEventHandler;
 import com.jcwhatever.nucleus.regions.ReadOnlyRegion;
 import com.jcwhatever.nucleus.regions.Region.EnterRegionReason;
 import com.jcwhatever.nucleus.regions.Region.LeaveRegionReason;
+import com.jcwhatever.nucleus.regions.selection.IRegionSelection;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.Storefront;
-import com.jcwhatever.bukkit.storefront.stores.IStore;
 
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 
-/*
- * 
+/**
+ * Encapsulates a stores region.
+ *
+ * <p>Used to hold either the stores own region or a region
+ * attached from another source (external region).</p>
  */
 public class StoreRegion implements IDisposable{
 
@@ -36,15 +39,27 @@ public class StoreRegion implements IDisposable{
     private boolean _isDisposed;
 
     /**
-     * Constructor
+     * Constructor.
+     *
+     * <p>Used to construct with an initial external region.</p>
+     *
+     * @param store   The owning {@link IStore}.
+     * @param region  The external region.
      */
-    public StoreRegion(IStore store, ReadOnlyRegion region) {
+    public StoreRegion(IStore store, IRegion region) {
         _store = store;
         _messageHandler = new MessageHandler();
 
         setRegion(region);
     }
 
+    /**
+     * Constructor.
+     *
+     * <p>Use to construct with own region.</p>
+     *
+     * @param store  The owning {@link IStore}.
+     */
     public StoreRegion(IStore store) {
         PreCon.notNull(store);
 
@@ -54,20 +69,31 @@ public class StoreRegion implements IDisposable{
         setOwnRegion();
     }
 
+    /**
+     * Determine if the store has its own region
+     * or is using an external region.
+     */
     public boolean hasOwnRegion() {
         return _hasOwnRegion;
     }
 
+    /**
+     * Get the stores region.
+     */
     public IRegion getRegion() {
         return _region;
     }
 
+    /**
+     * Set the stores region.
+     *
+     * @param region  The region.
+     */
     public void setRegion(IRegion region) {
         PreCon.notNull(region);
 
-        if (_region != null) {
+        if (_region != null)
             dispose();
-        }
 
         _hasOwnRegion = false;
 
@@ -76,11 +102,16 @@ public class StoreRegion implements IDisposable{
         _region.setMeta(REGION_STORE, _store);
     }
 
+    /**
+     * Set the store to have its own region.
+     */
     public void setOwnRegion() {
 
-        if (_region != null) {
+        if (_hasOwnRegion)
+            return;
+
+        if (_region != null)
             dispose();
-        }
 
         _hasOwnRegion = true;
 
@@ -94,7 +125,14 @@ public class StoreRegion implements IDisposable{
         _region.setMeta(REGION_STORE, _store);
     }
 
-    public void setCoords(Location p1, Location p2) {
+    /**
+     * Set the stores region coordinates.
+     *
+     * <p>Also sets the store to have its own region.</p>
+     *
+     * @param selection  The region selection.
+     */
+    public void setCoords(IRegionSelection selection) {
         if (!hasOwnRegion())
             setOwnRegion();
 
@@ -102,7 +140,7 @@ public class StoreRegion implements IDisposable{
         if (region == null)
             throw new AssertionError();
 
-        region.setCoords(p1, p2);
+        region.setCoords(selection.getP1(), selection.getP2());
     }
 
     @Nullable

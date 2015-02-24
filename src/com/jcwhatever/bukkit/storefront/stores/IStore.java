@@ -35,7 +35,6 @@ import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
 
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -88,15 +87,6 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * Get the stores region wrapper.
      */
     StoreRegion getStoreRegion();
-
-    /**
-     * Sets the region coordinates and sets the store
-     * to use an internal region instance.
-     *
-     * @param p1  The first region point location.
-     * @param p2  The seconds region point location.
-     */
-    void setRegionCoords(Location p1, Location p2);
 
     /**
      * Determine if the store defines its own region or uses an external region.
