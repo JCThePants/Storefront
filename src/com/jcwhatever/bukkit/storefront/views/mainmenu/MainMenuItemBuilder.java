@@ -15,7 +15,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
- * Utility class to create new instances of {@code MainMenuItem}.
+ * Utility class to create new instances of {@link MainMenuItem}.
  */
 public class MainMenuItemBuilder extends MenuItemBuilder {
 
@@ -26,7 +26,8 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     /**
      * Constructor.
      *
-     * @param itemStack  The {@code ItemStack} that represents the menu item.
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack} that represents
+     *                   the menu item.
      */
     public MainMenuItemBuilder(ItemStack itemStack) {
         super(itemStack);
@@ -35,7 +36,7 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     /**
      * Constructor.
      *
-     * @param material  The item {@code Material}.
+     * @param material  The menu item {@link org.bukkit.Material}.
      */
     public MainMenuItemBuilder(Material material) {
         super(material);
@@ -44,7 +45,7 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     /**
      * Constructor.
      *
-     * @param materialData  The item {@code MaterialData}.
+     * @param materialData  The menu item {@link org.bukkit.material.MaterialData}.
      */
     public MainMenuItemBuilder(MaterialData materialData) {
         super(materialData);
@@ -53,7 +54,7 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     /**
      * Constructor.
      *
-     * @param materialName  The name of the material.
+     * @param materialName  The name of the menu item material.
      */
     public MainMenuItemBuilder(String materialName) {
         super(materialName);
@@ -77,7 +78,8 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     /**
      * Set the sale item getter.
      *
-     * @param getter  The {@code SaleItem} getter.
+     * @param getter  The {@link ISaleItemGetter} used to get sale items
+     *                to show.
      *
      * @return  Self for chaining.
      */
@@ -90,7 +92,8 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     }
 
     /**
-     * Flag the {@code SaleItem}'s as categorized.
+     * Flag the {@link com.jcwhatever.bukkit.storefront.data.ISaleItem}'s shown
+     * as categorized.
      *
      * @return  Self for chaining.
      */
@@ -101,7 +104,7 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     }
 
     /**
-     * Build and return a new {@Code MainMenuItem}.
+     * Build and return a new {@link MainMenuItem}.
      *
      * @param slot  The inventory slot the menu item will be placed in.
      */
@@ -129,5 +132,4 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
 
         return new MainMenuItem(slot, itemStack, meta, onClick);
     }
-
 }

@@ -50,6 +50,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A menu view that is displayed in order to buy items.
+ *
+ * <p>Allows player to select items from an inventory view to purchase.</p>
+ */
 public class BuyView extends AbstractMenuView {
 
     private static final MetaKey<ISaleItem>
@@ -63,6 +68,11 @@ public class BuyView extends AbstractMenuView {
 
     private ISaleItem _selectedSaleItem;
 
+    /**
+     * Constructor.
+     *
+     * @param paginatedItems  {@link PaginatedItems} that contain the items to display in the view.
+     */
     public BuyView(PaginatedItems paginatedItems) {
         PreCon.notNull(paginatedItems);
 
@@ -146,7 +156,7 @@ public class BuyView extends AbstractMenuView {
                 return true;
             }
 
-            amount = ((QuantityView) quantityView).getSelectedAmount();
+            amount = ((QuantityView) quantityView).getSelectedQty();
 
             double price = _selectedSaleItem.getPricePerUnit() * amount;
             double balance = Economy.getBalance(getPlayer().getUniqueId());
@@ -174,7 +184,6 @@ public class BuyView extends AbstractMenuView {
             }
 
         } else {
-
 
             if (_store.getSaleItems().size() == 0) {
 

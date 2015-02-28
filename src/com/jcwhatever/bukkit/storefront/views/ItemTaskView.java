@@ -29,7 +29,6 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
@@ -40,7 +39,13 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
+/**
+ * A menu view used to perform tasks on an item.
+ *
+ * <p>Tasks include changing the quantity and price.</p>
+ */
 public class ItemTaskView extends AbstractMenuView {
 
     private static final int SLOT_ITEM = 0;
@@ -66,27 +71,47 @@ public class ItemTaskView extends AbstractMenuView {
     private Integer _selectedAmount;
     private Double _selectedPrice;
 
-    public ItemTaskView(ItemStack item, double price, int amount, int maxAmount) {
+    /**
+     * Constructor.
+     *
+     * @param item           The {@link org.bukkit.inventory.ItemStack} to change properties on.
+     * @param initialPrice   The initial price of the item.
+     * @param initialAmount  The initial amount of the item.
+     * @param maxAmount      The max amount of the item.
+     */
+    public ItemTaskView(ItemStack item, double initialPrice, int initialAmount, int maxAmount) {
         PreCon.notNull(item);
 
         _item = item;
-        _price = price;
-        _amount = amount;
+        _price = initialPrice;
+        _amount = initialAmount;
         _maxAmount = maxAmount;
+    }
+
+    /**
+     * Get the amount selected by the player/viewer.
+     *
+     * @return  The amount or null if not selected.
+     */
+    @Nullable
+    public Integer getSelectedAmount() {
+        return _selectedAmount;
+    }
+
+    /**
+     * Get the price selected by the player/viewer.
+     *
+     * @return  The price or null if not selected.
+     */
+    @Nullable
+    public Double getSelectedPrice() {
+        return _selectedPrice;
     }
 
     @Override
     public String getTitle() {
         ViewSessionTask taskMode = getSessionTask();
         return taskMode.getChatColor() + "Select Item Task";
-    }
-
-    public Integer getSelectedAmount() {
-        return _selectedAmount;
-    }
-
-    public Double getSelectedPrice() {
-        return _selectedPrice;
     }
 
     @Override
@@ -173,7 +198,7 @@ public class ItemTaskView extends AbstractMenuView {
         if (next instanceof QuantityView) {
             QuantityView quantityView = (QuantityView)next;
 
-            Integer amount = quantityView.getSelectedAmount();
+            Integer amount = quantityView.getSelectedQty();
             if (amount != null) {
                 _amount = amount;
                 _selectedAmount = amount;
@@ -196,13 +221,9 @@ public class ItemTaskView extends AbstractMenuView {
         _menuItem.setVisible(this, true);
     }
 
-
-
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-
-    }
-
+    /*
+     * Set an ItemStack's lore. (price, availability, instructions)
+     */
     private void setLore(ItemStack itemStack) {
         ItemStackUtil.removeTempLore(itemStack);
 

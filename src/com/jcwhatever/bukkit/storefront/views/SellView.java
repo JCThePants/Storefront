@@ -41,7 +41,6 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreInventoryUpdater;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.Permissions;
-import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
@@ -69,6 +68,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * A {@link ChestView} used to place items to be sold.
+ */
 public class SellView extends ChestView {
 
     private IStore _store;
@@ -79,7 +81,10 @@ public class SellView extends ChestView {
 
     private int _page = 1;
 
-    public SellView(PaginatedItems paginatedItems) {
+    /**
+     * Constructor.
+     */
+    public SellView() {
         super(Storefront.getPlugin(), null);
     }
 
@@ -95,11 +100,12 @@ public class SellView extends ChestView {
     @Override
     protected void onShow(ViewOpenReason reason) {
 
+        // check if opening as a previous view.
         if (reason == ViewOpenReason.PREV) {
 
+            // get the view that was closed, check for price change
             View nextView = getViewSession().getNextView();
             if (nextView instanceof PriceView) {
-
 
                 PriceView priceView = (PriceView) nextView;
 
@@ -156,15 +162,18 @@ public class SellView extends ChestView {
         if (_inventory != null)
             return _inventory;
 
+        // get session store
         _store = getViewSession().getMeta(SessionMetaKey.STORE);
         if (_store == null)
             throw new IllegalStateException("Store not set in session meta.");
 
+        // get session task
+        ViewSessionTask task = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        if (task == null)
+            throw new IllegalStateException("ViewSessionTask not set in session meta.");
+
         if (_priceMap == null)
             _priceMap = new PriceMap(getPlayer(), _store);
-
-        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
-        PreCon.notNull(taskMode);
 
         // create new chest
         int maxSaleItems = getMaxSaleItems(getPlayer());
@@ -178,6 +187,7 @@ public class SellView extends ChestView {
         if (saleItemStacks == null)
             return _inventory = inventory;
 
+        // add items to inventory, fill price map
         for (ISaleItem saleItem : saleItemStacks) {
 
             ItemStack stack = saleItem.getItemStack().clone();
@@ -188,6 +198,7 @@ public class SellView extends ChestView {
             _priceMap.set(saleItem.getMatchable(), saleItem.getPricePerUnit());
         }
 
+        // take an inventory starting snapshot
         _snapshot = new InventorySnapshot(inventory, StoreStackMatcher.getDefault());
 
         if (_sledgehammer != null)
@@ -201,9 +212,8 @@ public class SellView extends ChestView {
     @Override
     protected ChestEventAction onItemsPlaced(ChestEventInfo eventInfo) {
 
-        if (eventInfo.getInventoryPosition() == InventoryPosition.TOP) {
+        if (eventInfo.getInventoryPosition() == InventoryPosition.TOP)
             return onUpperItemsPlaced(eventInfo);
-        }
 
         ItemStackUtil.removeTempLore(getPlayer().getInventory(), true);
 
@@ -265,7 +275,9 @@ public class SellView extends ChestView {
         return ChestEventAction.DENY;
     }
 
-
+    /*
+     * Handle adding items to sell.
+     */
     private ChestEventAction onUpperItemsPlaced(ChestEventInfo eventInfo) {
         ItemStack cursorStack = eventInfo.getCursorStack();
         CategoryManager categoryManager = Storefront.getCategoryManager();
@@ -306,7 +318,9 @@ public class SellView extends ChestView {
         return ChestEventAction.ALLOW;
     }
 
-
+    /*
+     * Get the max number of items a player is allowed to sell.
+     */
     private int getMaxSaleItems (Player seller) {
 
         if (_store.getStoreType() == StoreType.PLAYER_OWNABLE)
@@ -322,6 +336,10 @@ public class SellView extends ChestView {
         return 9;
     }
 
+
+    /**
+     * Update quantities in the inventory based on quantities reported by the store.
+     */
     private void updateQuantities() {
 
         Scheduler.runTaskLater(Storefront.getPlugin(), 5, new Runnable() {
@@ -368,6 +386,9 @@ public class SellView extends ChestView {
         });
     }
 
+    /*
+     * Open a price menu view to change the sale price of an item.
+     */
     private boolean openPriceMenu (ItemStack item, boolean force) {
 
         IStore store = Storefront.getStoreManager().get(getViewSession().getSessionBlock());

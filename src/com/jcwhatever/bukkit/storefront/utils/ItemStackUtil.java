@@ -46,7 +46,6 @@ import javax.annotation.Nullable;
 
 public class ItemStackUtil {
 
-    
     private static final String TEMP_INDICATOR = ChatColor.BLACK.toString()
             + ChatColor.GRAY.toString();
     
@@ -58,7 +57,7 @@ public class ItemStackUtil {
         TOTAL
     }
 
-    public static List<String> removeTempLore (ItemStack stack) {
+    public static List<String> removeTempLore(ItemStack stack) {
 
         List<String> lore = ItemStackUtils.getLore(stack);
         if (lore == null)

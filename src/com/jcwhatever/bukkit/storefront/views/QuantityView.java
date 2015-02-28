@@ -30,18 +30,21 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A menu view used to change the quantity of an item.
+ */
 public class QuantityView extends AbstractMenuView {
 
     private static final MetaKey<Integer>
@@ -61,8 +64,6 @@ public class QuantityView extends AbstractMenuView {
     private MenuItem _menuAdd10;
 
     private MenuItem _itemToQuantify;
-
-
     private List<MenuItem> _menuItems;
 
     private ItemStack _item;
@@ -71,26 +72,42 @@ public class QuantityView extends AbstractMenuView {
     private Integer _selectedAmount;
     private double _price;
 
-    public QuantityView(ItemStack item, int qty, int maxQty, double price) {
+    /**
+     * Constructor.
+     *
+     * @param item        The {@link ItemStack} whose quantity is being changed.
+     * @param initialQty  The initial quantity.
+     * @param maxQty      The max quantity allowed.
+     * @param price       The price of the item. Used to display total price given selected quantity.
+     */
+    public QuantityView(ItemStack item, int initialQty, int maxQty, double price) {
         PreCon.notNull(item);
 
         _item = item;
-        _qty = qty;
+        _qty = initialQty;
         _maxQty = Math.min(64, maxQty);
         _price = price;
+    }
+
+    /**
+     * Get the {@link org.bukkit.inventory.ItemStack} whose quantity is being changed.
+     */
+    public ItemStack getItemStack() {
+        return _item;
+    }
+
+    /**
+     * Get the selected quantity.
+     *
+     * @return  The selected quantity or null if not selected.
+     */
+    public Integer getSelectedQty() {
+        return _selectedAmount;
     }
 
     @Override
     public String getTitle() {
         return "Select Amount";
-    }
-
-    public ItemStack getItemStack() {
-        return _item;
-    }
-
-    public Integer getSelectedAmount() {
-        return _selectedAmount;
     }
 
     @Override
@@ -173,7 +190,10 @@ public class QuantityView extends AbstractMenuView {
         int max = Math.min(64, _maxQty);
         qty = Math.min(qty, max);
 
-        ItemStack item = getInventoryView().getTopInventory().getItem(0);
+        InventoryView view = getInventoryView();
+        assert view != null;
+
+        ItemStack item = view.getTopInventory().getItem(0);
 
         item.setAmount(qty);
         _selectedAmount = qty;
@@ -188,14 +208,15 @@ public class QuantityView extends AbstractMenuView {
         updateItemVisibility();
     }
 
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-        // do nothing
-    }
-
+    /*
+     * Update the visibility of the quantity controls.
+     */
     private void updateItemVisibility() {
 
-        ItemStack item = getInventoryView().getTopInventory().getItem(0);
+        InventoryView view = getInventoryView();
+        assert view != null;
+
+        ItemStack item = view.getTopInventory().getItem(0);
 
         int qty = item.getAmount();
 
@@ -206,6 +227,9 @@ public class QuantityView extends AbstractMenuView {
         _menuAdd10.setVisible(this, qty < _maxQty);
     }
 
+    /*
+     * Update the item lore. (qty, availability, instructions)
+     */
     private ItemStack setLore(ItemStack itemStack) {
 
         ItemStackUtil.removeTempLore(itemStack);
@@ -228,5 +252,4 @@ public class QuantityView extends AbstractMenuView {
 
         return itemStack;
     }
-
 }

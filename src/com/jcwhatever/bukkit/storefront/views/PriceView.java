@@ -29,7 +29,6 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
@@ -42,6 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nullable;
 
+/**
+ * A menu view used to select the price of an item.
+ */
 public class PriceView extends AbstractMenuView {
 
     private static final MetaKey<Double>
@@ -67,26 +69,41 @@ public class PriceView extends AbstractMenuView {
     private double _price;
     private Double _selectedPrice;
 
-    public PriceView(ItemStack itemToPrice, double price) {
+    /**
+     * Constructor.
+     *
+     * @param itemToPrice   The {@link org.bukkit.inventory.ItemStack} to be priced.
+     *
+     * @param initialPrice  The initial price.
+     */
+    public PriceView(ItemStack itemToPrice, double initialPrice) {
         PreCon.notNull(itemToPrice);
 
         _item = itemToPrice;
-        _price = price;
+        _price = initialPrice;
+    }
+
+    /**
+     * Get the {@link org.bukkit.inventory.ItemStack} that is being priced.
+     */
+    public ItemStack getItemToPrice() {
+        return _item;
+    }
+
+    /**
+     * Get the selected price.
+     *
+     * @return  The selected price or null if not selected.
+     */
+    @Nullable
+    public Double getSelectedPrice() {
+        return _selectedPrice;
     }
 
     @Override
     public String getTitle() {
         ViewSessionTask task = getSessionTask();
         return task.getChatColor() + "Set price per item";
-    }
-
-    public ItemStack getItemToPrice() {
-        return _item;
-    }
-
-    @Nullable
-    public Double getSelectedPrice() {
-        return _selectedPrice;
     }
 
     @Override
@@ -171,11 +188,10 @@ public class PriceView extends AbstractMenuView {
         updateItemVisibility();
     }
 
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-        // do nothing
-    }
-
+    /*
+     * Increment the price of the item by the specified amount (can be negative).
+     * Updates variables and item lore.
+     */
     private void incrementPrice (double increment) {
 
         _price += increment;
@@ -204,6 +220,9 @@ public class PriceView extends AbstractMenuView {
         _minus50.set(this);
     }
 
+    /*
+     * Update the visibility of the price controls.
+     */
     private void updateItemVisibility() {
 
         _minus1.setVisible(this, _price > 1);
@@ -215,10 +234,12 @@ public class PriceView extends AbstractMenuView {
         _add50.setVisible(this, true);
     }
 
+    /*
+     * Set the item lore. (price, instructions)
+     */
     private void setLore(ItemStack itemStack) {
         ItemStackUtil.removeTempLore(itemStack);
         ItemStackUtil.setPriceLore(itemStack, _price, PriceType.PER_ITEM);
         ItemStackUtil.addTempLore(itemStack, ChatColor.GREEN + "Click to confirm changes.");
     }
-
 }

@@ -8,15 +8,23 @@ import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.views.menu.MenuView;
 
-/*
- * 
+/**
+ * Abstract implementation of {@link com.jcwhatever.nucleus.views.menu.MenuView}.
+ *
+ * <p>Provides protected utility methods to all Storefront menu views.</p>
  */
 public abstract class AbstractMenuView extends MenuView {
 
+    /**
+     * Constructor.
+     */
     protected AbstractMenuView() {
         super(Storefront.getPlugin(), StoreStackMatcher.getDefault());
     }
 
+    /**
+     * Get the {@link IStore} for the current view session.
+     */
     protected IStore getStore() {
         IStore store = getViewSession().getMeta(SessionMetaKey.STORE);
         if (store == null)
@@ -25,6 +33,9 @@ public abstract class AbstractMenuView extends MenuView {
         return store;
     }
 
+    /**
+     * Get the {@link ViewSessionTask} for the current view session.
+     */
     protected ViewSessionTask getSessionTask() {
         ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
         if (taskMode == null)
@@ -33,6 +44,9 @@ public abstract class AbstractMenuView extends MenuView {
         return taskMode;
     }
 
+    /**
+     * Get the {@link Category} for the current view session.
+     */
     protected Category getCategory() {
         Category category = getViewSession().getMeta(SessionMetaKey.CATEGORY);
         if (category == null)
@@ -41,6 +55,9 @@ public abstract class AbstractMenuView extends MenuView {
         return category;
     }
 
+    /**
+     * Determine if the current view session has a {@link Category}.
+     */
     protected boolean hasCategory() {
         Category category = getViewSession().getMeta(SessionMetaKey.CATEGORY);
         return category != null;

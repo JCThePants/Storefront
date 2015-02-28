@@ -51,12 +51,19 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An implementation of {@link AbstractMenuView} that displays
+ * the main store menu view.
+ */
 public class MainMenuView extends AbstractMenuView {
 
     private IStore _store;
     private boolean _isStoreOwner;
     private boolean _canSell;
 
+    /**
+     * Constructor.
+     */
     public MainMenuView() {
 
         _store = getStore();
@@ -64,9 +71,11 @@ public class MainMenuView extends AbstractMenuView {
         // set session store
         getViewSession().setMeta(SessionMetaKey.STORE, _store);
 
+        // Determine if the viewer is the store owner
         _isStoreOwner = _store.getStoreType() == StoreType.PLAYER_OWNABLE
                 && getPlayer().getUniqueId().equals(_store.getOwnerId());
 
+        // Determine if the viewer can sell items in the store
         _canSell = !(_store.getStoreType() == StoreType.PLAYER_OWNABLE &&
                 !getPlayer().getUniqueId().equals(_store.getOwnerId()) &&
                 _store.getWantedItems().getAll().size() == 0);
@@ -113,7 +122,7 @@ public class MainMenuView extends AbstractMenuView {
             case SERVER_SELL:
                 // fall through
             case OWNER_MANAGE_SELL:
-                view = new SellView(menuItem.getSaleItems());
+                view = new SellView();
                 break;
 
             case PLAYER_SELL:
@@ -167,8 +176,8 @@ public class MainMenuView extends AbstractMenuView {
         return store;
     }
 
-    /**
-     * Get a new Sell Menu Item
+    /*
+     * Get a new "Sell" menu item.
      */
     private MenuItem getSellItem() {
 
@@ -181,7 +190,6 @@ public class MainMenuView extends AbstractMenuView {
         switch (_store.getStoreType()) {
 
             case SERVER:
-                //builder.setViewFactory(Storefront.VIEW_SELL);
                 builder
                         .task(ViewSessionTask.SERVER_SELL)
                         .categorized()
@@ -196,7 +204,6 @@ public class MainMenuView extends AbstractMenuView {
             case PLAYER_OWNABLE:
                 // owner sell
                 if (_isStoreOwner) {
-                    //builder.setViewFactory(Storefront.VIEW_SELL);
                     builder
                             .task(ViewSessionTask.OWNER_MANAGE_SELL)
                             .saleItems(new ISaleItemGetter() {
@@ -209,7 +216,6 @@ public class MainMenuView extends AbstractMenuView {
                 }
                 // player sell
                 else {
-                    //builder.setViewFactory(Storefront.VIEW_SELL_WANTED);
                     builder
                             .task(ViewSessionTask.PLAYER_SELL)
                             .categorized()
@@ -229,7 +235,7 @@ public class MainMenuView extends AbstractMenuView {
     }
 
     /**
-     * Get a new Buy menu item.
+     * Get a new "Buy" menu item.
      */
     private MenuItem getBuyItem() {
 
@@ -246,10 +252,12 @@ public class MainMenuView extends AbstractMenuView {
         }
     }
 
+    /*
+     * Get a new "Buy" menu item for a server store.
+     */
     private MenuItem getServerBuyItem() {
 
         MainMenuItemBuilder builder = (MainMenuItemBuilder)new MainMenuItemBuilder(Material.CHEST)
-                //item.setViewFactory (Storefront.VIEW_BUY);
                 .task(ViewSessionTask.SERVER_BUY)
                 .categorized()
                 .saleItems(new ISaleItemGetter() {
@@ -276,12 +284,15 @@ public class MainMenuView extends AbstractMenuView {
         return builder.build(0);
     }
 
+    /*
+     * Get a new "Buy" menu item for a player owned store.
+     */
     private MenuItem getPlayerBuyItem() {
         MainMenuItemBuilder builder = new MainMenuItemBuilder(Material.CHEST);
 
         if (_isStoreOwner) {
+            // Build menu item for store owner
             builder
-                    //m.setViewFactory (Storefront.VIEW_WANTED);
                     .task(ViewSessionTask.OWNER_MANAGE_BUY)
                     .saleItems(new ISaleItemGetter() {
 
@@ -295,8 +306,8 @@ public class MainMenuView extends AbstractMenuView {
 
         }
         else {
+            // Build menu item for players that do not own the store
             builder
-                    //.setViewFactory (Storefront.VIEW_BUY);
                     .task(ViewSessionTask.PLAYER_BUY)
                     .categorized()
                     .saleItems(new ISaleItemGetter() {
@@ -311,5 +322,4 @@ public class MainMenuView extends AbstractMenuView {
         }
         return builder.build(0);
     }
-
 }

@@ -27,10 +27,8 @@ package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.storefront.Category;
 import com.jcwhatever.bukkit.storefront.CategoryManager;
-import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
-import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
@@ -38,6 +36,7 @@ import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask.BasicTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
@@ -51,16 +50,29 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.Nullable;
 
+/**
+ * A menu view used to select an item category.
+ */
 public class CategoryView extends AbstractMenuView {
 
-    public static MetaKey<Category>
+    private static MetaKey<Category>
             ITEM_CATEGORY = new MetaKey<>(Category.class);
 
-    public static void categoryNext(ViewSession session, View nextView, PaginatedItems pagin) {
+    /**
+     * Shows the next view and opens a {@link CategoryView} first if needed. If not, the next view
+     * or a {@link com.jcwhatever.nucleus.views.menu.PaginatorView} to the next view is shown.
+     *
+     * @param session   The current view session.
+     * @param nextView  The next view to show. Null to use the previous view (relative to the category view).
+     * @param pagin     The paginated items that will be shown in the view.
+     */
+    public static void categoryNext(ViewSession session, @Nullable View nextView, PaginatedItems pagin) {
+        PreCon.notNull(session);
+        PreCon.notNull(pagin);
 
         IStore store = session.getMeta(SessionMetaKey.STORE);
         if (store == null)
-            throw new AssertionError();
+            throw new AssertionError("Store not set.");
 
         ViewSessionTask task = session.getMeta(SessionMetaKey.TASK_MODE);
 
@@ -68,6 +80,7 @@ public class CategoryView extends AbstractMenuView {
 
         int totalSlots = pagin.size();
 
+        // determine if showing the category selection view is even necessary.
         if (totalSlots <= 6 * 9 * 3 || categories.size() <= 1) {
 
             PaginatorView.paginateNext(session, nextView, pagin, StoreStackMatcher.getDurability());
@@ -78,15 +91,18 @@ public class CategoryView extends AbstractMenuView {
         session.next(new CategoryView(nextView));
     }
 
-    private static Collection<Category> getCategories(IStore store, ViewSessionTask mode) {
+    /*
+     * Get all categories  for the given IStore and ViewSessionTask.
+     */
+    private static Collection<Category> getCategories(IStore store, ViewSessionTask task) {
         Collection<Category> categories;
 
-        if (mode.isOwnerManagerTask()) {
+        if (task.isOwnerManagerTask()) {
             CategoryManager manager = Storefront.getCategoryManager();
             categories = manager.getAll();
         }
         else {
-            categories = mode.getBasicTask() == BasicTask.BUY
+            categories = task.getBasicTask() == BasicTask.BUY
                     ? store.getBuyCategories()
                     : store.getSellCategories();
         }
@@ -98,6 +114,12 @@ public class CategoryView extends AbstractMenuView {
     private IStore _store;
     private View _nextView;
 
+    /**
+     * Constructor.
+     *
+     * @param nextView  The next view to show after the category view.
+     *                  Null to use the previous view.
+     */
     public CategoryView(@Nullable View nextView) {
 
         _nextView = nextView;
@@ -177,29 +199,4 @@ public class CategoryView extends AbstractMenuView {
         else
             getViewSession().previous();
     }
-
-    public static PaginatedItems getCategorySaleItems(final IStore store, ViewSessionTask currentMode,
-                                                      final Category category) {
-        PaginatedItems saleItems;
-
-        if (store.getStoreType() == StoreType.PLAYER_OWNABLE
-                && currentMode.getBasicTask() == BasicTask.SELL) {
-
-            saleItems = currentMode.isOwnerManagerTask()
-                    ? new PaginatedItems(store, category)
-                    : new PaginatedItems(new ISaleItemGetter() {
-                @Override
-                public List<ISaleItem> getSaleItems() {
-                    return store.getWantedItems().get(category);
-                }
-            });
-        }
-        else {
-
-            saleItems = new PaginatedItems(store, category);
-        }
-
-        return saleItems;
-    }
-
 }

@@ -44,7 +44,6 @@ import com.jcwhatever.nucleus.utils.extended.MaterialExt;
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
@@ -53,22 +52,19 @@ import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
- * @author JC The Pants
- *
+ * A menu view used to manage items that a store owner wants to buy.
  */
-//@ViewInfo(pageType=PaginatorPageType.SALE_ITEM)
 public class WantedView extends AbstractMenuView {
 
     private static final MetaKey<MenuItem> ITEM_TASKED_MENU_ITEM = new MetaKey<>(MenuItem.class);
 
-    private IStore _store;
     private InventorySnapshot _snapshot;
     private PriceMap _priceMap;
     private QtyMap _qtyMap;
@@ -76,11 +72,15 @@ public class WantedView extends AbstractMenuView {
     private int _page = 1;
     private PaginatedItems _pagin;
 
+    /**
+     * Constructor.
+     *
+     * @param paginatedItems  The current items wanted.
+     */
     public WantedView(PaginatedItems paginatedItems) {
         PreCon.notNull(paginatedItems);
 
         _pagin = paginatedItems;
-
     }
 
     @Override
@@ -92,15 +92,13 @@ public class WantedView extends AbstractMenuView {
     @Override
     protected List<MenuItem> createMenuItems() {
 
-        _store = getViewSession().getMeta(SessionMetaKey.STORE);
-        if (_store == null)
-            throw new IllegalStateException("Store not set in session meta.");
+        IStore store = getStore();
 
         ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
         PreCon.notNull(taskMode);
 
-        _priceMap = new PriceMap(getPlayer(), _store);
-        _qtyMap = new QtyMap(getPlayer(), _store);
+        _priceMap = new PriceMap(getPlayer(), store);
+        _qtyMap = new QtyMap(getPlayer(), store);
 
         List<ISaleItem> items = _pagin.getPage(_page);//, PaginatorPageType.SALE_ITEM);
 
@@ -124,7 +122,7 @@ public class WantedView extends AbstractMenuView {
 
     @Override
     protected void onItemSelect(MenuItem menuItem) {
-
+        // do nothing
     }
 
     @Override
@@ -149,21 +147,21 @@ public class WantedView extends AbstractMenuView {
         }
 
         return true;
-
     }
 
     @Override
     protected void onShow(ViewOpenReason reason) {
 
+        InventoryView view = getInventoryView();
+        assert view != null;
+
         // take snapshot of chest
-        _snapshot = new InventorySnapshot(getInventoryView().getTopInventory(), StoreStackMatcher.getDefault());
+        _snapshot = new InventorySnapshot(view.getTopInventory(), StoreStackMatcher.getDefault());
     }
 
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-
-    }
-
+    /*
+     * Update qty and price on an item and update its lore.
+     */
     private void updateItem(MenuItem menuItem, int qty, double price) {
 
         menuItem.setAmount(qty);
@@ -177,7 +175,9 @@ public class WantedView extends AbstractMenuView {
         menuItem.set(this);
     }
 
-
+    /*
+     * Handle items being added from lower inventory.
+     */
     private boolean onLowerInventoryClick (ChestEventInfo eventInfo) {
 
         ItemStack selectedStack = eventInfo.getSlotStack();
@@ -192,8 +192,11 @@ public class WantedView extends AbstractMenuView {
             ItemStackUtils.repair(selectedStack);
         }
 
+        InventoryView view = getInventoryView();
+        assert view != null;
+
         InventorySnapshot snapshot = new InventorySnapshot(
-                getInventoryView().getTopInventory(), StoreStackMatcher.getDefault());
+                view.getTopInventory(), StoreStackMatcher.getDefault());
 
         boolean hasItem = snapshot.getAmount(selectedStack) > 0;
         selectedStack.setAmount(1);
@@ -224,9 +227,14 @@ public class WantedView extends AbstractMenuView {
 
         getViewSession().setMeta(ITEM_TASKED_MENU_ITEM, menuItem);
 
-        getViewSession().next(new ItemTaskView(itemStack, _priceMap.get(itemStack), _qtyMap.get(itemStack), 64));
+        Double price = _priceMap.get(itemStack);
+        assert price != null;
+
+        Integer qty = _qtyMap.get(itemStack);
+        assert qty != null;
+
+        getViewSession().next(new ItemTaskView(itemStack, price, qty, 64));
 
         return false; // cancel underlying event
     }
-
 }

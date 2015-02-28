@@ -107,7 +107,7 @@ public class SellWantedView extends AbstractMenuView {
 
             QuantityView quantityView = (QuantityView)nextView;
 
-            Integer amount = quantityView.getSelectedAmount();
+            Integer amount = quantityView.getSelectedQty();
             if (amount == null)
                 return;
 
