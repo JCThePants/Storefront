@@ -24,14 +24,15 @@
 
 package com.jcwhatever.bukkit.storefront.utils;
 
-import com.jcwhatever.nucleus.utils.extended.MaterialExt;
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.player.PlayerUtils;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.Scheduler;
+import com.jcwhatever.nucleus.utils.extended.MaterialExt;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.nucleus.utils.player.PlayerUtils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
@@ -44,7 +45,12 @@ import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
 
+/**
+ * Static {@link org.bukkit.inventory.ItemStack} utilities.
+ */
 public class ItemStackUtil {
+
+    private ItemStackUtil() {}
 
     private static final String TEMP_INDICATOR = ChatColor.BLACK.toString()
             + ChatColor.GRAY.toString();
@@ -52,14 +58,31 @@ public class ItemStackUtil {
     private static NumberFormat _format = DecimalFormat.getCurrencyInstance();
     private static StoreStackMatcher _durabilityComparer = StoreStackMatcher.getDurability();
 
+    /**
+     * Specifies what type of price to display.
+     */
     public enum PriceType {
+        /**
+         * The price is per item.
+         */
         PER_ITEM,
+        /**
+         * The price is the sum price of the quantity.
+         */
         TOTAL
     }
 
-    public static List<String> removeTempLore(ItemStack stack) {
+    /**
+     * Remove all temporary lore from an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @param itemStack  The {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @return  A list of removed lore.
+     */
+    public static List<String> removeTempLore(ItemStack itemStack) {
+        PreCon.notNull(itemStack);
 
-        List<String> lore = ItemStackUtils.getLore(stack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null)
             return new ArrayList<String>(0);
 
@@ -75,13 +98,20 @@ public class ItemStackUtil {
             newLore.add(line);
         }
 
-        ItemStackUtils.setLore(stack, newLore);
+        ItemStackUtils.setLore(itemStack, newLore);
 
         return removed;
     }
 
-
-    public static void removeTempLore (final Inventory inventory, boolean runLater) {
+    /**
+     * Remove temp lore from all {@link org.bukkit.inventory.ItemStack}'s in
+     * the specified {@link org.bukkit.inventory.Inventory}.
+     *
+     * @param inventory  The inventory to remove all item stack lore.
+     * @param runLater   True to run the task on the next tick, false to run immediately..
+     */
+    public static void removeTempLore(final Inventory inventory, boolean runLater) {
+        PreCon.notNull(inventory);
 
         Runnable runnable = new Runnable() {
 
@@ -101,17 +131,24 @@ public class ItemStackUtil {
             }
         };
 
-        if (runLater)
-            Bukkit.getScheduler().runTaskLater(Storefront.getPlugin(), runnable, 1);
-        else
+        if (runLater) {
+            Scheduler.runTaskLater(Storefront.getPlugin(), runnable);
+        } else {
             runnable.run();
-
+        }
     }
 
+    /**
+     * Append temporary lore line to an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @param itemStack  The item stack to add the temp lore to.
+     * @param text       The lore text to add.
+     */
+    public static void addTempLore(ItemStack itemStack, String text) {
+        PreCon.notNull(itemStack);
+        PreCon.notNull(text);
 
-    public static void addTempLore (ItemStack stack, String text) {
-
-        List<String> lore = ItemStackUtils.getLore(stack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
 
         if (lore == null)
             lore = new ArrayList<>(5);
@@ -126,18 +163,25 @@ public class ItemStackUtil {
         }
         lore.add(insertAt, TEMP_INDICATOR + text);
 
-        ItemStackUtils.setLore(stack, lore);
+        ItemStackUtils.setLore(itemStack, lore);
     }
 
+    /**
+     * Append a list of temporary lore to an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @param itemStack  The item stack to add the temp lore to.
+     * @param newLore    The new lore text to add.
+     */
+    public static void addTempLore(ItemStack itemStack, List<String> newLore) {
+        PreCon.notNull(itemStack);
+        PreCon.notNull(newLore);
 
-    public static void addTempLore (ItemStack stack, List<String> newLore) {
-
-        List<String> lore = ItemStackUtils.getLore(stack);
+        List<String> lore = ItemStackUtils.getLore(itemStack);
 
         if (lore == null)
             lore = new ArrayList<>(5);
 
-        int insertAt = hasPriceLore(stack)
+        int insertAt = hasPriceLore(itemStack)
                 ? 1
                 : 0;
 
@@ -145,26 +189,43 @@ public class ItemStackUtil {
             lore.add(i, TEMP_INDICATOR + newLore.get(j));
         }
 
-        ItemStackUtils.setLore(stack, lore);
+        ItemStackUtils.setLore(itemStack, lore);
     }
 
-
-    public static void setSellerLore (ItemStack stack, UUID sellerId) {
+    /**
+     * Append temporary lore to an {@link org.bukkit.inventory.ItemStack} that
+     * indicates the items seller.
+     *
+     * @param itemStack  The item stack to append temp lore to.
+     * @param sellerId   The ID of the seller.
+     */
+    public static void setSellerLore (ItemStack itemStack, UUID sellerId) {
+        PreCon.notNull(itemStack);
+        PreCon.notNull(sellerId);
 
         String playerName = PlayerUtils.getPlayerName(sellerId);
         if (playerName == null)
             playerName = "?";
 
-        addTempLore(stack, ChatColor.YELLOW + "Seller: " + ChatColor.GRAY + playerName);
+        addTempLore(itemStack, ChatColor.YELLOW + "Seller: " + ChatColor.GRAY + playerName);
     }
 
-
+    /**
+     * Append or replace the temp lore on an {@link org.bukkit.inventory.ItemStack} that
+     * indicates the price of the item.
+     *
+     * @param itemStack  The item stack to append temp lore to.
+     * @param price      The price of the item.
+     * @param priceType  The price type.
+     */
     public static void setPriceLore (ItemStack itemStack, double price, PriceType priceType) {
+        PreCon.notNull(itemStack);
+        PreCon.notNull(priceType);
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
-        if (lore == null) {
+        if (lore == null)
             lore = new ArrayList<>(5);
-        }
+
 
         if (lore.size() > 0) {
             String line1 = lore.get(0);
@@ -182,20 +243,21 @@ public class ItemStackUtil {
 
         ItemStackUtils.setLore(itemStack, lore);
     }
-    
-    
-
 
     /**
-     * Change all item stacks in an chest that match the provided item stack type to the specified price.
-     * Note: Only use in views that contain chest for a single player
-     * @param inventory
-     * @param itemStack
-     * @param price
-     * @param runLater
+     * Change all {@link org.bukkit.inventory.ItemStack}'s in an {@link org.bukkit.inventory.Inventory} that
+     * match the provided item stack type to the specified price.
+     *
+     * @param inventory  The inventory.
+     * @param itemStack  The item stack.
+     * @param price      The price to set.
+     * @param runLater   True to run on the next tick, false to run immediately.
      */
     public static void setPriceLore (final Inventory inventory, final ItemStack itemStack,
                                      final double price, final PriceType priceType, boolean runLater) {
+        PreCon.notNull(inventory);
+        PreCon.notNull(itemStack);
+        PreCon.notNull(priceType);
 
         Runnable runnable = new Runnable() {
 
@@ -219,10 +281,13 @@ public class ItemStackUtil {
                         removePriceLore(item);
                     }
 
-                    if (wrapper.equals(item))
+                    //noinspection EqualsBetweenInconvertibleTypes
+                    if (wrapper.equals(item)) {
                         setPriceLore(item, price, priceType);
-                    else if (priceLine != null)
+                    }
+                    else if (priceLine != null) {
                         setPriceLoreLine(item, priceLine);
+                    }
 
                     inventory.setItem(i, item);
                 }
@@ -232,16 +297,23 @@ public class ItemStackUtil {
             }
         };
 
-        if (runLater)
-            Bukkit.getScheduler().runTaskLater(Storefront.getPlugin(), runnable, 1);
-        else
+        if (runLater) {
+            Scheduler.runTaskLater(Storefront.getPlugin(), runnable);
+        } else {
             runnable.run();
-
+        }
     }
 
-
+    /**
+     * Get the price lore set on an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @param itemStack  The item stack to check.
+     *
+     * @return The price lore text or null if not present.
+     */
     @Nullable
     public static String getPriceLore (ItemStack itemStack) {
+        PreCon.notNull(itemStack);
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
         if (lore == null)
@@ -258,34 +330,17 @@ public class ItemStackUtil {
         return null;
     }
 
-
-    private static void setPriceLoreLine (ItemStack itemStack, String str) {
-
-        List<String> lore = ItemStackUtils.getLore(itemStack);
-        if (lore == null) {
-            lore = new ArrayList<>(5);
-        }
-
-        for (int i = 0; i < lore.size(); i++) {
-            String line = lore.get(i);
-
-            if (line.indexOf(TEMP_INDICATOR + ChatColor.YELLOW + "Price: ") == 0) {
-                lore.remove(i);
-                lore.add(i, str);
-                break;
-            }
-        }
-
-        ItemStackUtils.setLore(itemStack, lore);
-    }
-
-
+    /**
+     * Determine if an {@link org.bukkit.inventory.ItemStack} has its price lore set.
+     *
+     * @param itemStack  The item stack to check.
+     */
     public static boolean hasPriceLore (ItemStack itemStack) {
+        PreCon.notNull(itemStack);
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
-        if (lore == null) {
+        if (lore == null)
             return false;
-        }
 
         if (lore.size() == 0)
             return false;
@@ -295,13 +350,17 @@ public class ItemStackUtil {
         return line1.indexOf(TEMP_INDICATOR + ChatColor.YELLOW + "Price: ") == 0;
     }
 
-
+    /**
+     * Remove price lore from an {@link org.bukkit.inventory.ItemStack}.
+     *
+     * @param itemStack  The item stack to remove price lore from.
+     */
     public static void removePriceLore (ItemStack itemStack) {
+        PreCon.notNull(itemStack);
 
         List<String> lore = ItemStackUtils.getLore(itemStack);
-        if (lore == null) {
+        if (lore == null)
             return;
-        }
 
         if (lore.size() == 0)
             return;
@@ -316,8 +375,15 @@ public class ItemStackUtil {
         ItemStackUtils.setLore(itemStack, lore);
     }
 
-
+    /**
+     * Remove price lore from all {@link org.bukkit.inventory.ItemStack}'s in
+     * the specified {@link org.bukkit.inventory.Inventory}.
+     *
+     * @param inventory  The inventory.
+     * @param runLater   True to run the task on the next tick, false to run immediately.
+     */
     public static void removePriceLore (final Inventory inventory, boolean runLater) {
+        PreCon.notNull(inventory);
 
         Runnable runnable = new Runnable() {
 
@@ -337,39 +403,27 @@ public class ItemStackUtil {
             }
         };
 
-        if (runLater)
-            Bukkit.getScheduler().runTaskLater(Storefront.getPlugin(), runnable, 1);
-        else
+        if (runLater) {
+            Scheduler.runTaskLater(Storefront.getPlugin(), runnable);
+        } else {
             runnable.run();
-
-    }
-
-
-    public static int addToInventory (SaleItem saleItem, Inventory inventory) {
-
-        int qty = saleItem.getQty();
-        if (qty == 0)
-            return 0;
-
-        int stacks = (int) Math.ceil((double) qty / 64);
-
-        for (int i = 0; i < stacks; i++) {
-
-            ItemStack stack = saleItem.getItemStack().clone();
-            stack.setAmount(qty >= 64
-                    ? 64
-                    : qty);
-
-            inventory.addItem(stack);
-
-            qty -= 64;
         }
-
-        return stacks;
     }
 
-
+    /**
+     * Add an {@link org.bukkit.inventory.ItemStack} to an {@link org.bukkit.inventory.Inventory}.
+     *
+     * <p>The amount of the {@link org.bukkit.inventory.ItemStack} is considered
+     * when adding to the inventory..</p>
+     *
+     * @param itemStack  The item stack to add.
+     * @param inventory  The inventory to add the item to.
+     *
+     * @return  The results of the operation.
+     */
     public static AddToInventoryResult addToInventory (ItemStack itemStack, Inventory inventory) {
+        PreCon.notNull(itemStack);
+        PreCon.notNull(inventory);
 
         ItemStack clone = itemStack.clone();
         removeTempLore(clone);
@@ -451,6 +505,29 @@ public class ItemStackUtil {
         return result;
     }
 
+    /*
+     * Append or set the price lore of an item stack.
+     */
+    private static void setPriceLoreLine (ItemStack itemStack, String str) {
+
+        List<String> lore = ItemStackUtils.getLore(itemStack);
+        if (lore == null) {
+            lore = new ArrayList<>(5);
+        }
+
+        for (int i = 0; i < lore.size(); i++) {
+            String line = lore.get(i);
+
+            if (line.indexOf(TEMP_INDICATOR + ChatColor.YELLOW + "Price: ") == 0) {
+                lore.remove(i);
+                lore.add(i, str);
+                break;
+            }
+        }
+
+        ItemStackUtils.setLore(itemStack, lore);
+    }
+
 
     public static int getTotalSlots (SaleItem saleItem) {
 
@@ -468,61 +545,61 @@ public class ItemStackUtil {
     }
 
     /**
-     * 
-     * @author JC The Pants
-     *
+     * Results object when adding an item to an inventory.
      */
     public static class AddToInventoryResult {
 
-        private int _leftover;
-        private final List<SlotInfo> _slotsInfo = new ArrayList<>(6 * 9);
+        int leftover;
+        final List<SlotInfo> slotsInfo = new ArrayList<>(6 * 9);
 
+        /**
+         * Get the number of items that were not added.
+         */
+        public int getLeftOver () {
+            return leftover;
+        }
+
+        /**
+         * Get info about the slots modified in the inventory.
+         */
+        public List<SlotInfo> getSlotsInfo () {
+            return slotsInfo;
+        }
 
         void setLeftOver (int leftover) {
-
-            _leftover = leftover;
+            this.leftover = leftover;
         }
-
 
         void addSlotInfo (int slot, int added) {
-
-            _slotsInfo.add(new SlotInfo(slot, added));
+            slotsInfo.add(new SlotInfo(slot, added));
         }
 
-
-        public int getLeftOver () {
-
-            return _leftover;
-        }
-
-
-        public List<SlotInfo> getSlotsInfo () {
-
-            return _slotsInfo;
-        }
-
+        /**
+         * Contains information about a slot modified in an inventory.
+         */
         public static class SlotInfo {
 
-            private int _slot;
-            private int _itemsAdded;
-
+            private int slot;
+            private int itemsAdded;
 
             SlotInfo(int slot, int itemsAdded) {
 
-                _slot = slot;
-                _itemsAdded = itemsAdded;
+                this.slot = slot;
+                this.itemsAdded = itemsAdded;
             }
 
-
-            public int getSlot () {
-
-                return _slot;
+            /**
+             * Get the slot index.
+             */
+            public int getSlot() {
+                return slot;
             }
 
-
-            public int getItemsAdded () {
-
-                return _itemsAdded;
+            /**
+             * Get the number of items added to the slot.
+             */
+            public int getItemsAdded() {
+                return itemsAdded;
             }
         }
     }
