@@ -26,8 +26,8 @@ package com.jcwhatever.bukkit.storefront.data;
 
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.extended.MaterialExt;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -83,8 +83,6 @@ public class SaleItemIDMap extends HashMap<UUID, ISaleItem> {
     private int getAvailableSpace(@Nullable UUID viewerId, ItemStack itemStack, int amount) {
         PreCon.notNull(itemStack);
 
-        MaterialExt materialExt = MaterialExt.from(itemStack.getType());
-        
         List<ISaleItem> saleItems = new ArrayList<>(this.values());
         
         int slotsUsed = 0;
@@ -93,7 +91,7 @@ public class SaleItemIDMap extends HashMap<UUID, ISaleItem> {
         // iterate all sale items
         for (ISaleItem saleItem : saleItems) {
             
-            MaterialExt saleMaterial = MaterialExt.from(saleItem.getItemStack().getType());
+            Material saleMaterial = saleItem.getItemStack().getType();
             
             int maxStackSize = saleMaterial.getMaxStackSize();            
             int qty = saleItem.getQty();
@@ -119,6 +117,6 @@ public class SaleItemIDMap extends HashMap<UUID, ISaleItem> {
         }
         
         int emptySlots = MAX_SLOTS - slotsUsed;
-        return (materialExt.getMaxStackSize() * emptySlots) + partialStackSpace;
+        return (itemStack.getType().getMaxStackSize() * emptySlots) + partialStackSpace;
     }
 }

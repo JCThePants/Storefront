@@ -28,7 +28,6 @@ import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
-import com.jcwhatever.nucleus.utils.extended.MaterialExt;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.player.PlayerUtils;
@@ -531,7 +530,7 @@ public class ItemStackUtil {
 
     public static int getTotalSlots (SaleItem saleItem) {
 
-        MaterialExt material = MaterialExt.from(saleItem.getItemStack().getType());
+        Material material = saleItem.getItemStack().getType();
         
         int qty = saleItem.getQty();
         if (qty == 0)

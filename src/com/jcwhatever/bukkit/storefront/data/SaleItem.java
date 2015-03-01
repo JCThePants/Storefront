@@ -58,7 +58,7 @@ public class SaleItem implements ISaleItem {
     private double _pricePerUnit = 1.0D;
     private int _qty;
     private IDataNode _dataNode;
-    private MatchableItem _wrapper;
+    private MatchableItem _matchableItem;
     private boolean _removed;
     private Date _expires;
 
@@ -107,7 +107,7 @@ public class SaleItem implements ISaleItem {
         _qty = qty;
         _pricePerUnit = pricePerUnit;
         _dataNode = dataNode;
-        _wrapper = new MatchableItem(itemStack, StoreStackMatcher.getDurability());
+        _matchableItem = new MatchableItem(itemStack, StoreStackMatcher.getDurability());
         _expires = DateUtils.addDays(new Date(), 5);
 
         saveSettings();
@@ -181,7 +181,7 @@ public class SaleItem implements ISaleItem {
 
     @Override
     public MatchableItem getMatchable() {
-        return _wrapper;
+        return _matchableItem;
     }
 
     @Override
@@ -239,7 +239,7 @@ public class SaleItem implements ISaleItem {
     @Override
     public List<ISaleItem> getStacks() {
 
-        int maxPerStack = _wrapper.getMaterialExt().getMaxStackSize();
+        int maxPerStack = _matchableItem.getMaterial().getMaxStackSize();
         if (maxPerStack == 0)
             return new ArrayList<>(0);
 
@@ -278,7 +278,7 @@ public class SaleItem implements ISaleItem {
         ItemStack[] itemStacks = _dataNode.getItemStacks("item");
         if (itemStacks != null && itemStacks.length > 0) {
             _itemStack = itemStacks[0];
-            _wrapper = new MatchableItem(_itemStack, StoreStackMatcher.getDurability());
+            _matchableItem = new MatchableItem(_itemStack, StoreStackMatcher.getDurability());
         }
 
         _sellerId = _dataNode.getUUID("seller-id", _sellerId);
@@ -353,7 +353,7 @@ public class SaleItem implements ISaleItem {
 
         @Override
         public MatchableItem getMatchable() {
-            return _wrapper;
+            return _matchableItem;
         }
 
         public void remove () {

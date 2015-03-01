@@ -40,9 +40,9 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.extended.MaterialExt;
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.utils.materials.Materials;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
@@ -186,9 +186,8 @@ public class WantedView extends AbstractMenuView {
 
         // clone and repair selected stack
         selectedStack = selectedStack.clone();
-        MaterialExt material = MaterialExt.from(selectedStack.getType());
 
-        if (material.isRepairable()) {
+        if (Materials.isRepairable(selectedStack.getType())) {
             ItemStackUtils.repair(selectedStack);
         }
 
