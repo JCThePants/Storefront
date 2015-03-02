@@ -63,7 +63,7 @@ public class Category implements INamedInsensitive {
         _categoryNode = categoryNode;
         _filterManager = new ItemFilterManager(Storefront.getPlugin(),
                 categoryNode.getNode("item-filter"),
-                ItemStackMatcher.getCustom(ItemStackMatcher.MATCH_TYPE));
+                ItemStackMatcher.get(ItemStackMatcher.MATCH_TYPE));
 
         loadSettings();
     }
