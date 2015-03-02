@@ -57,7 +57,7 @@ public class DelItemsSubCommand extends AbstractCommand {
             return; // finished
         }
 
-        if (!category.getFilterManager().removeItems(items)) {
+        if (!category.getFilterManager().remove(items)) {
             tellError(sender, "Failed to remove items from category.");
             return; // finished
         }

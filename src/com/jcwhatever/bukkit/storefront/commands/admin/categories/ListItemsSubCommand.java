@@ -66,13 +66,13 @@ public class ListItemsSubCommand extends AbstractCommand {
             return; // finished
         }
 
-        Set<MatchableItem> wrappers = category.getFilterManager().getItems();
+        Set<MatchableItem> wrappers = category.getFilterManager().getMatchable();
 
         String paginTitle = Lang.get("Filtered Items in Category '{0}'", category.getName());
         ChatPaginator pagin = Msg.getPaginator(paginTitle);
 
         String filterLabel = Lang.get("FILTER MODE");
-        pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, filterLabel, category.getFilterManager().getFilterPolicy().name());
+        pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, filterLabel, category.getFilterManager().getPolicy().name());
 
         for (MatchableItem wrapper : wrappers) {
 

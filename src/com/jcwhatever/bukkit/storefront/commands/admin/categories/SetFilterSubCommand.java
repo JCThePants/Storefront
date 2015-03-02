@@ -57,7 +57,7 @@ public class SetFilterSubCommand extends AbstractCommand {
             return; // finished
         }
 
-        category.getFilterManager().setMode(filter);
+        category.getFilterManager().setPolicy(filter);
 
         tellSuccess(sender, "Category '{0}' filter mode changed to {1}.", category.getName(), filter.name());
     }

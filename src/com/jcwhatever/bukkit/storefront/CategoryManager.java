@@ -65,7 +65,7 @@ public class CategoryManager extends NamedInsensitiveDataManager<Category> {
         Collection<Category> categories = getAll();
 
         for (Category category : categories) {
-            if (category.getFilterManager().isValidItem(itemStack))
+            if (category.getFilterManager().isValid(itemStack))
                 return category;
         }
 

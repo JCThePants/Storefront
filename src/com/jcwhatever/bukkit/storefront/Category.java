@@ -62,7 +62,8 @@ public class Category implements INamedInsensitive {
         _searchName = name.toLowerCase();
         _categoryNode = categoryNode;
         _filterManager = new ItemFilterManager(Storefront.getPlugin(),
-                categoryNode.getNode("item-filter"), ItemStackMatcher.MATCH_TYPE);
+                categoryNode.getNode("item-filter"),
+                ItemStackMatcher.getCustom(ItemStackMatcher.MATCH_TYPE));
 
         loadSettings();
     }

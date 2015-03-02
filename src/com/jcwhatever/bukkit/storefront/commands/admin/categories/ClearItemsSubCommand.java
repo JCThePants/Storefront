@@ -56,7 +56,7 @@ public class ClearItemsSubCommand extends AbstractCommand {
             return; // finished
         }
 
-        if (!category.getFilterManager().clearItems()) {
+        if (!category.getFilterManager().clear()) {
             tellError(sender, "Failed to clear items from category.");
             return; // finished
         }

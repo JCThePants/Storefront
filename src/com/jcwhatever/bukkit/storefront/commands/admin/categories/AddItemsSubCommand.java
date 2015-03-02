@@ -58,7 +58,7 @@ public class AddItemsSubCommand extends AbstractCommand {
             return; // finished
         }
 
-        if (!category.getFilterManager().addItems(items)) {
+        if (!category.getFilterManager().add(items)) {
             tellError(sender, "Failed to add items to category.");
             return; // finished
         }
