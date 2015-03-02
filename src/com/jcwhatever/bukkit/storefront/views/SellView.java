@@ -347,7 +347,7 @@ public class SellView extends ChestView {
             @Override
             public void run() {
 
-                List<MatchableItem> originalItems = _snapshot.getWrappers();
+                List<MatchableItem> originalItems = _snapshot.getMatchable();
 
                 Set<MatchableItem> processed = new HashSet<>(6 * 9);
 

@@ -166,8 +166,8 @@ public class StoreInventoryUpdater {
                 InventorySnapshot currentSnapshot = new InventorySnapshot(
                         _currentInventory, StoreStackMatcher.getDefault());
 
-                List<MatchableItem> originalItems = _snapshot.getWrappers();
-                List<MatchableItem> currentItems = currentSnapshot.getWrappers();
+                List<MatchableItem> originalItems = _snapshot.getMatchable();
+                List<MatchableItem> currentItems = currentSnapshot.getMatchable();
 
                 Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
 
@@ -289,7 +289,7 @@ public class StoreInventoryUpdater {
     }
 
     private void removeMissing() {
-        List<MatchableItem> originalItems = _snapshot.getWrappers();
+        List<MatchableItem> originalItems = _snapshot.getMatchable();
 
         Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
 
