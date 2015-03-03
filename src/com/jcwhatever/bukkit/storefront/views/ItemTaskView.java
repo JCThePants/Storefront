@@ -190,7 +190,7 @@ public class ItemTaskView extends AbstractMenuView {
             return;
         }
 
-        View next = getViewSession().getNextView();
+        View next = getViewSession().getNext();
         if (next == null)
             return;
 

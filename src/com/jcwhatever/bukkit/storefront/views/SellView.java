@@ -77,7 +77,7 @@ public class SellView extends ChestView {
     private PriceMap _priceMap;
     private ScheduledTask _sledgehammer = null;
     private InventorySnapshot _snapshot;
-    private Inventory _inventory;
+    private MenuInventory _inventory;
 
     private int _page = 1;
 
@@ -104,7 +104,7 @@ public class SellView extends ChestView {
         if (reason == ViewOpenReason.PREV) {
 
             // get the view that was closed, check for price change
-            View nextView = getViewSession().getNextView();
+            View nextView = getViewSession().getNext();
             if (nextView instanceof PriceView) {
 
                 PriceView priceView = (PriceView) nextView;
@@ -127,7 +127,7 @@ public class SellView extends ChestView {
         }
         else {
 
-            View paginatorView = getViewSession().getPrevView();
+            View paginatorView = getViewSession().getPrev();
             if (paginatorView instanceof PaginatorView)
                 _page = ((PaginatorView) paginatorView).getSelectedPage();
         }
@@ -363,23 +363,34 @@ public class SellView extends ChestView {
 
                     if (saleItem == null) {
 
-                        int total = InventoryUtils.count(_inventory, startWrapper.getItem(), StoreStackMatcher.getDefault());
+                        int total = InventoryUtils.count(_inventory,
+                                startWrapper.getItem(),
+                                StoreStackMatcher.getDefault());
 
-                        InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackMatcher.getDefault(), total);
+                        InventoryUtils.removeAmount(_inventory,
+                                startWrapper.getItem(),
+                                StoreStackMatcher.getDefault(),
+                                total);
 
                         continue;
                     }
 
                     int currQty = saleItem.getQty();
 
-                    int inventoryQty = InventoryUtils.count(_inventory.getContents(), startWrapper.getItem(), StoreStackMatcher.getDefault());
+                    int inventoryQty = InventoryUtils.count(
+                            _inventory.getContents(),
+                            startWrapper.getItem(),
+                            StoreStackMatcher.getDefault());
 
                     if (inventoryQty <= currQty)
                         continue;
 
                     int delta = Math.abs(inventoryQty - currQty);
 
-                    InventoryUtils.removeAmount(_inventory, startWrapper.getItem(), StoreStackMatcher.getDefault(), delta);
+                    InventoryUtils.removeAmount(_inventory,
+                            startWrapper.getItem(),
+                            StoreStackMatcher.getDefault(),
+                            delta);
 
                 }
             }
@@ -432,7 +443,7 @@ public class SellView extends ChestView {
         @Override
         public void run () {
 
-            if (getViewSession().getCurrentView() != SellView.this) {
+            if (getViewSession().getCurrent() != SellView.this) {
                 cancelTask();
                 return;
             }
@@ -484,8 +495,6 @@ public class SellView extends ChestView {
 
                 ItemStackUtil.removeTempLore(stack);
             }
-
         }
-
     }
 }

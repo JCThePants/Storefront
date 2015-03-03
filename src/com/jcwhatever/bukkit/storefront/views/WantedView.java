@@ -139,7 +139,7 @@ public class WantedView extends AbstractMenuView {
 
         else if (reason == ViewOpenReason.PREV) {
 
-            View nextView = getViewSession().getNextView();
+            View nextView = getViewSession().getNext();
 
             if (nextView instanceof PaginatorView) {
                 _page = ((PaginatorView) nextView).getSelectedPage();

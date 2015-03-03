@@ -95,7 +95,7 @@ public class BuyView extends AbstractMenuView {
     @Override
     protected List<MenuItem> createMenuItems() {
 
-        _paginator = getViewSession().getPrevView();
+        _paginator = getViewSession().getPrev();
         if (_paginator instanceof PaginatorView) {
             _page = ((PaginatorView) _paginator).getSelectedPage();
         }
@@ -151,7 +151,7 @@ public class BuyView extends AbstractMenuView {
 
             int amount;
 
-            View quantityView = getViewSession().getNextView();
+            View quantityView = getViewSession().getNext();
             if (!(quantityView instanceof QuantityView)) {
                 return true;
             }

@@ -86,7 +86,7 @@ public class SellWantedView extends AbstractMenuView {
 
         if (reason == ViewOpenReason.PREV) {
 
-            View nextView = getViewSession().getNextView();
+            View nextView = getViewSession().getNext();
 
             if (nextView instanceof PaginatorView) {
                 _page = ((PaginatorView) nextView).getSelectedPage();
@@ -102,7 +102,7 @@ public class SellWantedView extends AbstractMenuView {
         if (reason != ViewOpenReason.PREV)
             return;
 
-        View nextView = getViewSession().getNextView();
+        View nextView = getViewSession().getNext();
         if (nextView instanceof QuantityView) {
 
             QuantityView quantityView = (QuantityView)nextView;
