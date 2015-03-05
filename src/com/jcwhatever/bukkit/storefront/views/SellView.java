@@ -46,7 +46,7 @@ import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.utils.scheduler.ScheduledTask;
+import com.jcwhatever.nucleus.utils.scheduler.IScheduledTask;
 import com.jcwhatever.nucleus.utils.scheduler.TaskHandler;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
@@ -75,7 +75,7 @@ public class SellView extends ChestView {
 
     private IStore _store;
     private PriceMap _priceMap;
-    private ScheduledTask _sledgehammer = null;
+    private IScheduledTask _sledgehammer = null;
     private InventorySnapshot _snapshot;
     private MenuInventory _inventory;
 
