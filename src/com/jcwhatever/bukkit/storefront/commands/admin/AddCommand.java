@@ -28,8 +28,8 @@ import com.jcwhatever.nucleus.commands.AbstractCommand;
 import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
-import com.jcwhatever.bukkit.storefront.StoreManager;
-import com.jcwhatever.bukkit.storefront.StoreType;
+import com.jcwhatever.bukkit.storefront.stores.StoreManager;
+import com.jcwhatever.bukkit.storefront.stores.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 

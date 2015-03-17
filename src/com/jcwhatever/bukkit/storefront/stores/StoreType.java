@@ -22,7 +22,7 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront;
+package com.jcwhatever.bukkit.storefront.stores;
 
 /**
  * Specifies the type of store.

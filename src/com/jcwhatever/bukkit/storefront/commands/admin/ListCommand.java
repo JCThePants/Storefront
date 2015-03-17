@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.commands.admin;
 
 import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.StoreManager;
+import com.jcwhatever.bukkit.storefront.stores.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.nucleus.commands.AbstractCommand;

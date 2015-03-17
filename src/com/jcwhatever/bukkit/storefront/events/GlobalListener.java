@@ -25,8 +25,8 @@
 package com.jcwhatever.bukkit.storefront.events;
 
 import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.StoreManager;
-import com.jcwhatever.bukkit.storefront.StoreType;
+import com.jcwhatever.bukkit.storefront.stores.StoreManager;
+import com.jcwhatever.bukkit.storefront.stores.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;

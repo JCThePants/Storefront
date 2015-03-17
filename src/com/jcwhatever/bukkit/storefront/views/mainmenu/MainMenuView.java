@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.bukkit.storefront.StoreType;
+import com.jcwhatever.bukkit.storefront.stores.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;

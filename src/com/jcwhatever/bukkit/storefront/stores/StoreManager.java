@@ -22,13 +22,10 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront;
+package com.jcwhatever.bukkit.storefront.stores;
 
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
-import com.jcwhatever.bukkit.storefront.stores.IStore;
-import com.jcwhatever.bukkit.storefront.stores.PlayerStore;
-import com.jcwhatever.bukkit.storefront.stores.ServerStore;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.regions.IRegion;
@@ -55,7 +52,7 @@ public class StoreManager extends NamedInsensitiveDataManager<IStore> {
      *
      * @param storeNode  The store manager data node.
      */
-    StoreManager(IDataNode storeNode) {
+    public StoreManager(IDataNode storeNode) {
         super(storeNode, true);
     }
 

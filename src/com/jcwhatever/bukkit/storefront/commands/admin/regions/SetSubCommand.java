@@ -29,7 +29,7 @@ import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.regions.selection.IRegionSelection;
-import com.jcwhatever.bukkit.storefront.StoreManager;
+import com.jcwhatever.bukkit.storefront.stores.StoreManager;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
