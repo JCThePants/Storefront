@@ -214,7 +214,7 @@ public abstract class AbstractStore implements IStore {
     @Override
     public WantedItems getWantedItems () {
 
-        if (getStoreType() == StoreType.SERVER) {
+        if (getType() == StoreType.SERVER) {
             throw new RuntimeException("Cannot get Wanted items from a server store.");
         }
 
@@ -249,7 +249,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public boolean sellToStore(Player seller, ISaleItem stack, int qty, double price) {
-        if (getStoreType() == StoreType.SERVER) {
+        if (getType() == StoreType.SERVER) {
             Msg.debug("Cannot sell to a server store");
             return false;
         }

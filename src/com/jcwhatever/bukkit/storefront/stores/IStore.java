@@ -102,7 +102,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
     /**
      * Get the type of store.
      */
-    StoreType getStoreType ();
+    StoreType getType();
 
     /**
      * Open the stores main menu to a player.

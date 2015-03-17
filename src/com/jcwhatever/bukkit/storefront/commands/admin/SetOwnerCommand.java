@@ -58,7 +58,7 @@ public class SetOwnerCommand extends AbstractCommand {
             return; // finished
         }
 
-        if (store.getStoreType() == StoreType.SERVER) {
+        if (store.getType() == StoreType.SERVER) {
             tellError(sender, "The store named '{0}' is a Server store and cannot have an owner.", store.getName());
             return; // finished
         }

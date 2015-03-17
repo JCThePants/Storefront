@@ -70,7 +70,7 @@ public class PlayerStore extends AbstractStore {
     }
 
     @Override
-    public StoreType getStoreType () {
+    public StoreType getType() {
         return StoreType.PLAYER_OWNABLE;
     }
 

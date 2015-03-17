@@ -323,7 +323,7 @@ public class SellView extends ChestView {
      */
     private int getMaxSaleItems (Player seller) {
 
-        if (_store.getStoreType() == StoreType.PLAYER_OWNABLE)
+        if (_store.getType() == StoreType.PLAYER_OWNABLE)
             return 6 * 9;
 
         for (int i = 6; i > 0; i--) {

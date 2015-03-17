@@ -63,7 +63,7 @@ public class ListCommand extends AbstractCommand {
 
         for (IStore store : stores) {
 
-            String desc = store.getStoreType().name();
+            String desc = store.getType().name();
 
             if (!store.getName().equals(store.getTitle())) {
                 desc += ", " + store.getTitle();

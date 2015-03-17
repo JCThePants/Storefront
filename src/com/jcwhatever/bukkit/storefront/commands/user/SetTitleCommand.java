@@ -67,7 +67,7 @@ public class SetTitleCommand extends AbstractCommand {
             playerId = ((Player) sender).getUniqueId();
         }
         
-        if (store.getStoreType() == StoreType.SERVER) {
+        if (store.getType() == StoreType.SERVER) {
             
             if (!sender.hasPermission("storefront.store.server")) {
                 tellError(sender, "You don't have permission to change the title of a Server store.");

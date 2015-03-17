@@ -68,7 +68,7 @@ public class GlobalListener implements Listener {
             if (store.getRegion().getRegionClass().equals(event.getRegion().getRegionClass())) {
 
                 // store must be player ownable
-                if (store.getStoreType() != StoreType.PLAYER_OWNABLE)
+                if (store.getType() != StoreType.PLAYER_OWNABLE)
                     return;
 
                 // deposit items into bank of old owner

@@ -72,11 +72,11 @@ public class MainMenuView extends AbstractMenuView {
         getViewSession().setMeta(SessionMetaKey.STORE, _store);
 
         // Determine if the viewer is the store owner
-        _isStoreOwner = _store.getStoreType() == StoreType.PLAYER_OWNABLE
+        _isStoreOwner = _store.getType() == StoreType.PLAYER_OWNABLE
                 && getPlayer().getUniqueId().equals(_store.getOwnerId());
 
         // Determine if the viewer can sell items in the store
-        _canSell = !(_store.getStoreType() == StoreType.PLAYER_OWNABLE &&
+        _canSell = !(_store.getType() == StoreType.PLAYER_OWNABLE &&
                 !getPlayer().getUniqueId().equals(_store.getOwnerId()) &&
                 _store.getWantedItems().getAll().size() == 0);
     }
@@ -187,7 +187,7 @@ public class MainMenuView extends AbstractMenuView {
                         ? "Click to sell items to the store."
                         : "Click to sell items from the store.");
 
-        switch (_store.getStoreType()) {
+        switch (_store.getType()) {
 
             case SERVER:
                 builder
@@ -239,7 +239,7 @@ public class MainMenuView extends AbstractMenuView {
      */
     private MenuItem getBuyItem() {
 
-        switch (_store.getStoreType()) {
+        switch (_store.getType()) {
 
             case SERVER:
                 return getServerBuyItem();
