@@ -22,8 +22,9 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront;
+package com.jcwhatever.bukkit.storefront.category;
 
+import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;

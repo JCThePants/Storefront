@@ -24,8 +24,8 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.bukkit.storefront.Category;
-import com.jcwhatever.bukkit.storefront.CategoryManager;
+import com.jcwhatever.bukkit.storefront.category.Category;
+import com.jcwhatever.bukkit.storefront.category.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.StoreType;
 import com.jcwhatever.bukkit.storefront.Storefront;

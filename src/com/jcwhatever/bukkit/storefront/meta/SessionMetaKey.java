@@ -24,7 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.meta;
 
-import com.jcwhatever.bukkit.storefront.Category;
+import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.nucleus.utils.MetaKey;
 

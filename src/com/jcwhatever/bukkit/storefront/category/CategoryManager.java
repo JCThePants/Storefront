@@ -22,7 +22,7 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront;
+package com.jcwhatever.bukkit.storefront.category;
 
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.nucleus.storage.IDataNode;
@@ -44,7 +44,7 @@ public class CategoryManager extends NamedInsensitiveDataManager<Category> {
      *
      * @param categoryNode  The category managers data node.
      */
-    CategoryManager(IDataNode categoryNode) {
+    public CategoryManager(IDataNode categoryNode) {
         super(categoryNode, true);
     }
 

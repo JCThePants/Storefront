@@ -28,7 +28,7 @@ import com.jcwhatever.nucleus.utils.TimeScale;
 import com.jcwhatever.nucleus.mixins.IPaginator;
 import com.jcwhatever.nucleus.utils.performance.SingleCache;
 import com.jcwhatever.nucleus.views.chest.ChestView;
-import com.jcwhatever.bukkit.storefront.Category;
+import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 
 import java.util.ArrayList;

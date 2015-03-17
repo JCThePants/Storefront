@@ -24,8 +24,8 @@
 
 package com.jcwhatever.bukkit.storefront.commands.admin.categories;
 
-import com.jcwhatever.bukkit.storefront.Category;
-import com.jcwhatever.bukkit.storefront.CategoryManager;
+import com.jcwhatever.bukkit.storefront.category.Category;
+import com.jcwhatever.bukkit.storefront.category.CategoryManager;
 import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
