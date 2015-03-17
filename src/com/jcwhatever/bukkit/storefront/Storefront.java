@@ -27,7 +27,9 @@ package com.jcwhatever.bukkit.storefront;
 import com.jcwhatever.bukkit.storefront.category.CategoryManager;
 import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
 import com.jcwhatever.bukkit.storefront.events.GlobalListener;
+import com.jcwhatever.bukkit.storefront.scripting.ScriptApi;
 import com.jcwhatever.bukkit.storefront.stores.StoreManager;
+import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.NucleusPlugin;
 import com.jcwhatever.nucleus.providers.permissions.IPermission;
 import com.jcwhatever.nucleus.utils.Permissions;
@@ -86,6 +88,8 @@ public class Storefront extends NucleusPlugin {
         _categoryManager = new CategoryManager(getDataNode().getNode("categories"));
         _storeManager = new StoreManager(getDataNode().getNode("stores"));
 
+        Nucleus.getScriptApiRepo().registerApiType(this, ScriptApi.class);
+
         registerPermissions();
 
         this.registerCommands(new StorefrontCommandDispatcher(this));
@@ -94,7 +98,8 @@ public class Storefront extends NucleusPlugin {
 
     @Override
     protected void onDisablePlugin() {
-        // do nothing
+
+        Nucleus.getScriptApiRepo().unregisterApiType(this, ScriptApi.class);
     }
 
     private void registerPermissions () {
