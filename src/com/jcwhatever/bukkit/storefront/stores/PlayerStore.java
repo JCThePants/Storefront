@@ -78,13 +78,13 @@ public class PlayerStore extends AbstractStore {
     public void view (Player player, @Nullable Block sourceBlock) {
         PreCon.notNull(player);
 
-        assert getOwnerId() != null;
-        
         if (!hasOwner()) {
 
             Msg.tell(player, "This store is out of business.");
             return;
         }
+
+        assert getOwnerId() != null;
 
         if (!getOwnerId().equals(player.getUniqueId()) &&
                 getSaleItems().size() == 0 &&
