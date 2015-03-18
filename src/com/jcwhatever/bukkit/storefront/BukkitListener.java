@@ -22,15 +22,13 @@
  */
 
 
-package com.jcwhatever.bukkit.storefront.events;
+package com.jcwhatever.bukkit.storefront;
 
-import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.stores.StoreManager;
-import com.jcwhatever.bukkit.storefront.stores.StoreType;
-import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.regions.StoreRegion;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.bukkit.storefront.stores.StoreManager;
+import com.jcwhatever.bukkit.storefront.stores.StoreType;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.events.regions.RegionOwnerChangedEvent;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
@@ -46,13 +44,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import java.util.Collection;
 import java.util.List;
 
-public class GlobalListener implements Listener {
+public class BukkitListener implements Listener {
 
     @EventHandler
     private void onRegionOwnerChanged(RegionOwnerChangedEvent event) {
-        
-        Msg.debug("Region owner changed.");
-        
+
         // return if there was no previous owner
         if (event.getOldOwnerId() == null)
             return;
@@ -60,12 +56,10 @@ public class GlobalListener implements Listener {
         StoreManager storeManager = Storefront.getStoreManager();
         
         Collection<IStore> stores = storeManager.getAll();
-        
-        Msg.debug("find store with region");
-        
+
         // find store with event region
         for (IStore store : stores) {
-            if (store.getRegion().getRegionClass().equals(event.getRegion().getRegionClass())) {
+            if (store.getRegion().equals(event.getRegion())) {
 
                 // store must be player ownable
                 if (store.getType() != StoreType.PLAYER_OWNABLE)
@@ -80,7 +74,6 @@ public class GlobalListener implements Listener {
                     account.deposit(saleItem.getItemStack(), saleItem.getQty());
                 }
 
-                Msg.debug("Remove store items");
                 // remove items from store
                 store.clearSaleItems(event.getOldOwnerId());
 

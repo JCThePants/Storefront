@@ -26,7 +26,6 @@ package com.jcwhatever.bukkit.storefront;
 
 import com.jcwhatever.bukkit.storefront.category.CategoryManager;
 import com.jcwhatever.bukkit.storefront.commands.StorefrontCommandDispatcher;
-import com.jcwhatever.bukkit.storefront.events.GlobalListener;
 import com.jcwhatever.bukkit.storefront.scripting.ScriptApi;
 import com.jcwhatever.bukkit.storefront.stores.StoreManager;
 import com.jcwhatever.nucleus.Nucleus;
@@ -93,7 +92,7 @@ public class Storefront extends NucleusPlugin {
         registerPermissions();
 
         this.registerCommands(new StorefrontCommandDispatcher(this));
-        this.registerEventListeners(new GlobalListener());
+        this.registerEventListeners(new BukkitListener());
     }
 
     @Override
