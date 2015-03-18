@@ -1,14 +1,11 @@
 name: Storefront
 author: JCThePants
 main: com.jcwhatever.bukkit.storefront.Storefront
-version: 0.0-beta
+version: 0.1-beta
 depend: [NucleusFramework]
 commands:
-    store:
-        description: Base command for Storefront
-        usage: |
-            ERROR!
-    stores:
+    storefront:
+        aliases: [store, stores]
         description: Base command for Storefront
         usage: |
             ERROR!
