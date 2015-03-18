@@ -40,6 +40,7 @@ import com.jcwhatever.bukkit.storefront.views.WantedView;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
@@ -63,6 +64,10 @@ public class MainMenuView extends AbstractMenuView {
      */
     public MainMenuView(IStore store) {
         super(store);
+    }
+
+    @Override
+    protected void onViewSessionSet(ViewSession session) {
 
         // Determine if the viewer is the store owner
         _isStoreOwner = getStore().getType() == StoreType.PLAYER_OWNABLE
