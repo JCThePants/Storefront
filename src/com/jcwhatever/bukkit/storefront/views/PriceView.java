@@ -24,17 +24,18 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -46,6 +47,48 @@ import javax.annotation.Nullable;
  * A menu view used to select the price of an item.
  */
 public class PriceView extends AbstractMenuView {
+
+    @Localizable static final String _VIEW_TITLE = "Set price per item";
+
+    @Localizable static final String _SUBTRACT_1_TITLE =
+            "{RED}Subtract 1.00";
+
+    @Localizable static final String _SUBTRACT_1_DESCR =
+            "Subtract 1.00 from the price of the item.";
+
+    @Localizable static final String _SUBTRACT_10_TITLE =
+            "{RED}Subtract 10.00";
+
+    @Localizable static final String _SUBTRACT_10_DESCR =
+            "Subtract 10.00 from the price of the item.";
+
+    @Localizable static final String _SUBTRACT_50_TITLE =
+            "{RED}Subtract 50.00";
+
+    @Localizable static final String _SUBTRACT_50_DESCR =
+            "Subtract 50.00 from the price of the item.";
+
+    @Localizable static final String _ADD_1_TITLE =
+            "{GREEN}Add 1.00";
+
+    @Localizable static final String _ADD_1_DESCR =
+            "Add 1.00 to the price of the item.";
+
+    @Localizable static final String _ADD_10_TITLE =
+            "{GREEN}Add 10.00";
+
+    @Localizable static final String _ADD_10_DESCR =
+            "Add 10.00 to the price of the item.";
+
+    @Localizable static final String _ADD_50_TITLE =
+            "{GREEN}Add 50.00";
+
+    @Localizable static final String _ADD_50_DESCR =
+            "Add 50.00 to the price of the item.";
+
+    @Localizable static final String _CONFIRM_CHANGES =
+            "{GREEN}Click to confirm changes.";
+
 
     private static final MetaKey<Double>
             PRICE_INCREMENT = new MetaKey<Double>(Double.class);
@@ -107,7 +150,7 @@ public class PriceView extends AbstractMenuView {
     @Override
     public String getTitle() {
         ViewSessionTask task = getSessionTask();
-        return task.getChatColor() + "Set price per item";
+        return task.getChatColor() + Lang.get(_VIEW_TITLE);
     }
 
     @Override
@@ -117,48 +160,48 @@ public class PriceView extends AbstractMenuView {
 
         // -1 btn
         _minus1 = new MenuItemBuilder(Material.STONE)
-                .title("{RED}Subtract 1")
-                .description("Subtract 1.00 from the price of the item.")
+                .title(Lang.get(_SUBTRACT_1_TITLE))
+                .description(Lang.get(_SUBTRACT_1_DESCR))
                 .meta(PRICE_INCREMENT, -1.0D)
                 .build(SLOT_SUBTRACT_1);
         menuItems.add(_minus1);
 
         // -10 btn
         _minus10 = new MenuItemBuilder(Material.DIRT)
-                .title("{RED}Subtract 10")
-                .description("Subtract 10.00 from the price of the item.")
+                .title(Lang.get(_SUBTRACT_10_TITLE))
+                .description(Lang.get(_SUBTRACT_10_DESCR))
                 .meta(PRICE_INCREMENT, -10.0D)
                 .build(SLOT_SUBTRACT_10);
         menuItems.add(_minus10);
 
         // -50 btn
         _minus50 = new MenuItemBuilder(Material.GRASS)
-                .title("{RED}Subtract 50")
-                .description("Subtract 50.00 from the price of the item.")
+                .title(Lang.get(_SUBTRACT_50_TITLE))
+                .description(Lang.get(_SUBTRACT_50_DESCR))
                 .meta(PRICE_INCREMENT, -50.0D)
                 .build(SLOT_SUBTRACT_50);
         menuItems.add(_minus50);
 
         // +50 btn
         _add50 = new MenuItemBuilder(Material.DIAMOND_BLOCK)
-                .title("{GREEN}Add 50")
-                .description("Add 50.00 to the price of the item.")
+                .title(Lang.get(_ADD_50_TITLE))
+                .description(Lang.get(_ADD_50_DESCR))
                 .meta(PRICE_INCREMENT, 50.0D)
                 .build(SLOT_ADD_50);
         menuItems.add(_add50);
 
         // +10 btn
         _add10 = new MenuItemBuilder(Material.GOLD_BLOCK)
-                .title("{GREEN}Add 10")
-                .description("Add 10.00 to the price of the item.")
+                .title(Lang.get(_ADD_10_TITLE))
+                .description(_ADD_10_DESCR)
                 .meta(PRICE_INCREMENT, 10.0D)
                 .build(SLOT_ADD_10);
         menuItems.add(_add10);
 
         // +1 btn
         _add1 = new MenuItemBuilder(Material.IRON_BLOCK)
-                .title("{GREEN}Add 1")
-                .description("Add 1.00 to the price of the item.")
+                .title(Lang.get(_ADD_1_TITLE))
+                .description(Lang.get(_ADD_1_DESCR))
                 .meta(PRICE_INCREMENT, 1.0D)
                 .build(SLOT_ADD_1);
         menuItems.add(_add1);
@@ -244,6 +287,6 @@ public class PriceView extends AbstractMenuView {
     private void setLore(ItemStack itemStack) {
         ItemStackUtil.removeTempLore(itemStack);
         ItemStackUtil.setPriceLore(itemStack, _price, PriceType.PER_ITEM);
-        ItemStackUtil.addTempLore(itemStack, ChatColor.GREEN + "Click to confirm changes.");
+        ItemStackUtil.addTempLore(itemStack, Lang.get(_CONFIRM_CHANGES));
     }
 }

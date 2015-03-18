@@ -24,17 +24,18 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,6 +49,40 @@ import javax.annotation.Nullable;
  * <p>Tasks include changing the quantity and price.</p>
  */
 public class ItemTaskView extends AbstractMenuView {
+
+    @Localizable static final String _VIEW_TITLE =
+            "Select Item Task";
+
+    @Localizable static final String _QTY_TITLE =
+            "{LIGHT_PURPLE}QUANTITY";
+
+    @Localizable static final String _QTY_DESCR =
+            "Set the number of items in the stack.";
+
+    @Localizable static final String _PRICE_TITLE =
+            "{YELLOW}PRICE";
+
+    @Localizable static final String _PRICE_DESCR =
+            "Set the price per item in the stack.";
+
+    @Localizable static final String _REMOVE_TITLE =
+            "{DARK_RED}REMOVE";
+
+    @Localizable static final String _REMOVE_DESCR =
+            "{RED}Click to remove item.";
+
+    @Localizable static final String _CANCEL_TITLE =
+            "{RED}CANCEL";
+
+    @Localizable static final String _CANCEL_DESCR =
+            "{RED}Click to cancel changes and return.";
+
+    @Localizable static final String _AVAILABLE_LORE =
+            "{YELLOW}Available: {GRAY}{0: available}";
+
+    @Localizable static final String _CONFIRM_CHANGES =
+            "{BLUE}Click to confirm changes.";
+
 
     private static final int SLOT_ITEM = 0;
     private static final int SLOT_QTY = 3;
@@ -115,7 +150,7 @@ public class ItemTaskView extends AbstractMenuView {
     @Override
     public String getTitle() {
         ViewSessionTask taskMode = getSessionTask();
-        return taskMode.getChatColor() + "Select Item Task";
+        return taskMode.getChatColor() + Lang.get(_VIEW_TITLE);
     }
 
     @Override
@@ -127,26 +162,26 @@ public class ItemTaskView extends AbstractMenuView {
         _menuItems = new ArrayList<>(5);
 
         _qtyMenuItem = new MenuItemBuilder(Material.CHEST)
-                .title("{LIGHT_PURPLE}QUANTITY")
-                .description("Set the number of items in the stack.")
+                .title(Lang.get(_QTY_TITLE))
+                .description(Lang.get(_QTY_DESCR))
                 .build(SLOT_QTY);
         _menuItems.add(_qtyMenuItem);
 
         _priceMenuItem = new MenuItemBuilder(Material.GOLD_NUGGET)
-                .title("{YELLOW}PRICE")
-                .description("Set the price per item in the stack.")
+                .title(Lang.get(_PRICE_TITLE))
+                .description(Lang.get(_PRICE_DESCR))
                 .build(SLOT_PRICE);
         _menuItems.add(_priceMenuItem);
 
         _removeMenuItem = new MenuItemBuilder(Material.SHEARS)
-                .title("{DARK_RED}REMOVE")
-                .description("{RED}Click to remove item.")
+                .title(Lang.get(_REMOVE_TITLE))
+                .description(Lang.get(_REMOVE_DESCR))
                 .build(SLOT_REMOVE);
         _menuItems.add(_removeMenuItem);
 
         _cancelMenuItem = new MenuItemBuilder(Material.REDSTONE_BLOCK)
-                .title("{RED}CANCEL")
-                .description("{RED}Click to cancel changes and return.")
+                .title(Lang.get(_CANCEL_TITLE))
+                .description(Lang.get(_CANCEL_DESCR))
                 .build(SLOT_CANCEL);
         _menuItems.add(_cancelMenuItem);
 
@@ -234,9 +269,9 @@ public class ItemTaskView extends AbstractMenuView {
         if (_price > 0)
             ItemStackUtil.setPriceLore(itemStack, _price * itemStack.getAmount(), PriceType.TOTAL);
 
-        ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Available: " + ChatColor.GRAY
-                + (_maxAmount - itemStack.getAmount()));
+        ItemStackUtil.addTempLore(itemStack, Lang.get(_AVAILABLE_LORE,
+                (_maxAmount - itemStack.getAmount())));
 
-        ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to confirm changes.");
+        ItemStackUtil.addTempLore(itemStack, Lang.get(_CONFIRM_CHANGES));
     }
 }

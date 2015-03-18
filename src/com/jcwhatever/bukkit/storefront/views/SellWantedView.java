@@ -25,11 +25,11 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
-import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
@@ -40,14 +40,13 @@ import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameResult;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -55,6 +54,31 @@ import java.util.List;
 
 //@ViewInfo(pageType=PaginatorPageType.SALE_ITEM)
 public class SellWantedView extends AbstractMenuView {
+
+    @Localizable static final String _VIEW_TITLE =
+            "{DARK_GRAY}Sell Items to Store";
+
+    @Localizable static final String _ITEM_NO_LONGER_ACCEPTED =
+            "{RED}Problem: {WHITE}The store is no longer accepting that item.";
+
+    @Localizable static final String _INSUFFICIENT_ITEMS =
+            "{RED}Problem: {WHITE}You don't have the items you are trying to sell or do " +
+                    "not have enough of them.";
+
+    @Localizable static final String _STORE_CANNOT_AFFORD =
+            "{RED}Problem: {WHITE}The store cannot afford to buy from you right now.";
+
+    @Localizable static final String _ITEM_NOT_IN_INVENTORY =
+            "{RED}Problem: {WHITE}You don't have that item in your inventory.";
+
+    @Localizable static final String _SELL_FAILED =
+            "{RED}Problem: {WHITE}Failed to sell items to store.";
+
+    @Localizable static final String _SELL_SUCCESS =
+            "{GREEN}Success: {WHITE}Sold {0: qty} {1: item sold} to the store for {GREEN}{2: amount}{WHITE}.";
+
+    @Localizable static final String _WANTED_QTY_LORE =
+            "{YELLOW}Wanted: {GRAY}{0: qty}";
 
     private static final MetaKey<ISaleItem> SALE_ITEM = new MetaKey<>(ISaleItem.class);
 
@@ -76,8 +100,7 @@ public class SellWantedView extends AbstractMenuView {
 
     @Override
     public String getTitle() {
-        ViewSessionTask taskMode = getSessionTask();
-        return taskMode.getChatColor() + "Sell Items to Store";
+        return Lang.get(_VIEW_TITLE);
     }
 
     @Override
@@ -115,7 +138,7 @@ public class SellWantedView extends AbstractMenuView {
             if (_selectedSaleItem.getParent().getQty() == 0 || _selectedSaleItem.isRemoved()) {
 
                 // item is not being accepted anymore
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}The store is no longer accepting that item.");
+                Msg.tell(getPlayer(), Lang.get(_ITEM_NO_LONGER_ACCEPTED));
                 return;
             }
 
@@ -123,7 +146,7 @@ public class SellWantedView extends AbstractMenuView {
             if (!InventoryUtils.has(getPlayer().getInventory(), _selectedSaleItem.getItemStack(),
                     StoreStackMatcher.getDefault(), amount)) {
 
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have the items you are trying to sell or do not have enough of them.");
+                Msg.tell(getPlayer(), Lang.get(_INSUFFICIENT_ITEMS));
                 return;
             }
 
@@ -131,12 +154,12 @@ public class SellWantedView extends AbstractMenuView {
             double storeBalance = Economy.getBalance(getStore().getOwnerId());
 
             if (storeBalance < totalCost) {
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}The store cannot afford to buy from you right now.");
+                Msg.tell(getPlayer(), Lang.get(_STORE_CANNOT_AFFORD));
                 return;
             }
 
             if (!getStore().sellToStore(getPlayer(), _selectedSaleItem, amount, totalCost)) {
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Failed to sell items to store.");
+                Msg.tell(getPlayer(), Lang.get(_SELL_FAILED));
 
                 return;
             }
@@ -149,19 +172,12 @@ public class SellWantedView extends AbstractMenuView {
                 menuItem.set(this);
                 //_inventory.setItem(menuItem.getSlot(), menuItem.getItemStack());
 
-                Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Sold {0} {1} to the store for {GREEN}{2}{WHITE}.",
+                Msg.tell(getPlayer(), Lang.get(_SELL_SUCCESS,
                         amount,
                         ItemStackUtils.getDisplayName(menuItem, DisplayNameResult.REQUIRED),
-                        Economy.getCurrency().format(totalCost));
+                        Economy.getCurrency().format(totalCost)));
             }
-
         }
-
-    }
-
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-
     }
 
     @Override
@@ -200,7 +216,7 @@ public class SellWantedView extends AbstractMenuView {
         int playerQty = InventoryUtils.count(getPlayer().getInventory(), clone);
 
         if (playerQty == 0) {
-            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have that item in your chest.");
+            Msg.tell(getPlayer(), Lang.get(_ITEM_NOT_IN_INVENTORY));
             return;
         }
 
@@ -225,7 +241,7 @@ public class SellWantedView extends AbstractMenuView {
 
         ItemStackUtil.removeTempLore(itemStack);
         ItemStackUtil.setPriceLore(itemStack, price, PriceType.PER_ITEM);
-        ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Wanted: " + ChatColor.GRAY + qty);
+        ItemStackUtil.addTempLore(itemStack, Lang.get(_WANTED_QTY_LORE, qty));
     }
 
 }

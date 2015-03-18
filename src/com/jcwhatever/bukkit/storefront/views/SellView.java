@@ -24,11 +24,11 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
+import com.jcwhatever.bukkit.storefront.Lang;
+import com.jcwhatever.bukkit.storefront.Msg;
+import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.category.CategoryManager;
-import com.jcwhatever.bukkit.storefront.Msg;
-import com.jcwhatever.bukkit.storefront.stores.StoreType;
-import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
@@ -36,6 +36,7 @@ import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.bukkit.storefront.stores.StoreType;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreInventoryUpdater;
@@ -47,6 +48,7 @@ import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.utils.scheduler.IScheduledTask;
 import com.jcwhatever.nucleus.utils.scheduler.TaskHandler;
 import com.jcwhatever.nucleus.views.View;
@@ -74,6 +76,19 @@ import java.util.Set;
  */
 public class SellView extends ChestView {
 
+    @Localizable static final String _VIEW_TITLE =
+            "{DARK_GRAY}Place items to sell";
+
+    @Localizable static final String _ALREADY_PURCHASED =
+            "Item already purchased. Inventory updated to reflect changes.";
+
+    @Localizable static final String _CANNOT_SELL =
+            "{RED}Problem: {WHITE}You cannot sell that item.";
+
+    @Localizable static final String _NO_ROOM_IN_INVENTORY =
+            "{RED}Problem: {WHITE}There is not enough room left in the store for the item you " +
+                    "are trying to sell.";
+
     private IStore _store;
     private PriceMap _priceMap;
     private IScheduledTask _sledgehammer = null;
@@ -95,11 +110,7 @@ public class SellView extends ChestView {
 
     @Override
     public String getTitle() {
-        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
-        if (taskMode == null)
-            throw new AssertionError();
-
-        return taskMode.getChatColor() + "Place items to sell";
+        return Lang.get(_VIEW_TITLE);
     }
 
     @Override
@@ -260,7 +271,7 @@ public class SellView extends ChestView {
 
                 updateQuantities();
 
-                Msg.tell(getPlayer(), "Item already purchased. Inventory updated to reflect changes.");
+                Msg.tell(getPlayer(), Lang.get(_ALREADY_PURCHASED));
 
                 // cancel event, prevent moving item out of store and into player chest
                 return ChestEventAction.DENY;
@@ -298,18 +309,16 @@ public class SellView extends ChestView {
         // make sure the item is part of a valid category
         Category category = categoryManager.get(itemToAdd);
         if (category == null) {
-            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You cannot sell that item.");
+            Msg.tell(getPlayer(), Lang.get(_CANNOT_SELL));
             return ChestEventAction.DENY;
         }
 
         int availableSpace = _store.getSpaceAvailable(getPlayer().getUniqueId(), itemToAdd);
-
         int added = InventoryUtils.count(_inventory, itemToAdd, StoreStackMatcher.getDefault());
 
         if (availableSpace - added < itemToAdd.getAmount()) {
 
-            Msg.tell(getPlayer(), "{RED}Problem: {WHITE}There is not enough room left in the store for the item you are trying to sell.");
-
+            Msg.tell(getPlayer(), _NO_ROOM_IN_INVENTORY);
             return ChestEventAction.DENY; // prevent placing item
         }
 
@@ -335,7 +344,6 @@ public class SellView extends ChestView {
 
         return 9;
     }
-
 
     /**
      * Update quantities in the inventory based on quantities reported by the store.

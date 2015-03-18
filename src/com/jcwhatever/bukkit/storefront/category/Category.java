@@ -24,12 +24,14 @@
 
 package com.jcwhatever.bukkit.storefront.category;
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.ItemFilterManager;
 import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -39,10 +41,13 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Category implements INamedInsensitive {
 
+    @Localizable static final String _DESCRIPTION =
+            "Click to view items in category.";
+
     private String _name;
     private String _searchName;
     private String _title;
-    private String _description = "Click to view items in category.";
+    private String _description = Lang.get(_DESCRIPTION);
 
     private IDataNode _categoryNode;
     private ItemFilterManager _filterManager;

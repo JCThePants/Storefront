@@ -24,9 +24,10 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.storefront.category.Category;
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
@@ -37,6 +38,7 @@ import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.block.Block;
@@ -56,6 +58,10 @@ import javax.annotation.Nullable;
  * Player ownable implementation of {@link AbstractStore}.
  */
 public class PlayerStore extends AbstractStore {
+
+    @Localizable static final String _OUT_OF_STOCK = "Out of stock.";
+    @Localizable static final String _OUT_OF_BUSINESS = "This store is out of business.";
+
 
     private Map<MatchableItem, ISaleItem> _stackMap;
 
@@ -80,7 +86,7 @@ public class PlayerStore extends AbstractStore {
 
         if (!hasOwner()) {
 
-            Msg.tell(player, "This store is out of business.");
+            Msg.tell(player, Lang.get(_OUT_OF_BUSINESS));
             return;
         }
 
@@ -90,7 +96,7 @@ public class PlayerStore extends AbstractStore {
                 getSaleItems().size() == 0 &&
                 getWantedItems().getAll().size() == 0) {
             
-            Msg.tell(player, "Out of stock.");
+            Msg.tell(player, Lang.get(_OUT_OF_STOCK));
             return;
         }
 
@@ -330,7 +336,6 @@ public class PlayerStore extends AbstractStore {
                 saleItem.setPricePerUnit(pricePerUnit);
                 saleItem.setQty(newQty);
             }
-
         });
 
         return saleItem;

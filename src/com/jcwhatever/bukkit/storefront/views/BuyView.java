@@ -24,6 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
@@ -38,8 +39,8 @@ import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameResult;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
@@ -56,6 +57,31 @@ import java.util.List;
  * <p>Allows player to select items from an inventory view to purchase.</p>
  */
 public class BuyView extends AbstractMenuView {
+
+    @Localizable static final String _VIEW_TITLE =
+            "Buy Items";
+
+    @Localizable static final String _VIEW_TITLE_MULTI_PAGE =
+            "Buy Items (Page {0: page number})";
+
+    @Localizable static final String _INSUFFICIENT_FUNDS =
+            "{RED}Problem: {WHITE}You don't have enough {0: currency name}.";
+
+    @Localizable static final String _INSUFFICENT_INVENTORY_SPACE =
+            "{RED}Problem: {WHITE}There isn't enough space in your inventory.";
+
+    @Localizable static final String _NOT_ENOUGH_AVAILABLE =
+            "{RED}Problem: {WHITE}Not enough available. Someone may have purchased the item already.";
+
+    @Localizable static final String _BUY_FAILED =
+            "{RED}Problem: {WHITE}Failed to buy items. They may have been purchased by " +
+                    "someone else already.";
+
+    @Localizable static final String _BUY_SUCCESS =
+            "{GREEN}Success: {WHITE}Purchased {0: qty} {1: item} for {2: price}.";
+
+    @Localizable static final String _OUT_OF_STOCK =
+            "Out of Stock";
 
     private static final MetaKey<ISaleItem>
             SALE_ITEM = new MetaKey<>(ISaleItem.class);
@@ -82,11 +108,11 @@ public class BuyView extends AbstractMenuView {
     @Override
     public String getTitle() {
         ViewSessionTask taskMode = getSessionTask();
-        String title = taskMode.getChatColor() + "Buy Items";
+        String title = taskMode.getChatColor().toString();
 
-        if (_paginator != null) {
-            title += " (Page " + _page + ')';
-        }
+        title += _paginator != null
+                ? Lang.get(_VIEW_TITLE_MULTI_PAGE, _page)
+                : Lang.get(_VIEW_TITLE);
 
         return title;
     }
@@ -163,41 +189,35 @@ public class BuyView extends AbstractMenuView {
 
             // check buyer balance
             if (balance < price) {
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}You don't have enough {0}.",
-                        Economy.getCurrency().getName(CurrencyNoun.PLURAL));
+                Msg.tell(getPlayer(), Lang.get(_INSUFFICIENT_FUNDS,
+                        Economy.getCurrency().getName(CurrencyNoun.PLURAL)));
             }
             // check buyer available inventory room
             else if (!InventoryUtils.hasRoom(getPlayer().getInventory(), _selectedSaleItem.getItemStack(), amount)) {
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}There isn't enough space in your inventory.");
+                Msg.tell(getPlayer(), Lang.get(_INSUFFICENT_INVENTORY_SPACE));
             }
             // check item is available
             else if (_selectedSaleItem.getParent().getQty() < amount) {
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Not enough inventory. Someone may have purchased the item already.");
+                Msg.tell(getPlayer(), Lang.get(_NOT_ENOUGH_AVAILABLE));
             }
             // buy items
             else if (!getStore().buySaleItem(getPlayer(), _selectedSaleItem, amount, price)) {
-                Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Failed to buy items. They may have been purchased by someone else already.");
+                Msg.tell(getPlayer(), Lang.get(_BUY_FAILED));
             } else {
-                Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Purchased {0} {1} for {2}.", amount,
+                Msg.tell(getPlayer(), Lang.get(_BUY_SUCCESS, amount,
                         ItemStackUtils.getDisplayName(_selectedSaleItem.getItemStack(), DisplayNameResult.REQUIRED),
-                        Economy.getCurrency().format(price));
+                        Economy.getCurrency().format(price)));
             }
 
         } else {
 
             if (getStore().getSaleItems().size() == 0) {
 
-                Msg.tell(getPlayer(), "Out of Stock");
+                Msg.tell(getPlayer(), Lang.get(_OUT_OF_STOCK));
                 return false;
             }
-
         }
 
         return true;
-    }
-
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-        // do nothing
     }
 }

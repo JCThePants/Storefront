@@ -24,6 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
@@ -37,6 +38,7 @@ import com.jcwhatever.bukkit.storefront.views.CategoryView;
 import com.jcwhatever.bukkit.storefront.views.SellView;
 import com.jcwhatever.bukkit.storefront.views.SellWantedView;
 import com.jcwhatever.bukkit.storefront.views.WantedView;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
@@ -44,7 +46,6 @@ import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -55,6 +56,27 @@ import java.util.List;
  * the main store menu view.
  */
 public class MainMenuView extends AbstractMenuView {
+
+    @Localizable static final String _SELL_TITLE =
+            "{BLUE}SELL";
+
+    @Localizable static final String _SELL_TO_DESCR =
+            "Click to sell items to the store.";
+
+    @Localizable static final String _SELL_FROM_DESCR =
+            "Click to sell items from the store.";
+
+    @Localizable static final String _BUY_TITLE =
+            "{GREEN}BUY";
+
+    @Localizable static final String _BUY_DESCR =
+            "Click to buy from the store.";
+
+    @Localizable static final String _WANTED_TITLE =
+            "{YELLOW}WANTED";
+
+    @Localizable static final String _WANTED_DESCR =
+            "Click to manage items you're willing to buy.";
 
     private boolean _isStoreOwner;
     private boolean _canSell;
@@ -166,10 +188,10 @@ public class MainMenuView extends AbstractMenuView {
     private MenuItem getSellItem() {
 
         MainMenuItemBuilder builder = (MainMenuItemBuilder)new MainMenuItemBuilder(Material.GOLD_BLOCK)
-                .title("{BLUE}SELL")
+                .title(Lang.get(_SELL_TITLE))
                 .description(getStore().hasOwner()
-                        ? "Click to sell items to the store."
-                        : "Click to sell items from the store.");
+                        ? Lang.get(_SELL_TO_DESCR)
+                        : Lang.get(_SELL_FROM_DESCR));
 
         switch (getStore().getType()) {
 
@@ -261,8 +283,8 @@ public class MainMenuView extends AbstractMenuView {
                         return results;
                     }
                 })
-                .title("BUY")
-                .description("Click to buy from the store.")
+                .title(_BUY_TITLE)
+                .description(_BUY_DESCR)
                 ;
 
         return builder.build(0);
@@ -285,8 +307,8 @@ public class MainMenuView extends AbstractMenuView {
                             return getStore().getWantedItems().getAll();
                         }
                     })
-                    .title(ChatColor.GREEN + "WANTED")
-                    .description("Click to manage items you're willing to buy.");
+                    .title(Lang.get(_WANTED_TITLE))
+                    .description(Lang.get(_WANTED_DESCR));
 
         }
         else {
@@ -300,8 +322,8 @@ public class MainMenuView extends AbstractMenuView {
                             return getStore().getSaleItems();
                         }
                     })
-                    .title("BUY")
-                    .description("Click to buy from the store.");
+                    .title(Lang.get(_BUY_TITLE))
+                    .description(Lang.get(_BUY_DESCR));
 
         }
         return builder.build(0);

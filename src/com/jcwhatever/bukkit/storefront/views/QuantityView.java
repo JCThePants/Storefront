@@ -24,6 +24,7 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -31,11 +32,11 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -47,6 +48,51 @@ import java.util.List;
  * A menu view used to change the quantity of an item.
  */
 public class QuantityView extends AbstractMenuView {
+
+    @Localizable static final String _VIEW_TITLE =
+            "Select Amount";
+
+    @Localizable static final String _CANCEL_TITLE =
+            "{RED}Cancel";
+
+    @Localizable static final String _CANCEL_DESCR =
+            "{RED}Click to cancel and return.";
+
+    @Localizable static final String _SUBTRACT_1_TITLE =
+            "{RED}Subtract 1";
+
+    @Localizable static final String _SUBTRACT_1_DESCR =
+            "Click to Subtract 1 item from the quantity.";
+
+    @Localizable static final String _SUBTRACT_10_TITLE =
+            "{RED}Subtract 10";
+
+    @Localizable static final String _SUBTRACT_10_DESCR =
+            "Click to Subtract 10 items from the quantity.";
+
+    @Localizable static final String _ADD_1_TITLE =
+            "{GREEN}Add 1";
+
+    @Localizable static final String _ADD_1_DESCR =
+            "Click to Add 1 item to the quantity.";
+
+    @Localizable static final String _ADD_10_TITLE =
+            "{GREEN}Add 10";
+
+    @Localizable static final String _ADD_10_DESCR =
+            "Click to Add 10 item to the quantity.";
+
+    @Localizable static final String _QTY_LORE =
+            "{YELLOW}Qty: {GRAY}{0: qty}";
+
+    @Localizable static final String _AVAILABLE_QTY_LORE =
+            "{YELLOW}Available: {GRAY}{0: available qty}";
+
+    @Localizable static final String _CLICK_TO_PURCHASE_LORE =
+            "{BLUE}Click to purchase.";
+
+    @Localizable static final String _CLICK_TO_CONFIRM_LORE =
+            "{BLUE}Click to confirm.";
 
     private static final MetaKey<Integer>
             QUANTITY_INCREMENT = new MetaKey<Integer>(Integer.class);
@@ -110,7 +156,7 @@ public class QuantityView extends AbstractMenuView {
 
     @Override
     public String getTitle() {
-        return "Select Amount";
+        return Lang.get(_VIEW_TITLE);
     }
 
     @Override
@@ -127,35 +173,35 @@ public class QuantityView extends AbstractMenuView {
         _menuItems = new ArrayList<>(6);
 
         _menuCancel = new MenuItemBuilder(Material.REDSTONE_BLOCK)
-                .title("{RED}Cancel")
-                .description("{RED}Click to cancel and return.")
+                .title(Lang.get(_CANCEL_TITLE))
+                .description(Lang.get(_CANCEL_DESCR))
                 .build(SLOT_CANCEL);
         _menuItems.add(_menuCancel);
 
         _menuSubtract1 = new MenuItemBuilder(Material.STONE)
-                .title("{RED}Subtract 1")
-                .description("Click to Subtract 1 item from the quantity.")
+                .title(Lang.get(_SUBTRACT_1_TITLE))
+                .description(Lang.get(_SUBTRACT_1_DESCR))
                 .meta(QUANTITY_INCREMENT, -1)
                 .build(SLOT_SUBTRACT_1);
         _menuItems.add(_menuSubtract1);
 
         _menuSubtract10 = new MenuItemBuilder(Material.DIRT)
-                .title("{RED}Subtract 10")
-                .description("Click to Subtract 10 items from the quantity.")
+                .title(Lang.get(_SUBTRACT_10_TITLE))
+                .description(Lang.get(_SUBTRACT_10_DESCR))
                 .meta(QUANTITY_INCREMENT, -10)
                 .build(SLOT_SUBTRACT_10);
         _menuItems.add(_menuSubtract10);
 
         _menuAdd1 = new MenuItemBuilder(Material.IRON_BLOCK)
-                .title("{GREEN}Add 1")
-                .description("Click to Add 1 item to the quantity.")
+                .title(Lang.get(_ADD_1_TITLE))
+                .description(Lang.get(_ADD_1_DESCR))
                 .meta(QUANTITY_INCREMENT, 1)
                 .build(SLOT_ADD_1);
         _menuItems.add(_menuAdd1);
 
         _menuAdd10 = new MenuItemBuilder(Material.GOLD_BLOCK)
-                .title("{GREEN}Add 10")
-                .description("Click to Add 10 item to the quantity.")
+                .title(Lang.get(_ADD_10_TITLE))
+                .description(Lang.get(_ADD_10_DESCR))
                 .meta(QUANTITY_INCREMENT, 10)
                 .build(SLOT_ADD_10);
         _menuItems.add(_menuAdd10);
@@ -240,18 +286,15 @@ public class QuantityView extends AbstractMenuView {
         if (_price > 0)
             ItemStackUtil.setPriceLore(itemStack, _price * itemStack.getAmount(), PriceType.TOTAL);
 
-        ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Qty: " + ChatColor.GRAY
-                + itemStack.getAmount());
-
-        ItemStackUtil.addTempLore(itemStack, ChatColor.YELLOW + "Available: " + ChatColor.GRAY
-                + _maxQty);
+        ItemStackUtil.addTempLore(itemStack, Lang.get(_QTY_LORE, itemStack.getAmount()));
+        ItemStackUtil.addTempLore(itemStack, Lang.get(_AVAILABLE_QTY_LORE, _maxQty));
 
         ViewSessionTask taskMode = getSessionTask();
 
         if (taskMode == ViewSessionTask.SERVER_BUY || taskMode == ViewSessionTask.PLAYER_BUY)
-            ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to purchase.");
+            ItemStackUtil.addTempLore(itemStack, Lang.get(_CLICK_TO_PURCHASE_LORE));
         else
-            ItemStackUtil.addTempLore(itemStack, ChatColor.BLUE + "Click to confirm.");
+            ItemStackUtil.addTempLore(itemStack, Lang.get(_CLICK_TO_CONFIRM_LORE));
 
         return itemStack;
     }

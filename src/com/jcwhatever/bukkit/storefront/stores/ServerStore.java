@@ -24,9 +24,10 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.storefront.category.Category;
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
@@ -43,6 +44,7 @@ import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Rand;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.block.Block;
@@ -62,6 +64,11 @@ import javax.annotation.Nullable;
  * where any player can buy or sell items.
  */
 public class ServerStore extends AbstractStore {
+
+    @Localizable static final String _ITEMS_EXPIRED =
+            "1 or more items you were selling at the store '{0: store title}' expired and " +
+                    "were sent to your item bank account.";
+
 
     private static ExpireChecker _expireChecker;
 
@@ -396,8 +403,7 @@ public class ServerStore extends AbstractStore {
         removeSaleItem(saleItem.getId());
 
         Msg.tellImportant(saleItem.getSellerId(), "storefront-sale-expired-" + this.getName(),
-                "1 or more items you were selling at the store '{0}' expired and were sent to your item bank account.",
-                this.getTitle());
+                Lang.get(_ITEMS_EXPIRED, this.getTitle()));
     }
 
     private static class ExpireChecker implements Runnable {

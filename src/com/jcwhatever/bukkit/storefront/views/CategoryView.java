@@ -25,9 +25,10 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 
+import com.jcwhatever.bukkit.storefront.Lang;
+import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.category.CategoryManager;
-import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
@@ -37,8 +38,8 @@ import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
 import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.nucleus.views.menu.MenuItem;
@@ -54,6 +55,16 @@ import javax.annotation.Nullable;
  * A menu view used to select an item category.
  */
 public class CategoryView extends AbstractMenuView {
+
+    @Localizable static final String _VIEW_TITLE_BUY =
+            "Buy Item Categories";
+
+    @Localizable static final String _VIEW_TITLE_SELL =
+            "Sell Item Categories";
+
+    @Localizable static final String _CATEGORY_NAME =
+            "{YELLOW}{ITALIC}{0: category name}{AQUA} {1: total items} items  ";
+
 
     private static MetaKey<Category>
             ITEM_CATEGORY = new MetaKey<>(Category.class);
@@ -127,13 +138,8 @@ public class CategoryView extends AbstractMenuView {
         // set title
         ViewSessionTask taskMode = getSessionTask();
         return taskMode.getBasicTask() == BasicTask.BUY
-                ? taskMode.getChatColor() + "Buy Item Categories"
-                : taskMode.getChatColor() + "Sell Item Categories";
-    }
-
-    @Override
-    protected void onClose(ViewCloseReason reason) {
-        // do nothing
+                ? taskMode.getChatColor() + Lang.get(_VIEW_TITLE_BUY)
+                : taskMode.getChatColor() + Lang.get(_VIEW_TITLE_SELL);
     }
 
     @Override
@@ -165,9 +171,9 @@ public class CategoryView extends AbstractMenuView {
 
             MenuItem item = new MenuItemBuilder(category.getMenuItem())
                     .description(category.getDescription())
-                    .title("{YELLOW}{ITALIC}{0}{AQUA} {1} items  ",
+                    .title(Lang.get(_CATEGORY_NAME,
                             category.getTitle().toUpperCase(),
-                            totalInCategory)
+                            totalInCategory))
                     .meta(ITEM_CATEGORY, category)
                     .build(i);
 
@@ -185,10 +191,6 @@ public class CategoryView extends AbstractMenuView {
             throw new AssertionError();
 
         getViewSession().setMeta(SessionMetaKey.CATEGORY, category);
-
-        // get sale items in category
-
-        //PaginatedItems saleItems = getCategorySaleItems(_store, _taskMode, category);
 
         if (_nextView != null)
             getViewSession().next(_nextView);

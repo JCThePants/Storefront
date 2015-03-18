@@ -24,8 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.views;
 
-import com.jcwhatever.bukkit.storefront.category.Category;
+import com.jcwhatever.bukkit.storefront.Lang;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.PaginatedItems;
 import com.jcwhatever.bukkit.storefront.data.PriceMap;
@@ -42,6 +43,7 @@ import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.utils.materials.Materials;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
@@ -50,7 +52,6 @@ import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
@@ -62,6 +63,9 @@ import java.util.List;
  * A menu view used to manage items that a store owner wants to buy.
  */
 public class WantedView extends AbstractMenuView {
+
+    @Localizable static final String _WANTED_QTY_LORE = "{YELLOW}Wanted: {GRAY}{0: qty}";
+    @Localizable static final String _VIEW_TITLE = "{DARK_GREEN}Wanted";
 
     private static final MetaKey<MenuItem> ITEM_TASKED_MENU_ITEM = new MetaKey<>(MenuItem.class);
 
@@ -88,8 +92,7 @@ public class WantedView extends AbstractMenuView {
 
     @Override
     public String getTitle() {
-        ViewSessionTask taskMode = getSessionTask();
-        return taskMode.getChatColor() + "Wanted";
+        return Lang.get(_VIEW_TITLE);
     }
 
     @Override
@@ -173,7 +176,7 @@ public class WantedView extends AbstractMenuView {
 
         ItemStackUtil.removeTempLore(menuItem);
         ItemStackUtil.setPriceLore(menuItem, price, PriceType.PER_ITEM);
-        ItemStackUtil.addTempLore(menuItem, ChatColor.YELLOW + "Wanted: " + ChatColor.GRAY + qty);
+        ItemStackUtil.addTempLore(menuItem, Lang.get(_WANTED_QTY_LORE, qty));
 
         menuItem.set(this);
     }
@@ -207,7 +210,8 @@ public class WantedView extends AbstractMenuView {
         if (category == null)
             return false;
 
-        AddToInventoryResult result = ItemStackUtil.addToInventory(selectedStack, getInventoryView().getTopInventory());
+        AddToInventoryResult result = ItemStackUtil.addToInventory(
+                selectedStack, getInventoryView().getTopInventory());
         if (result.getLeftOver() == 1)
             return false;
 
