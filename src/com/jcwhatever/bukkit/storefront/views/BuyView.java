@@ -60,7 +60,6 @@ public class BuyView extends AbstractMenuView {
     private static final MetaKey<ISaleItem>
             SALE_ITEM = new MetaKey<>(ISaleItem.class);
 
-    private final IStore _store;
     private final PaginatedItems _pagin;
 
     private View _paginator;
@@ -73,10 +72,10 @@ public class BuyView extends AbstractMenuView {
      *
      * @param paginatedItems  {@link PaginatedItems} that contain the items to display in the view.
      */
-    public BuyView(PaginatedItems paginatedItems) {
+    public BuyView(IStore store, PaginatedItems paginatedItems) {
+        super(store);
         PreCon.notNull(paginatedItems);
 
-        _store = getStore();
         _pagin = paginatedItems;
     }
 
@@ -136,7 +135,8 @@ public class BuyView extends AbstractMenuView {
 
         _selectedSaleItem = saleItemStack;
 
-        getViewSession().next(new QuantityView(saleItemStack.getItemStack(), 1, 64, saleItemStack.getPricePerUnit()));
+        getViewSession().next(new QuantityView(getStore(),
+                saleItemStack.getItemStack(), 1, 64, saleItemStack.getPricePerUnit()));
     }
 
     @Override
@@ -175,7 +175,7 @@ public class BuyView extends AbstractMenuView {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Not enough inventory. Someone may have purchased the item already.");
             }
             // buy items
-            else if (!_store.buySaleItem(getPlayer(), _selectedSaleItem, amount, price)) {
+            else if (!getStore().buySaleItem(getPlayer(), _selectedSaleItem, amount, price)) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Failed to buy items. They may have been purchased by someone else already.");
             } else {
                 Msg.tell(getPlayer(), "{GREEN}Success: {WHITE}Purchased {0} {1} for {2}.", amount,
@@ -185,7 +185,7 @@ public class BuyView extends AbstractMenuView {
 
         } else {
 
-            if (_store.getSaleItems().size() == 0) {
+            if (getStore().getSaleItems().size() == 0) {
 
                 Msg.tell(getPlayer(), "Out of Stock");
                 return false;

@@ -62,17 +62,14 @@ public class CategoryView extends AbstractMenuView {
      * Shows the next view and opens a {@link CategoryView} first if needed. If not, the next view
      * or a {@link com.jcwhatever.nucleus.views.menu.PaginatorView} to the next view is shown.
      *
+     * @param store     The view session store.
      * @param session   The current view session.
      * @param nextView  The next view to show. Null to use the previous view (relative to the category view).
      * @param pagin     The paginated items that will be shown in the view.
      */
-    public static void categoryNext(ViewSession session, @Nullable View nextView, PaginatedItems pagin) {
+    public static void categoryNext(IStore store, ViewSession session, @Nullable View nextView, PaginatedItems pagin) {
         PreCon.notNull(session);
         PreCon.notNull(pagin);
-
-        IStore store = session.getMeta(SessionMetaKey.STORE);
-        if (store == null)
-            throw new AssertionError("Store not set.");
 
         ViewSessionTask task = session.getMeta(SessionMetaKey.TASK_MODE);
 
@@ -88,7 +85,7 @@ public class CategoryView extends AbstractMenuView {
         }
 
         // show categories
-        session.next(new CategoryView(nextView));
+        session.next(new CategoryView(store, nextView));
     }
 
     /*
@@ -111,7 +108,6 @@ public class CategoryView extends AbstractMenuView {
     }
 
 
-    private IStore _store;
     private View _nextView;
 
     /**
@@ -120,10 +116,10 @@ public class CategoryView extends AbstractMenuView {
      * @param nextView  The next view to show after the category view.
      *                  Null to use the previous view.
      */
-    public CategoryView(@Nullable View nextView) {
+    public CategoryView(IStore store, @Nullable View nextView) {
+        super(store);
 
         _nextView = nextView;
-        _store = getStore();
     }
 
     @Override
@@ -162,7 +158,7 @@ public class CategoryView extends AbstractMenuView {
 
             Category category = categories.get(i);
 
-            List<ISaleItem> saleItems = _store.getSaleItems(category);
+            List<ISaleItem> saleItems = getStore().getSaleItems(category);
             int totalInCategory = 0;
             for (ISaleItem saleItem : saleItems)
                 totalInCategory += saleItem.getQty();

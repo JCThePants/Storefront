@@ -24,13 +24,12 @@
 
 package com.jcwhatever.bukkit.storefront.views.mainmenu;
 
-import com.jcwhatever.bukkit.storefront.stores.StoreType;
-import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.bukkit.storefront.stores.StoreType;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.bukkit.storefront.views.AbstractMenuView;
 import com.jcwhatever.bukkit.storefront.views.BuyView;
@@ -46,7 +45,6 @@ import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,28 +55,23 @@ import java.util.List;
  */
 public class MainMenuView extends AbstractMenuView {
 
-    private IStore _store;
     private boolean _isStoreOwner;
     private boolean _canSell;
 
     /**
      * Constructor.
      */
-    public MainMenuView() {
-
-        _store = getStore();
-
-        // set session store
-        getViewSession().setMeta(SessionMetaKey.STORE, _store);
+    public MainMenuView(IStore store) {
+        super(store);
 
         // Determine if the viewer is the store owner
-        _isStoreOwner = _store.getType() == StoreType.PLAYER_OWNABLE
-                && getPlayer().getUniqueId().equals(_store.getOwnerId());
+        _isStoreOwner = getStore().getType() == StoreType.PLAYER_OWNABLE
+                && getPlayer().getUniqueId().equals(getStore().getOwnerId());
 
         // Determine if the viewer can sell items in the store
-        _canSell = !(_store.getType() == StoreType.PLAYER_OWNABLE &&
-                !getPlayer().getUniqueId().equals(_store.getOwnerId()) &&
-                _store.getWantedItems().getAll().size() == 0);
+        _canSell = !(getStore().getType() == StoreType.PLAYER_OWNABLE &&
+                !getPlayer().getUniqueId().equals(getStore().getOwnerId()) &&
+                getStore().getWantedItems().getAll().size() == 0);
     }
 
     @Override
@@ -116,26 +109,26 @@ public class MainMenuView extends AbstractMenuView {
             case SERVER_BUY:
                 // fall through
             case PLAYER_BUY:
-                view = new BuyView(menuItem.getSaleItems());
+                view = new BuyView(getStore(), menuItem.getSaleItems());
                 break;
 
             case SERVER_SELL:
                 // fall through
             case OWNER_MANAGE_SELL:
-                view = new SellView();
+                view = new SellView(getStore());
                 break;
 
             case PLAYER_SELL:
-                view = new SellWantedView(menuItem.getSaleItems());
+                view = new SellWantedView(getStore(), menuItem.getSaleItems());
                 break;
 
             case OWNER_MANAGE_BUY:
-                view = new WantedView(menuItem.getSaleItems());
+                view = new WantedView(getStore(), menuItem.getSaleItems());
                 break;
         }
 
         if (menuItem.isCategorized()) {
-            CategoryView.categoryNext(getViewSession(),
+            CategoryView.categoryNext(getStore(), getViewSession(),
                     view,
                     menuItem.getSaleItems());
         }
@@ -162,20 +155,6 @@ public class MainMenuView extends AbstractMenuView {
         // do nothing
     }
 
-    @Override
-    protected IStore getStore() {
-        Block block = getViewSession().getSessionBlock();
-        if (block == null) {
-            throw new RuntimeException("A session block is required in order to get a store instance.");
-        }
-
-        IStore store = Storefront.getStoreManager().get(block);
-        if (store == null)
-            throw new IllegalStateException("Could not get store instance.");
-
-        return store;
-    }
-
     /*
      * Get a new "Sell" menu item.
      */
@@ -183,11 +162,11 @@ public class MainMenuView extends AbstractMenuView {
 
         MainMenuItemBuilder builder = (MainMenuItemBuilder)new MainMenuItemBuilder(Material.GOLD_BLOCK)
                 .title("{BLUE}SELL")
-                .description(_store.hasOwner()
+                .description(getStore().hasOwner()
                         ? "Click to sell items to the store."
                         : "Click to sell items from the store.");
 
-        switch (_store.getType()) {
+        switch (getStore().getType()) {
 
             case SERVER:
                 builder
@@ -196,7 +175,7 @@ public class MainMenuView extends AbstractMenuView {
                         .saleItems(new ISaleItemGetter() {
                             @Override
                             public List<ISaleItem> getSaleItems() {
-                                return _store.getSaleItems(getPlayer().getUniqueId());
+                                return getStore().getSaleItems(getPlayer().getUniqueId());
                             }
                         });
                 break;
@@ -209,7 +188,7 @@ public class MainMenuView extends AbstractMenuView {
                             .saleItems(new ISaleItemGetter() {
                                 @Override
                                 public List<ISaleItem> getSaleItems() {
-                                    return _store.getSaleItems();
+                                    return getStore().getSaleItems();
                                 }
                             });
 
@@ -223,8 +202,8 @@ public class MainMenuView extends AbstractMenuView {
                                 @Override
                                 public List<ISaleItem> getSaleItems() {
                                     return hasCategory()
-                                            ? _store.getWantedItems().get(getCategory())
-                                            : _store.getWantedItems().getAll();
+                                            ? getStore().getWantedItems().get(getCategory())
+                                            : getStore().getWantedItems().getAll();
                                 }
                             });
                 }
@@ -239,7 +218,7 @@ public class MainMenuView extends AbstractMenuView {
      */
     private MenuItem getBuyItem() {
 
-        switch (_store.getType()) {
+        switch (getStore().getType()) {
 
             case SERVER:
                 return getServerBuyItem();
@@ -264,7 +243,7 @@ public class MainMenuView extends AbstractMenuView {
                     @Override
                     public List<ISaleItem> getSaleItems() {
 
-                        List<ISaleItem> items = _store.getSaleItems();
+                        List<ISaleItem> items = getStore().getSaleItems();
 
                         // remove players items from the list
                         List<ISaleItem> results = new ArrayList<ISaleItem>(items.size());
@@ -298,7 +277,7 @@ public class MainMenuView extends AbstractMenuView {
 
                         @Override
                         public List<ISaleItem> getSaleItems() {
-                            return _store.getWantedItems().getAll();
+                            return getStore().getWantedItems().getAll();
                         }
                     })
                     .title(ChatColor.GREEN + "WANTED")
@@ -313,7 +292,7 @@ public class MainMenuView extends AbstractMenuView {
                     .saleItems(new ISaleItemGetter() {
                         @Override
                         public List<ISaleItem> getSaleItems() {
-                            return _store.getSaleItems();
+                            return getStore().getSaleItems();
                         }
                     })
                     .title("BUY")

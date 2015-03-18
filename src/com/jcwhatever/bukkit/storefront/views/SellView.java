@@ -41,6 +41,7 @@ import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.bukkit.storefront.utils.StoreInventoryUpdater;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.nucleus.utils.Permissions;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
@@ -84,8 +85,12 @@ public class SellView extends ChestView {
     /**
      * Constructor.
      */
-    public SellView() {
+    public SellView(IStore store) {
         super(Storefront.getPlugin(), null);
+
+        PreCon.notNull(store);
+
+        _store = store;
     }
 
     @Override
@@ -161,11 +166,6 @@ public class SellView extends ChestView {
 
         if (_inventory != null)
             return _inventory;
-
-        // get session store
-        _store = getViewSession().getMeta(SessionMetaKey.STORE);
-        if (_store == null)
-            throw new IllegalStateException("Store not set in session meta.");
 
         // get session task
         ViewSessionTask task = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
@@ -422,7 +422,7 @@ public class SellView extends ChestView {
                 _sledgehammer = null;
             }
 
-            getViewSession().next(new PriceView(itemClone, price != null
+            getViewSession().next(new PriceView(_store, itemClone, price != null
                     ? price
                     : 1.0D));
             return true;

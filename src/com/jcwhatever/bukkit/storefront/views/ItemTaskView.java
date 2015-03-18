@@ -25,6 +25,7 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
+import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.PreCon;
@@ -74,12 +75,15 @@ public class ItemTaskView extends AbstractMenuView {
     /**
      * Constructor.
      *
+     * @param store          The store the view is for.
      * @param item           The {@link org.bukkit.inventory.ItemStack} to change properties on.
      * @param initialPrice   The initial price of the item.
      * @param initialAmount  The initial amount of the item.
      * @param maxAmount      The max amount of the item.
      */
-    public ItemTaskView(ItemStack item, double initialPrice, int initialAmount, int maxAmount) {
+    public ItemTaskView(IStore store, ItemStack item, double initialPrice, int initialAmount, int maxAmount) {
+        super(store);
+
         PreCon.notNull(item);
 
         _item = item;
@@ -162,11 +166,11 @@ public class ItemTaskView extends AbstractMenuView {
     protected void onItemSelect(MenuItem menuItem) {
 
         if (menuItem == _qtyMenuItem) {
-            getViewSession().next(new QuantityView(menuItem, _amount, _maxAmount, _price));
+            getViewSession().next(new QuantityView(getStore(), menuItem, _amount, _maxAmount, _price));
         }
 
         else if (menuItem == _priceMenuItem) {
-            getViewSession().next(new PriceView(menuItem, _price));
+            getViewSession().next(new PriceView(getStore(), menuItem, _price));
         }
 
         else if (menuItem == _removeMenuItem) {

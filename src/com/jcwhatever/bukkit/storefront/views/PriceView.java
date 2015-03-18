@@ -25,6 +25,7 @@
 package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
+import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.MetaKey;
@@ -72,11 +73,14 @@ public class PriceView extends AbstractMenuView {
     /**
      * Constructor.
      *
+     * @param store         The store the view is for.
      * @param itemToPrice   The {@link org.bukkit.inventory.ItemStack} to be priced.
      *
      * @param initialPrice  The initial price.
      */
-    public PriceView(ItemStack itemToPrice, double initialPrice) {
+    public PriceView(IStore store, ItemStack itemToPrice, double initialPrice) {
+        super(store);
+
         PreCon.notNull(itemToPrice);
 
         _item = itemToPrice;

@@ -25,7 +25,6 @@
 package com.jcwhatever.bukkit.storefront.meta;
 
 import com.jcwhatever.bukkit.storefront.category.Category;
-import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.nucleus.utils.MetaKey;
 
 /**
@@ -40,13 +39,7 @@ public class SessionMetaKey {
 	 */
 	public static MetaKey<ViewSessionTask>
 			TASK_MODE = new MetaKey<ViewSessionTask>(ViewSessionTask.class);
-	
-	/**
-	 * The current store whose value is an an instance that implements {@code IStore}.
-	 */
-	public static MetaKey<IStore>
-			STORE = new MetaKey<IStore>(IStore.class);
-	
+
 	/**
 	 * The current category
 	 */

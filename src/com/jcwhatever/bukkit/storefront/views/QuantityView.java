@@ -26,6 +26,7 @@ package com.jcwhatever.bukkit.storefront.views;
 
 import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
+import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil;
 import com.jcwhatever.bukkit.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.nucleus.utils.MetaKey;
@@ -80,7 +81,9 @@ public class QuantityView extends AbstractMenuView {
      * @param maxQty      The max quantity allowed.
      * @param price       The price of the item. Used to display total price given selected quantity.
      */
-    public QuantityView(ItemStack item, int initialQty, int maxQty, double price) {
+    public QuantityView(IStore store, ItemStack item, int initialQty, int maxQty, double price) {
+        super(store);
+
         PreCon.notNull(item);
 
         _item = item;

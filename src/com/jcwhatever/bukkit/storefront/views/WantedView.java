@@ -75,9 +75,12 @@ public class WantedView extends AbstractMenuView {
     /**
      * Constructor.
      *
+     * @param store           The store the view is for.
      * @param paginatedItems  The current items wanted.
      */
-    public WantedView(PaginatedItems paginatedItems) {
+    public WantedView(IStore store, PaginatedItems paginatedItems) {
+        super(store);
+
         PreCon.notNull(paginatedItems);
 
         _pagin = paginatedItems;
@@ -232,7 +235,7 @@ public class WantedView extends AbstractMenuView {
         Integer qty = _qtyMap.get(itemStack);
         assert qty != null;
 
-        getViewSession().next(new ItemTaskView(itemStack, price, qty, 64));
+        getViewSession().next(new ItemTaskView(getStore(), itemStack, price, qty, 64));
 
         return false; // cancel underlying event
     }

@@ -89,7 +89,7 @@ public class ServerStore extends AbstractStore {
         PreCon.notNull(player);
 
         ViewSession session = ViewSession.get(player, sourceBlock);
-        session.next(new MainMenuView());
+        session.next(new MainMenuView(this));
     }
 
     @Override

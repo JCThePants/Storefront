@@ -6,6 +6,7 @@ import com.jcwhatever.bukkit.storefront.meta.SessionMetaKey;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.utils.StoreStackMatcher;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.views.menu.MenuView;
 
 /**
@@ -15,22 +16,24 @@ import com.jcwhatever.nucleus.views.menu.MenuView;
  */
 public abstract class AbstractMenuView extends MenuView {
 
+    private final IStore _store;
+
     /**
      * Constructor.
      */
-    protected AbstractMenuView() {
+    protected AbstractMenuView(IStore store) {
         super(Storefront.getPlugin(), StoreStackMatcher.getDefault());
+
+        PreCon.notNull(store);
+
+        _store = store;
     }
 
     /**
      * Get the {@link IStore} for the current view session.
      */
-    protected IStore getStore() {
-        IStore store = getViewSession().getMeta(SessionMetaKey.STORE);
-        if (store == null)
-            throw new RuntimeException("STORE session meta key not set.");
-
-        return store;
+    public IStore getStore() {
+        return _store;
     }
 
     /**

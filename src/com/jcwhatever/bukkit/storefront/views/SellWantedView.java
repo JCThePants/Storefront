@@ -58,7 +58,6 @@ public class SellWantedView extends AbstractMenuView {
 
     private static final MetaKey<ISaleItem> SALE_ITEM = new MetaKey<>(ISaleItem.class);
 
-    private IStore _store;
     private PriceMap _priceMap;
 
     private ISaleItem _selectedSaleItem;
@@ -67,12 +66,12 @@ public class SellWantedView extends AbstractMenuView {
     private PaginatedItems _pagin;
     private int _page = 1;
 
-    public SellWantedView(PaginatedItems paginatedItems) {
+    public SellWantedView(IStore store, PaginatedItems paginatedItems) {
+        super(store);
+
         PreCon.notNull(paginatedItems);
 
         _pagin = paginatedItems;
-
-        _store = getStore();
     }
 
     @Override
@@ -129,14 +128,14 @@ public class SellWantedView extends AbstractMenuView {
             }
 
             double totalCost = amount * _selectedSaleItem.getPricePerUnit();
-            double storeBalance = Economy.getBalance(_store.getOwnerId());
+            double storeBalance = Economy.getBalance(getStore().getOwnerId());
 
             if (storeBalance < totalCost) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}The store cannot afford to buy from you right now.");
                 return;
             }
 
-            if (!_store.sellToStore(getPlayer(), _selectedSaleItem, amount, totalCost)) {
+            if (!getStore().sellToStore(getPlayer(), _selectedSaleItem, amount, totalCost)) {
                 Msg.tell(getPlayer(), "{RED}Problem: {WHITE}Failed to sell items to store.");
 
                 return;
@@ -168,7 +167,7 @@ public class SellWantedView extends AbstractMenuView {
     @Override
     protected List<MenuItem> createMenuItems() {
 
-        _priceMap = new PriceMap(getPlayer(), _store);
+        _priceMap = new PriceMap(getPlayer(), getStore());
 
         List<ISaleItem> saleItemStacks = _pagin.getPage(_page);
 
@@ -206,9 +205,15 @@ public class SellWantedView extends AbstractMenuView {
         }
 
         ISaleItem selectedItem = menuItem.getMeta(SALE_ITEM);
+        assert selectedItem != null;
+
         _selectedMenuItem = menuItem;
 
-        getViewSession().next(new QuantityView(selectedItem.getItemStack(), 1, playerQty, _priceMap.get(clone)));
+        Double price = _priceMap.get(clone);
+        assert price != null;
+
+        getViewSession().next(new QuantityView(getStore(),
+                selectedItem.getItemStack(), 1, playerQty, price));
     }
 
 
