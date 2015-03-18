@@ -24,9 +24,9 @@
 
 package com.jcwhatever.bukkit.storefront.stores;
 
-import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
+import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.data.ISaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItem;
 import com.jcwhatever.bukkit.storefront.data.SaleItemIDMap;
@@ -40,7 +40,6 @@ import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 
@@ -85,11 +84,11 @@ public abstract class AbstractStore implements IStore {
         _dataNode = storeNode;
         _categoryMap = new HashMap<Category, SaleItemIDMap>(25);
 
-        _region = new StoreRegion(this);
+        _region = new StoreRegion(this, storeNode.getNode("region"));
 
         onInit();
 
-        loadSettings();
+        load();
     }
 
     @Override
@@ -152,7 +151,7 @@ public abstract class AbstractStore implements IStore {
 
     @Override
     public void setExternalRegion (IRegion region) {
-        IDataNode ownRegionNode = _dataNode.getNode("region");
+        PreCon.notNull(region);
 
         boolean isOwn = region.getPlugin() == Storefront.getPlugin();
 
@@ -162,15 +161,7 @@ public abstract class AbstractStore implements IStore {
         if (!region.isDefined())
             throw new IllegalStateException("Region must be defined.");
 
-        _dataNode.set("region-name", region.getName());
-        _dataNode.set("region-p1", region.getP1());
-        _dataNode.set("region-p2", region.getP2());
-
-        ownRegionNode.remove();
-
         _region.setRegion(region);
-
-        _dataNode.save();
     }
 
     @Override
@@ -336,21 +327,21 @@ public abstract class AbstractStore implements IStore {
         return saleItems;
     }
 
-    private void clearExternalRegion() {
-
-        _dataNode.set("region-name", null);
-        _dataNode.set("region-p1", null);
-        _dataNode.set("region-p2", null);
-
-        IDataNode ownRegionNode = _dataNode.getNode("region");
-        ownRegionNode.remove();
-
-        _region.setOwnRegion();
-
-        _dataNode.save();
+    protected IDataNode getItemNode (UUID itemId) {
+        return _dataNode.getNode("sale-items." + itemId);
     }
 
-    private void loadSettings () {
+    protected Map<UUID, ISaleItem> getIDMap() {
+        return _idMap;
+    }
+
+    protected abstract void onInit ();
+
+    protected abstract void onSaleItemLoaded (SaleItem saleItem);
+
+    protected abstract void onLoadSettings (IDataNode storeNode);
+
+    private void load() {
 
         _title = _dataNode.getString("title", _name);
 
@@ -379,31 +370,7 @@ public abstract class AbstractStore implements IStore {
             onSaleItemLoaded(saleItem);
         }
 
-        Scheduler.runTaskLater(Storefront.getPlugin(), 30, new Runnable() {
-
-            @Override
-            public void run() {
-
-                // load external region, if any
-                getRegion();
-            }
-        });
-
         onLoadSettings(_dataNode);
     }
-
-    protected IDataNode getItemNode (UUID itemId) {
-        return _dataNode.getNode("sale-items." + itemId);
-    }
-
-    protected Map<UUID, ISaleItem> getIDMap() {
-        return _idMap;
-    }
-
-    protected abstract void onInit ();
-
-    protected abstract void onSaleItemLoaded (SaleItem saleItem);
-
-    protected abstract void onLoadSettings (IDataNode storeNode);
 
 }

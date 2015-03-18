@@ -3,6 +3,7 @@ package com.jcwhatever.bukkit.storefront.regions;
 import com.jcwhatever.bukkit.storefront.Msg;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
+import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.mixins.IDisposable;
 import com.jcwhatever.nucleus.regions.BasicRegion;
 import com.jcwhatever.nucleus.regions.IRegion;
@@ -11,10 +12,16 @@ import com.jcwhatever.nucleus.regions.ReadOnlyRegion;
 import com.jcwhatever.nucleus.regions.options.EnterRegionReason;
 import com.jcwhatever.nucleus.regions.options.LeaveRegionReason;
 import com.jcwhatever.nucleus.regions.selection.IRegionSelection;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.DependencyRunner;
+import com.jcwhatever.nucleus.utils.DependencyRunner.DependencyStatus;
+import com.jcwhatever.nucleus.utils.DependencyRunner.IDependantRunnable;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +37,7 @@ public class StoreRegion implements IDisposable{
     public static final MetaKey<BasicRegion> REGION = new MetaKey<>(BasicRegion.class);
 
     private final IStore _store;
+    private final IDataNode _dataNode;
     private final MessageHandler _messageHandler;
 
     private IRegion _region;
@@ -43,30 +51,60 @@ public class StoreRegion implements IDisposable{
      *
      * <p>Used to construct with an initial external region.</p>
      *
-     * @param store   The owning {@link IStore}.
-     * @param region  The external region.
+     * @param store    The owning {@link IStore}.
+     * @param dataNode  The regions data node.
      */
-    public StoreRegion(IStore store, IRegion region) {
-        _store = store;
-        _messageHandler = new MessageHandler();
-
-        setRegion(region);
-    }
-
-    /**
-     * Constructor.
-     *
-     * <p>Use to construct with own region.</p>
-     *
-     * @param store  The owning {@link IStore}.
-     */
-    public StoreRegion(IStore store) {
+    public StoreRegion(IStore store, final IDataNode dataNode) {
         PreCon.notNull(store);
+        PreCon.notNull(dataNode);
 
         _store = store;
+        _dataNode = dataNode;
         _messageHandler = new MessageHandler();
 
-        setOwnRegion();
+        final String pluginName = dataNode.getString("plugin");
+        final String regionName = dataNode.getString("region");
+        if (pluginName != null && regionName != null) {
+
+            // setup external region
+            DependencyRunner<IDependantRunnable> runner = new DependencyRunner<>(Storefront.getPlugin());
+            runner.add(new IDependantRunnable() {
+
+                IRegion region;
+
+                @Override
+                public DependencyStatus getDependencyStatus() {
+
+                    Plugin plugin = Bukkit.getPluginManager().getPlugin(pluginName);
+                    if (plugin == null)
+                        return DependencyStatus.NOT_READY;
+
+                    region = Nucleus.getRegionManager().getRegion(plugin, regionName);
+                    if (region == null)
+                        return DependencyStatus.NOT_READY;
+
+                    return DependencyStatus.READY;
+                }
+
+                @Override
+                public void run() {
+                    _region = region;
+                    _region.setMeta(REGION_STORE, _store);
+                    _region.addEventHandler(_messageHandler);
+                }
+            });
+            runner.start();
+        }
+        else {
+            // setup own region
+            BasicRegion region = new BasicRegion(Storefront.getPlugin(), _store.getName(),
+                    dataNode);
+            region.setMeta(REGION, region);
+            region.setMeta(REGION_STORE, _store);
+            region.addEventHandler(_messageHandler);
+            _region = region;
+            _hasOwnRegion = true;
+        }
     }
 
     /**
@@ -85,14 +123,14 @@ public class StoreRegion implements IDisposable{
     }
 
     /**
-     * Set the stores region.
+     * Set an external region.
      *
      * @param region  The region.
      */
     public void setRegion(IRegion region) {
         PreCon.notNull(region);
 
-        if (_region != null)
+        if (_region != null && _region.getPlugin().equals(Storefront.getPlugin()))
             dispose();
 
         _hasOwnRegion = false;
@@ -100,6 +138,11 @@ public class StoreRegion implements IDisposable{
         _region = region;
         _region.addEventHandler(_messageHandler);
         _region.setMeta(REGION_STORE, _store);
+
+        _dataNode.clear();
+        _dataNode.set("plugin", region.getPlugin().getName());
+        _dataNode.set("region", region.getName());
+        _dataNode.save();
     }
 
     /**
@@ -110,19 +153,24 @@ public class StoreRegion implements IDisposable{
         if (_hasOwnRegion)
             return;
 
-        if (_region != null)
+        if (_region != null && _region.getPlugin().equals(Storefront.getPlugin()))
             dispose();
 
         _hasOwnRegion = true;
 
+        _dataNode.clear();
+        _dataNode.save();
+
         BasicRegion region = new BasicRegion(Storefront.getPlugin(), _store.getName(),
-                _store.getDataNode().getNode("region"));
+                _dataNode);
 
         region.setMeta(REGION, region);
 
         _region = new ReadOnlyRegion(region);
         _region.addEventHandler(_messageHandler);
         _region.setMeta(REGION_STORE, _store);
+
+
     }
 
     /**
