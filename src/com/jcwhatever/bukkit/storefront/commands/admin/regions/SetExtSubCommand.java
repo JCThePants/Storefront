@@ -106,7 +106,7 @@ public class SetExtSubCommand extends AbstractCommand {
         if (extRegion == null) {
             tellError(sender, regionName.isEmpty()
                     ? "Could not find a region."
-                    : "Could not fina a region where you are standing named '{0}'.", regionName);
+                    : "Could not find a region where you are standing named '{0}'.", regionName);
             
             return; // finished
         }
