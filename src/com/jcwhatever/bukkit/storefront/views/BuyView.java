@@ -38,7 +38,7 @@ import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameResult;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameOption;
 import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
@@ -205,7 +205,7 @@ public class BuyView extends AbstractMenuView {
                 Msg.tell(getPlayer(), Lang.get(_BUY_FAILED));
             } else {
                 Msg.tell(getPlayer(), Lang.get(_BUY_SUCCESS, amount,
-                        ItemStackUtils.getDisplayName(_selectedSaleItem.getItemStack(), DisplayNameResult.REQUIRED),
+                        ItemStackUtils.getDisplayName(_selectedSaleItem.getItemStack(), DisplayNameOption.REQUIRED),
                         Economy.getCurrency().format(price)));
             }
 

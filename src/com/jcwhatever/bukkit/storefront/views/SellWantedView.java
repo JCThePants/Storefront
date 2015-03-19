@@ -39,7 +39,7 @@ import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameResult;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils.DisplayNameOption;
 import com.jcwhatever.nucleus.utils.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewOpenReason;
@@ -174,7 +174,7 @@ public class SellWantedView extends AbstractMenuView {
 
                 Msg.tell(getPlayer(), Lang.get(_SELL_SUCCESS,
                         amount,
-                        ItemStackUtils.getDisplayName(menuItem, DisplayNameResult.REQUIRED),
+                        ItemStackUtils.getDisplayName(menuItem, DisplayNameOption.REQUIRED),
                         Economy.getCurrency().format(totalCost)));
             }
         }
