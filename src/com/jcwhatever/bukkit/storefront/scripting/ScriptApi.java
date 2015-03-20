@@ -3,7 +3,6 @@ package com.jcwhatever.bukkit.storefront.scripting;
 import com.jcwhatever.bukkit.storefront.Storefront;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
 import com.jcwhatever.bukkit.storefront.stores.StoreType;
-import com.jcwhatever.nucleus.mixins.INamedLocation;
 import com.jcwhatever.nucleus.scripting.IEvaluatedScript;
 import com.jcwhatever.nucleus.scripting.ScriptApiInfo;
 import com.jcwhatever.nucleus.scripting.api.IScriptApiObject;
@@ -64,7 +63,7 @@ public class ScriptApi extends NucleusScriptApi {
         }
 
         /**
-         * Get a store by name, {@link com.jcwhatever.nucleus.mixins.INamedLocation},
+         * Get a store by name, {@link com.jcwhatever.nucleus.utils.NamedLocation},
          * {@link org.bukkit.Location} or {@link org.bukkit.block.Block}.
          *
          * @param store  The object to reference the store with.
@@ -80,11 +79,6 @@ public class ScriptApi extends NucleusScriptApi {
             }
             else if (store instanceof String) {
                 return Storefront.getStoreManager().get((String)store);
-            }
-            else if (store instanceof INamedLocation) {
-                INamedLocation named = (INamedLocation)store;
-                Block block = named.getLocation().getBlock();
-                return Storefront.getStoreManager().get(block);
             }
             else if (store instanceof Location) {
                 Block block = ((Location)store).getBlock();
