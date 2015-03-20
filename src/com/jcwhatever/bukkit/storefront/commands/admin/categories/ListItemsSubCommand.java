@@ -47,6 +47,7 @@ import java.util.Set;
         parent = "categories",
         command = "listitems",
         staticParams = { "categoryName", "page=1" },
+        floatingParams = { "search=" },
         description = "List a categories filter items.")
 
 public class ListItemsSubCommand extends AbstractCommand {
@@ -78,6 +79,9 @@ public class ListItemsSubCommand extends AbstractCommand {
 
             pagin.add(ItemStackUtils.serializeToString(wrapper.getItem(), SerializerOutputType.COLOR));
         }
+
+        if (!args.isDefaultValue("search"))
+            pagin.setSearchTerm(args.getString("search"));
 
         pagin.show(sender, page, FormatTemplate.RAW);
     }

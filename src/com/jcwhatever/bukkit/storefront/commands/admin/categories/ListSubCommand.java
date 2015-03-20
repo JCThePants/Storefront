@@ -44,6 +44,7 @@ import java.util.Collection;
         parent = "categories",
         command = "list",
         staticParams = { "page=1" },
+        floatingParams = { "search=" },
         description = "List item categories.")
 
 public class ListSubCommand extends AbstractCommand {
@@ -78,6 +79,9 @@ public class ListSubCommand extends AbstractCommand {
 
             pagin.add(category.getName(), desc);
         }
+
+        if (!args.isDefaultValue("search"))
+            pagin.setSearchTerm(args.getString("search"));
 
         pagin.show(sender, page, FormatTemplate.LIST_ITEM_DESCRIPTION);
     }
