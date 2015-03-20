@@ -33,7 +33,7 @@ import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.managers.NamedInsensitiveDataManager;
-import com.jcwhatever.nucleus.utils.performance.SingleCache;
+import com.jcwhatever.nucleus.utils.performance.EntryCache;
 
 import org.bukkit.block.Block;
 
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
  */
 public class StoreManager extends NamedInsensitiveDataManager<IStore> {
 
-    private final SingleCache<Block, IStore> _blockCache = new SingleCache<>();
+    private final EntryCache<Block, IStore> _blockCache = new EntryCache<>();
 
     /**
      * Constructor.

@@ -26,7 +26,7 @@ package com.jcwhatever.bukkit.storefront.data;
 
 import com.jcwhatever.nucleus.utils.TimeScale;
 import com.jcwhatever.nucleus.mixins.IPaginator;
-import com.jcwhatever.nucleus.utils.performance.SingleCache;
+import com.jcwhatever.nucleus.utils.performance.EntryCache;
 import com.jcwhatever.nucleus.views.chest.ChestView;
 import com.jcwhatever.bukkit.storefront.category.Category;
 import com.jcwhatever.bukkit.storefront.stores.IStore;
@@ -44,7 +44,7 @@ public class PaginatedItems implements IPaginator<ISaleItem>, ISaleItemStacksGet
 
     private ISaleItemGetter _getter;
     private int _itemsPerPage = ChestView.MAX_SLOTS;
-    private SingleCache<List<ISaleItem>, Void> _listCache = new SingleCache<>(1, TimeScale.TICKS);
+    private EntryCache<List<ISaleItem>, Void> _listCache = new EntryCache<>(1, TimeScale.TICKS);
 
     /**
      * Constructor.
