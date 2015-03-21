@@ -3,7 +3,6 @@ package com.jcwhatever.bukkit.storefront.views.mainmenu;
 import com.jcwhatever.bukkit.storefront.data.ISaleItemGetter;
 import com.jcwhatever.bukkit.storefront.meta.ViewSessionTask;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
 import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 
 import org.bukkit.Material;
@@ -126,10 +125,20 @@ public class MainMenuItemBuilder extends MenuItemBuilder {
     }
 
     @Override
-    protected MenuItem createMenuItem(int slot, ItemStack itemStack,
+    protected MainMenuItem createMenuItem(int slot, ItemStack itemStack,
                                       @Nullable Map<Object, Object> meta,
                                       @Nullable List<Runnable> onClick) {
 
-        return new MainMenuItem(slot, itemStack, meta, onClick);
+        MainMenuItem item = new MainMenuItem(slot, itemStack);
+
+        if (meta != null)
+            item.getMeta().copyAll(meta);
+
+        if (onClick != null) {
+            for (Runnable runnable : onClick)
+                item.onClick(runnable);
+        }
+
+        return item;
     }
 }

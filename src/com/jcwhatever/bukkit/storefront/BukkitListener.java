@@ -97,10 +97,11 @@ public class BukkitListener implements Listener {
         if (event.getClickedBlock().getType() != Material.CHEST)
             return;
 
-        List<IRegion> regions = Nucleus.getRegionManager().getRegions(event.getClickedBlock().getLocation());
+        List<IRegion> regions = Nucleus.getRegionManager().getRegions(
+                event.getClickedBlock().getLocation());
 
         for (IRegion region : regions) {
-            IStore store = region.getMeta(StoreRegion.REGION_STORE);
+            IStore store = region.getMeta().get(StoreRegion.REGION_STORE);
             if (store != null) {
                 event.setCancelled(true);
                 store.view(event.getPlayer(), event.getClickedBlock());

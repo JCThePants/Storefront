@@ -7,10 +7,6 @@ import com.jcwhatever.nucleus.views.menu.MenuItem;
 
 import org.bukkit.inventory.ItemStack;
 
-import java.util.List;
-import java.util.Map;
-import javax.annotation.Nullable;
-
 /**
  * Implementation of a {@link com.jcwhatever.nucleus.views.menu.MenuItem} designed
  * for Storefronts main menu.
@@ -27,13 +23,9 @@ public class MainMenuItem extends MenuItem {
      * @param slot       The inventory slot the item is for.
      * @param itemStack  The {@link org.bukkit.inventory.ItemStack} that is used in
      *                   the inventory slot.
-     * @param meta       Optional meta data.
-     * @param onClick    Optional click handlers.
      */
-    public MainMenuItem(int slot, ItemStack itemStack,
-                        @Nullable Map<Object, Object> meta,
-                        @Nullable List<Runnable> onClick) {
-        super(slot, itemStack, meta, onClick);
+    public MainMenuItem(int slot, ItemStack itemStack) {
+        super(slot, itemStack);
     }
 
     /**

@@ -210,7 +210,7 @@ public class SellWantedView extends AbstractMenuView {
     @Override
     protected void onItemSelect(MenuItem menuItem) {
 
-        MenuItem clone = menuItem.clone();
+        MenuItem clone = new MenuItem(menuItem);
         ItemStackUtil.removeTempLore(clone);
 
         int playerQty = InventoryUtils.count(getPlayer().getInventory(), clone);
@@ -220,7 +220,7 @@ public class SellWantedView extends AbstractMenuView {
             return;
         }
 
-        ISaleItem selectedItem = menuItem.getMeta(SALE_ITEM);
+        ISaleItem selectedItem = menuItem.getMeta().get(SALE_ITEM);
         assert selectedItem != null;
 
         _selectedMenuItem = menuItem;

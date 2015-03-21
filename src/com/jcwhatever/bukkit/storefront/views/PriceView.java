@@ -222,7 +222,7 @@ public class PriceView extends AbstractMenuView {
             return;
         }
 
-        Double increment = menuItem.getMeta(PRICE_INCREMENT);
+        Double increment = menuItem.getMeta().get(PRICE_INCREMENT);
         if (increment == null)
             return;
 

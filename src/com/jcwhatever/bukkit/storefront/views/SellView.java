@@ -179,7 +179,7 @@ public class SellView extends ChestView {
             return _inventory;
 
         // get session task
-        ViewSessionTask task = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask task = getViewSession().getMeta().get(SessionMetaKey.TASK_MODE);
         if (task == null)
             throw new IllegalStateException("ViewSessionTask not set in session meta.");
 

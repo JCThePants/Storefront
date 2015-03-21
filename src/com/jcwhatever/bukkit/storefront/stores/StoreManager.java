@@ -74,7 +74,7 @@ public class StoreManager extends NamedInsensitiveDataManager<IStore> {
         IStore result = null;
 
         for (IRegion region : regions) {
-            result = region.getMeta(StoreRegion.REGION_STORE);
+            result = region.getMeta().get(StoreRegion.REGION_STORE);
             if (result != null) {
                 break;
             }

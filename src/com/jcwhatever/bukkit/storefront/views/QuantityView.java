@@ -167,7 +167,7 @@ public class QuantityView extends AbstractMenuView {
 
         _selectedAmount = null;
 
-        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask taskMode = getViewSession().getMeta().get(SessionMetaKey.TASK_MODE);
         PreCon.notNull(taskMode);
 
         _menuItems = new ArrayList<>(6);
@@ -231,7 +231,7 @@ public class QuantityView extends AbstractMenuView {
         if (_selectedAmount == null)
             _selectedAmount = 0;
 
-        Integer increment = menuItem.getMeta(QUANTITY_INCREMENT);
+        Integer increment = menuItem.getMeta().get(QUANTITY_INCREMENT);
         if (increment == null)
             return;
 

@@ -155,7 +155,7 @@ public class BuyView extends AbstractMenuView {
     @Override
     protected void onItemSelect(MenuItem menuItem) {
 
-        ISaleItem saleItemStack = menuItem.getMeta(SALE_ITEM);
+        ISaleItem saleItemStack = menuItem.getMeta().get(SALE_ITEM);
         if (saleItemStack == null)
             return;
 

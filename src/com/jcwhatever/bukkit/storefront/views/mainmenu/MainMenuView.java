@@ -128,7 +128,7 @@ public class MainMenuView extends AbstractMenuView {
             throw new AssertionError();
 
         // set persistent task mode
-        getViewSession().setMeta(SessionMetaKey.TASK_MODE, taskMode);
+        getViewSession().getMeta().set(SessionMetaKey.TASK_MODE, taskMode);
 
         View view = null;
 

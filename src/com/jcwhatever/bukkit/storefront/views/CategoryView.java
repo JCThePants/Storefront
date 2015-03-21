@@ -82,7 +82,7 @@ public class CategoryView extends AbstractMenuView {
         PreCon.notNull(session);
         PreCon.notNull(pagin);
 
-        ViewSessionTask task = session.getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask task = session.getMeta().get(SessionMetaKey.TASK_MODE);
 
         Collection<Category> categories = getCategories(store, task);
 
@@ -186,11 +186,11 @@ public class CategoryView extends AbstractMenuView {
     @Override
     protected void onItemSelect(MenuItem menuItem) {
 
-        Category category = menuItem.getMeta(ITEM_CATEGORY);
+        Category category = menuItem.getMeta().get(ITEM_CATEGORY);
         if (category == null)
             throw new AssertionError();
 
-        getViewSession().setMeta(SessionMetaKey.CATEGORY, category);
+        getViewSession().getMeta().set(SessionMetaKey.CATEGORY, category);
 
         if (_nextView != null)
             getViewSession().next(_nextView);

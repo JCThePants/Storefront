@@ -40,7 +40,7 @@ public abstract class AbstractMenuView extends MenuView {
      * Get the {@link ViewSessionTask} for the current view session.
      */
     protected ViewSessionTask getSessionTask() {
-        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask taskMode = getViewSession().getMeta().get(SessionMetaKey.TASK_MODE);
         if (taskMode == null)
             throw new RuntimeException("TASK_MODE session meta key not set.");
 
@@ -51,7 +51,7 @@ public abstract class AbstractMenuView extends MenuView {
      * Get the {@link Category} for the current view session.
      */
     protected Category getCategory() {
-        Category category = getViewSession().getMeta(SessionMetaKey.CATEGORY);
+        Category category = getViewSession().getMeta().get(SessionMetaKey.CATEGORY);
         if (category == null)
             throw new RuntimeException("CATEGORY session meta key not set.");
 
@@ -62,7 +62,7 @@ public abstract class AbstractMenuView extends MenuView {
      * Determine if the current view session has a {@link Category}.
      */
     protected boolean hasCategory() {
-        Category category = getViewSession().getMeta(SessionMetaKey.CATEGORY);
+        Category category = getViewSession().getMeta().get(SessionMetaKey.CATEGORY);
         return category != null;
     }
 }

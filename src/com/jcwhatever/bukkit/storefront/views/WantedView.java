@@ -100,7 +100,7 @@ public class WantedView extends AbstractMenuView {
 
         IStore store = getStore();
 
-        ViewSessionTask taskMode = getViewSession().getMeta(SessionMetaKey.TASK_MODE);
+        ViewSessionTask taskMode = getViewSession().getMeta().get(SessionMetaKey.TASK_MODE);
         PreCon.notNull(taskMode);
 
         _priceMap = new PriceMap(getPlayer(), store);
@@ -231,7 +231,7 @@ public class WantedView extends AbstractMenuView {
             _qtyMap.set(selectedStack, 1);
         }
 
-        getViewSession().setMeta(ITEM_TASKED_MENU_ITEM, menuItem);
+        getViewSession().getMeta().set(ITEM_TASKED_MENU_ITEM, menuItem);
 
         Double price = _priceMap.get(itemStack);
         assert price != null;

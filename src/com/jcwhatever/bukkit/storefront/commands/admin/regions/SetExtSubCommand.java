@@ -111,7 +111,7 @@ public class SetExtSubCommand extends AbstractCommand {
             return; // finished
         }
         
-        IStore extStore = extRegion.getMeta(StoreRegion.REGION_STORE);
+        IStore extStore = extRegion.getMeta().get(StoreRegion.REGION_STORE);
         if (extStore != null) {
             tellError(sender, "Region '{0}' is already assigned to store named '{1}'.", extRegion.getName(), extStore.getName());
             return; // finished
