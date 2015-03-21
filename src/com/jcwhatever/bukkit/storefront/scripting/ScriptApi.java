@@ -63,7 +63,7 @@ public class ScriptApi extends NucleusScriptApi {
         }
 
         /**
-         * Get a store by name, {@link com.jcwhatever.nucleus.utils.NamedLocation},
+         * Get a store by name, {@link com.jcwhatever.nucleus.utils.coords.NamedLocation},
          * {@link org.bukkit.Location} or {@link org.bukkit.block.Block}.
          *
          * @param store  The object to reference the store with.
