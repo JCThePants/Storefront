@@ -1,6 +1,6 @@
 name: Storefront
 author: JCThePants
-main: Storefront
+main: com.jcwhatever.storefront.Storefront
 version: 0.1-beta
 depend: [NucleusFramework]
 commands:
