@@ -24,17 +24,23 @@
 
 package com.jcwhatever.storefront;
 
-import com.jcwhatever.storefront.category.CategoryManager;
-import com.jcwhatever.storefront.commands.StorefrontCommandDispatcher;
-import com.jcwhatever.storefront.scripting.ScriptApi;
-import com.jcwhatever.storefront.stores.StoreManager;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.NucleusPlugin;
+import com.jcwhatever.nucleus.mixins.IDisposable;
 import com.jcwhatever.nucleus.providers.permissions.IPermission;
+import com.jcwhatever.nucleus.scripting.IEvaluatedScript;
+import com.jcwhatever.nucleus.scripting.IScriptApi;
+import com.jcwhatever.nucleus.scripting.SimpleScriptApi;
+import com.jcwhatever.nucleus.scripting.SimpleScriptApi.IApiObjectCreator;
 import com.jcwhatever.nucleus.utils.Permissions;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
+import com.jcwhatever.storefront.category.CategoryManager;
+import com.jcwhatever.storefront.commands.StorefrontCommandDispatcher;
+import com.jcwhatever.storefront.scripting.ScriptApiObject;
+import com.jcwhatever.storefront.stores.StoreManager;
 
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
 
 /**
  * Region and menu based {@link org.bukkit.inventory.ItemStack} store plugin.
@@ -68,6 +74,7 @@ public class Storefront extends NucleusPlugin {
 
     private CategoryManager _categoryManager;
     private StoreManager _storeManager;
+    private IScriptApi _scriptApi;
 
     @Override
     public String getChatPrefix () {
@@ -87,7 +94,14 @@ public class Storefront extends NucleusPlugin {
         _categoryManager = new CategoryManager(getDataNode().getNode("categories"));
         _storeManager = new StoreManager(getDataNode().getNode("stores"));
 
-        Nucleus.getScriptApiRepo().registerApiType(this, ScriptApi.class);
+        _scriptApi = new SimpleScriptApi(this, "storefront", new IApiObjectCreator() {
+            @Override
+            public IDisposable create(Plugin plugin, IEvaluatedScript script) {
+                return new ScriptApiObject();
+            }
+        });
+
+        Nucleus.getScriptApiRepo().registerApi(_scriptApi);
 
         registerPermissions();
 
@@ -98,7 +112,7 @@ public class Storefront extends NucleusPlugin {
     @Override
     protected void onDisablePlugin() {
 
-        Nucleus.getScriptApiRepo().unregisterApiType(this, ScriptApi.class);
+        Nucleus.getScriptApiRepo().unregisterApi(_scriptApi);
     }
 
     private void registerPermissions () {
