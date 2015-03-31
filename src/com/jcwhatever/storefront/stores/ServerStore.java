@@ -24,6 +24,22 @@
 
 package com.jcwhatever.storefront.stores;
 
+import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
+import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
+import com.jcwhatever.nucleus.storage.DataBatchOperation;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.BankItems;
+import com.jcwhatever.nucleus.utils.Economy;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.Rand;
+import com.jcwhatever.nucleus.utils.Scheduler;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.language.Localizable;
+import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent;
+import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent.Future;
+import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
+import com.jcwhatever.nucleus.utils.observer.result.Result;
+import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
@@ -34,18 +50,6 @@ import com.jcwhatever.storefront.data.SaleItemIDMap;
 import com.jcwhatever.storefront.data.SaleItemMap;
 import com.jcwhatever.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.storefront.views.mainmenu.MainMenuView;
-import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
-import com.jcwhatever.nucleus.providers.economy.TransactionFailException;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.BankItems;
-import com.jcwhatever.nucleus.utils.Economy;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.Rand;
-import com.jcwhatever.nucleus.utils.Scheduler;
-import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.language.Localizable;
-import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -274,54 +278,54 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    public boolean buySaleItem(Player buyer, ISaleItem stack, int qty, double price) {
+    public Future<IEconomyTransaction> buySaleItem(
+            final Player buyer, final ISaleItem stack, final int qty, double price) {
 
         SaleItem saleItem = getSaleItem(stack.getId());
         if (saleItem == null || saleItem.getQty() < qty) {
-            Msg.debug("Couldn't find saleItem or not enough quantity to purchase.");
-            return false;
+            return new FutureResultAgent<IEconomyTransaction>().error(null,
+                    "Couldn't find saleItem or not enough quantity to purchase.");
         }
 
         if (saleItem.isRemoved() || saleItem.isExpired()) {
-            Msg.debug("Player sale rejected because the item is removed or expired.");
 
             if (saleItem.isExpired()) {
                 removeExpired(saleItem);
             }
 
-            return false;
+            return new FutureResultAgent<IEconomyTransaction>().error(null,
+                    "Player sale rejected because the item is removed or expired.");
         }
 
-        ItemStack purchasedStack = saleItem.getItemStack().clone();
+        final ItemStack purchasedStack = saleItem.getItemStack().clone();
         purchasedStack.setAmount(qty);
 
         // make sure player has room in chest
         if (!InventoryUtils.hasRoom(buyer.getInventory(), purchasedStack)) {
-            Msg.debug("Player sale rejected because not enough room in chest.");
-            return false;
+            return new FutureResultAgent<IEconomyTransaction>().error(null,
+                    "Player sale rejected because not enough room in inventory.");
         }
 
         // make sure buyer can afford
         if (Economy.getBalance(buyer.getUniqueId()) < price) {
-            Msg.debug("Player sale rejected because player doesn't have enough money.");
-            return false;
+            return new FutureResultAgent<IEconomyTransaction>().error(null,
+                    "Player sale rejected because player doesn't have enough money.");
         }
 
-        try {
-            Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price);
-        } catch (TransactionFailException e) {
-            return false;
-        }
+        return Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)
+                .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                    @Override
+                    public void on(Result<IEconomyTransaction> result) {
 
-        stack.increment(-qty);
+                        stack.increment(-qty);
 
-        if (stack.getParent().getQty() == 0) {
-            removeSaleItem(stack.getId());
-        }
+                        if (stack.getParent().getQty() == 0) {
+                            removeSaleItem(stack.getId());
+                        }
 
-        buyer.getInventory().addItem(purchasedStack);
-
-        return true;
+                        buyer.getInventory().addItem(purchasedStack);
+                    }
+                });
     }
 
     @Override

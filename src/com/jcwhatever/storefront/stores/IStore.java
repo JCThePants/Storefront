@@ -24,15 +24,17 @@
 
 package com.jcwhatever.storefront.stores;
 
+import com.jcwhatever.nucleus.mixins.INamedInsensitive;
+import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
+import com.jcwhatever.nucleus.regions.IRegion;
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent.Future;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.data.ISaleItem;
 import com.jcwhatever.storefront.data.ISaleItemGetter;
 import com.jcwhatever.storefront.data.SaleItem;
 import com.jcwhatever.storefront.data.WantedItems;
 import com.jcwhatever.storefront.regions.StoreRegion;
-import com.jcwhatever.nucleus.mixins.INamedInsensitive;
-import com.jcwhatever.nucleus.regions.IRegion;
-import com.jcwhatever.nucleus.storage.IDataNode;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -202,7 +204,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty     The number of items to sell.
      * @param price   The total price of the transaction.
      */
-    boolean sellToStore(Player seller, ISaleItem stack, int qty, double price);
+    Future<IEconomyTransaction> sellToStore(Player seller, ISaleItem stack, int qty, double price);
 
     /**
      * Remove item from store and give to the specified buyer. Creates economy transaction
@@ -213,9 +215,9 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty    The number of items to be purchased.
      * @param price  The total price of the transaction.
      *
-     * @return  True if successful
+     * @return  A {@link Future} indicating the result.
      */
-    boolean buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
+    Future<IEconomyTransaction> buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
 
     /**
      * Remove all sale items from the specified seller.

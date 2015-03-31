@@ -25,6 +25,9 @@
 package com.jcwhatever.storefront.views;
 
 
+import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
+import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
+import com.jcwhatever.nucleus.utils.observer.result.Result;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.data.ISaleItem;
@@ -129,11 +132,11 @@ public class SellWantedView extends AbstractMenuView {
 
             QuantityView quantityView = (QuantityView)nextView;
 
-            Integer amount = quantityView.getSelectedQty();
+            final Integer amount = quantityView.getSelectedQty();
             if (amount == null)
                 return;
 
-            MenuItem menuItem = _selectedMenuItem;
+            final MenuItem menuItem = _selectedMenuItem;
 
             if (_selectedSaleItem.getParent().getQty() == 0 || _selectedSaleItem.isRemoved()) {
 
@@ -150,7 +153,7 @@ public class SellWantedView extends AbstractMenuView {
                 return;
             }
 
-            double totalCost = amount * _selectedSaleItem.getPricePerUnit();
+            final double totalCost = amount * _selectedSaleItem.getPricePerUnit();
             double storeBalance = Economy.getBalance(getStore().getOwnerId());
 
             if (storeBalance < totalCost) {
@@ -158,25 +161,32 @@ public class SellWantedView extends AbstractMenuView {
                 return;
             }
 
-            if (!getStore().sellToStore(getPlayer(), _selectedSaleItem, amount, totalCost)) {
-                Msg.tell(getPlayer(), Lang.get(_SELL_FAILED));
+            getStore().sellToStore(getPlayer(), _selectedSaleItem, amount, totalCost)
+                    .onError(new FutureSubscriber<IEconomyTransaction>() {
+                        @Override
+                        public void on(Result<IEconomyTransaction> result) {
+                            Msg.tell(getPlayer(), Lang.get(_SELL_FAILED));
+                        }
+                    })
+                    .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                        @Override
+                        public void on(Result<IEconomyTransaction> result) {
+                            // remove quantity from wanted items
+                            _selectedSaleItem.increment(-amount);
 
-                return;
-            }
+                            if (menuItem != null) {
+                                updateItem(menuItem, _selectedSaleItem.getQty(), _selectedSaleItem.getPricePerUnit());
+                                menuItem.set(SellWantedView.this);
+                                //_inventory.setItem(menuItem.getSlot(), menuItem.getItemStack());
 
-            // remove quantity from wanted items
-            _selectedSaleItem.increment(-amount);
+                                Msg.tell(getPlayer(), Lang.get(_SELL_SUCCESS,
+                                        amount,
+                                        ItemStackUtils.getDisplayName(menuItem, DisplayNameOption.REQUIRED),
+                                        Economy.getCurrency().format(totalCost)));
+                            }
+                        }
+                    });
 
-            if (menuItem != null) {
-                updateItem(menuItem, _selectedSaleItem.getQty(), _selectedSaleItem.getPricePerUnit());
-                menuItem.set(this);
-                //_inventory.setItem(menuItem.getSlot(), menuItem.getItemStack());
-
-                Msg.tell(getPlayer(), Lang.get(_SELL_SUCCESS,
-                        amount,
-                        ItemStackUtils.getDisplayName(menuItem, DisplayNameOption.REQUIRED),
-                        Economy.getCurrency().format(totalCost)));
-            }
         }
     }
 

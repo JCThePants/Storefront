@@ -24,6 +24,9 @@
 
 package com.jcwhatever.storefront.views;
 
+import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
+import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
+import com.jcwhatever.nucleus.utils.observer.result.Result;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.data.ISaleItem;
@@ -175,16 +178,14 @@ public class BuyView extends AbstractMenuView {
 
         if (reason == ViewOpenReason.PREV) {
 
-            int amount;
-
             View quantityView = getViewSession().getNext();
             if (!(quantityView instanceof QuantityView)) {
                 return true;
             }
 
-            amount = ((QuantityView) quantityView).getSelectedQty();
+            final int amount = ((QuantityView) quantityView).getSelectedQty();
 
-            double price = _selectedSaleItem.getPricePerUnit() * amount;
+            final double price = _selectedSaleItem.getPricePerUnit() * amount;
             double balance = Economy.getBalance(getPlayer().getUniqueId());
 
             // check buyer balance
@@ -200,14 +201,25 @@ public class BuyView extends AbstractMenuView {
             else if (_selectedSaleItem.getParent().getQty() < amount) {
                 Msg.tell(getPlayer(), Lang.get(_NOT_ENOUGH_AVAILABLE));
             }
-            // buy items
-            else if (!getStore().buySaleItem(getPlayer(), _selectedSaleItem, amount, price)) {
-                Msg.tell(getPlayer(), Lang.get(_BUY_FAILED));
-            } else {
-                Msg.tell(getPlayer(), Lang.get(_BUY_SUCCESS, amount,
-                        ItemStackUtils.getDisplayName(_selectedSaleItem.getItemStack(), DisplayNameOption.REQUIRED),
-                        Economy.getCurrency().format(price)));
-            }
+
+            getStore().buySaleItem(getPlayer(), _selectedSaleItem, amount, price)
+                    .onError(new FutureSubscriber<IEconomyTransaction>() {
+                        @Override
+                        public void on(Result<IEconomyTransaction> result) {
+
+                            Msg.tell(getPlayer(), Lang.get(_BUY_FAILED));
+                        }
+                    })
+                    .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                        @Override
+                        public void on(Result<IEconomyTransaction> result) {
+
+                            Msg.tell(getPlayer(), Lang.get(_BUY_SUCCESS, amount,
+                                    ItemStackUtils.getDisplayName(
+                                            _selectedSaleItem.getItemStack(), DisplayNameOption.REQUIRED),
+                                    Economy.getCurrency().format(price)));
+                        }
+                    });
 
         } else {
 
