@@ -1,15 +1,13 @@
 package com.jcwhatever.storefront.utils;
 
-import com.jcwhatever.storefront.data.PriceMap;
-import com.jcwhatever.storefront.data.QtyMap;
-import com.jcwhatever.storefront.data.SaleItem;
-import com.jcwhatever.storefront.stores.IStore;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
-import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.storefront.data.PriceMap;
+import com.jcwhatever.storefront.data.QtyMap;
+import com.jcwhatever.storefront.data.SaleItem;
+import com.jcwhatever.storefront.stores.IStore;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -158,40 +156,26 @@ public class StoreInventoryUpdater {
         if (_priceMap == null)
             throw new IllegalStateException("StoreInventoryUpdater: PriceMap is required.");
 
-        _store.getDataNode().runBatchOperation(new DataBatchOperation() {
+        InventorySnapshot currentSnapshot = new InventorySnapshot(
+                _currentInventory, StoreStackMatcher.getDefault());
 
-            @Override
-            public void run (IDataNode dataNode) {
+        List<MatchableItem> originalItems = _snapshot.getMatchable();
+        List<MatchableItem> currentItems = currentSnapshot.getMatchable();
 
-                InventorySnapshot currentSnapshot = new InventorySnapshot(
-                        _currentInventory, StoreStackMatcher.getDefault());
+        Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
 
-                List<MatchableItem> originalItems = _snapshot.getMatchable();
-                List<MatchableItem> currentItems = currentSnapshot.getMatchable();
+        // modify original items
+        modifyExisting(currentSnapshot, originalItems, processed);
 
-                Set<MatchableItem> processed = new HashSet<MatchableItem>(originalItems.size());
-
-                // modify original items
-                modifyExisting(currentSnapshot, originalItems, processed);
-
-                // add new Items
-                addNew(currentSnapshot, currentItems, processed);
-            }
-
-        });
+        // add new Items
+        addNew(currentSnapshot, currentItems, processed);
     }
 
     /**
      * Update for removed items only.
      */
     public void updateRemoved() {
-        _store.getDataNode().runBatchOperation(new DataBatchOperation() {
-
-            @Override
-            public void run (IDataNode dataNode) {
-                removeMissing();
-            }
-        });
+        removeMissing();
     }
 
     private void checkAllValuesPresent() {

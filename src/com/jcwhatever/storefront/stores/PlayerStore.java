@@ -24,6 +24,11 @@
 
 package com.jcwhatever.storefront.stores;
 
+import com.jcwhatever.nucleus.storage.IDataNode;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.nucleus.utils.language.Localizable;
+import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
@@ -34,12 +39,6 @@ import com.jcwhatever.storefront.data.SaleItemIDMap;
 import com.jcwhatever.storefront.data.WantedItems;
 import com.jcwhatever.storefront.utils.StoreStackMatcher;
 import com.jcwhatever.storefront.views.mainmenu.MainMenuView;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
-import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.utils.language.Localizable;
-import com.jcwhatever.nucleus.views.ViewSession;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -61,7 +60,6 @@ public class PlayerStore extends AbstractStore {
 
     @Localizable static final String _OUT_OF_STOCK = "Out of stock.";
     @Localizable static final String _OUT_OF_BUSINESS = "This store is out of business.";
-
 
     private Map<MatchableItem, ISaleItem> _stackMap;
 
@@ -95,7 +93,7 @@ public class PlayerStore extends AbstractStore {
         if (!getOwnerId().equals(player.getUniqueId()) &&
                 getSaleItems().size() == 0 &&
                 getWantedItems().getAll().size() == 0) {
-            
+
             Msg.tell(player, Lang.get(_OUT_OF_STOCK));
             return;
         }
@@ -257,19 +255,11 @@ public class PlayerStore extends AbstractStore {
         if (!sellerId.equals(getOwnerId()))
             return false;
 
-        getDataNode().runBatchOperation(new DataBatchOperation() {
+        List<ISaleItem> items = getSaleItems();
 
-            @Override
-            public void run (IDataNode dataNode) {
-
-                List<ISaleItem> items = getSaleItems();
-
-                for (ISaleItem item : items) {
-                    removeSaleItem(getOwnerId(), item.getItemStack());
-                }
-            }
-
-        });
+        for (ISaleItem item : items) {
+            removeSaleItem(getOwnerId(), item.getItemStack());
+        }
 
         return true;
     }
@@ -326,17 +316,10 @@ public class PlayerStore extends AbstractStore {
                                         final double pricePerUnit) {
         PreCon.notNull(saleItem);
 
-        getDataNode().runBatchOperation(new DataBatchOperation() {
+        int newQty = saleItem.getQty() + qty;
 
-            @Override
-            public void run (IDataNode dataNode) {
-
-                int newQty = saleItem.getQty() + qty;
-
-                saleItem.setPricePerUnit(pricePerUnit);
-                saleItem.setQty(newQty);
-            }
-        });
+        saleItem.setPricePerUnit(pricePerUnit);
+        saleItem.setQty(newQty);
 
         return saleItem;
     }

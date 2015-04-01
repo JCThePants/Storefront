@@ -26,7 +26,6 @@ package com.jcwhatever.storefront.stores;
 
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
-import com.jcwhatever.nucleus.storage.DataBatchOperation;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.BankItems;
 import com.jcwhatever.nucleus.utils.Economy;
@@ -173,21 +172,13 @@ public class ServerStore extends AbstractStore {
     }
 
     private SaleItem updateAddSaleItem(final SaleItem saleItem, final int qty,
-                                        final double pricePerUnit) {
+                                       final double pricePerUnit) {
         PreCon.notNull(saleItem);
 
-        getDataNode().runBatchOperation(new DataBatchOperation() {
+        int newQty = saleItem.getQty() + qty;
 
-            @Override
-            public void run (IDataNode dataNode) {
-
-                int newQty = saleItem.getQty() + qty;
-
-                saleItem.setPricePerUnit(pricePerUnit);
-                saleItem.setQty(newQty);
-            }
-
-        });
+        saleItem.setPricePerUnit(pricePerUnit);
+        saleItem.setQty(newQty);
 
         return saleItem;
     }
@@ -336,19 +327,11 @@ public class ServerStore extends AbstractStore {
         if (map == null)
             return false;
 
-        getDataNode().runBatchOperation(new DataBatchOperation() {
+        List<ISaleItem> items = new ArrayList<>(map.values());
 
-            @Override
-            public void run (IDataNode dataNode) {
-
-                List<ISaleItem> items = new ArrayList<>(map.values());
-
-                for (ISaleItem item : items) {
-                    removeSaleItem(playerId, item.getItemStack());
-                }
-            }
-
-        });
+        for (ISaleItem item : items) {
+            removeSaleItem(playerId, item.getItemStack());
+        }
 
         return true;
     }
@@ -420,7 +403,7 @@ public class ServerStore extends AbstractStore {
             Collection<IStore> stores = storeManager.getAll();
 
             for (IStore store : stores) {
-                
+
                 if (!(store instanceof ServerStore))
                     continue;
 
