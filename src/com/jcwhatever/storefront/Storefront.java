@@ -117,7 +117,7 @@ public class Storefront extends NucleusPlugin {
 
     private void registerPermissions () {
 
-        Permissions.runBatchOperation(true, new Runnable() {
+        Permissions.runBatchOperation(new Runnable() {
 
             @Override
             public void run () {
@@ -128,9 +128,8 @@ public class Storefront extends NucleusPlugin {
 
                 for (int i = 1; i <= 6; i++) {
 
-                    IPermission rowPermission = Permissions.register(
-                            "storefront.sell.rows." + i, PermissionDefault.TRUE);
-                    Permissions.addParent(rowPermission, permission, true);
+                    Permissions.register("storefront.sell.rows." + i, PermissionDefault.TRUE)
+                        .addParent(permission, true);
                 }
             }
         });
