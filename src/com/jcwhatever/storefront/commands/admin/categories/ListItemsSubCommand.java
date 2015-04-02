@@ -77,7 +77,7 @@ public class ListItemsSubCommand extends AbstractCommand {
 
         for (MatchableItem wrapper : wrappers) {
 
-            pagin.add(ItemStackUtils.serializeToString(wrapper.getItem(), SerializerOutputType.COLOR));
+            pagin.add(ItemStackUtils.serialize(wrapper.getItem(), SerializerOutputType.COLOR));
         }
 
         if (!args.isDefaultValue("search"))
