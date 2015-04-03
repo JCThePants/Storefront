@@ -38,7 +38,7 @@ import com.jcwhatever.storefront.views.CategoryView;
 import com.jcwhatever.storefront.views.SellView;
 import com.jcwhatever.storefront.views.SellWantedView;
 import com.jcwhatever.storefront.views.WantedView;
-import com.jcwhatever.nucleus.utils.language.Localizable;
+import com.jcwhatever.nucleus.managed.language.Localizable;
 import com.jcwhatever.nucleus.views.View;
 import com.jcwhatever.nucleus.views.ViewCloseReason;
 import com.jcwhatever.nucleus.views.ViewOpenReason;

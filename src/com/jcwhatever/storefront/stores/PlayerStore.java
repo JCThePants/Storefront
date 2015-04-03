@@ -27,7 +27,7 @@ package com.jcwhatever.storefront.stores;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.utils.language.Localizable;
+import com.jcwhatever.nucleus.managed.language.Localizable;
 import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;

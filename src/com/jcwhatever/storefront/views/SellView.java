@@ -48,7 +48,7 @@ import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.utils.language.Localizable;
+import com.jcwhatever.nucleus.managed.language.Localizable;
 import com.jcwhatever.nucleus.managed.scheduler.IScheduledTask;
 import com.jcwhatever.nucleus.managed.scheduler.TaskHandler;
 import com.jcwhatever.nucleus.views.View;
