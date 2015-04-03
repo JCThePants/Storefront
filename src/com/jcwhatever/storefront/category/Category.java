@@ -29,7 +29,7 @@ import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.items.ItemFilterManager;
+import com.jcwhatever.nucleus.utils.items.ItemFilter;
 import com.jcwhatever.nucleus.utils.items.ItemStackMatcher;
 import com.jcwhatever.nucleus.managed.language.Localizable;
 
@@ -50,7 +50,7 @@ public class Category implements INamedInsensitive {
     private String _description = Lang.get(_DESCRIPTION);
 
     private IDataNode _categoryNode;
-    private ItemFilterManager _filterManager;
+    private ItemFilter _filterManager;
 
     private ItemStack _menuItem;
 
@@ -67,7 +67,7 @@ public class Category implements INamedInsensitive {
         _name = name;
         _searchName = name.toLowerCase();
         _categoryNode = categoryNode;
-        _filterManager = new ItemFilterManager(Storefront.getPlugin(),
+        _filterManager = new ItemFilter(Storefront.getPlugin(),
                 categoryNode.getNode("item-filter"),
                 ItemStackMatcher.get(ItemStackMatcher.MATCH_TYPE));
 
@@ -127,7 +127,7 @@ public class Category implements INamedInsensitive {
      *
      * <p>Defines what items the category encompasses.</p>
      */
-    public ItemFilterManager getFilterManager () {
+    public ItemFilter getFilterManager () {
         return _filterManager;
     }
 

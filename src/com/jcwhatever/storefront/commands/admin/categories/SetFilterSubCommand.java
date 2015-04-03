@@ -28,7 +28,7 @@ import com.jcwhatever.nucleus.commands.AbstractCommand;
 import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
-import com.jcwhatever.nucleus.utils.items.ItemFilterManager.FilterPolicy;
+import com.jcwhatever.nucleus.utils.items.ItemFilter.FilterPolicy;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.category.CategoryManager;
 import com.jcwhatever.storefront.Storefront;
