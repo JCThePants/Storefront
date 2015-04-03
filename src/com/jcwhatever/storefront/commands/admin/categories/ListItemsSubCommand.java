@@ -30,7 +30,6 @@ import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.utils.items.serializer.ItemStackSerializer.SerializerOutputType;
 import com.jcwhatever.nucleus.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
 import com.jcwhatever.storefront.category.Category;
@@ -77,7 +76,7 @@ public class ListItemsSubCommand extends AbstractCommand {
 
         for (MatchableItem wrapper : wrappers) {
 
-            pagin.add(ItemStackUtils.serialize(wrapper.getItem(), SerializerOutputType.COLOR));
+            pagin.add(ItemStackUtils.serialize(wrapper.getItem()));
         }
 
         if (!args.isDefaultValue("search"))
