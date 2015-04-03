@@ -37,7 +37,7 @@ import com.jcwhatever.storefront.stores.IStore;
 import com.jcwhatever.storefront.utils.ItemStackUtil;
 import com.jcwhatever.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.storefront.utils.StoreStackMatcher;
-import com.jcwhatever.nucleus.utils.Economy;
+import com.jcwhatever.nucleus.providers.economy.Economy;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;

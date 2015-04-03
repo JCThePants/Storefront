@@ -30,7 +30,7 @@ import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.BankItems;
+import com.jcwhatever.nucleus.providers.bankitems.BankItems;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.managers.NamedInsensitiveDataManager;
 import com.jcwhatever.nucleus.utils.performance.EntryCache;

@@ -28,7 +28,7 @@ import com.jcwhatever.nucleus.commands.AbstractCommand;
 import com.jcwhatever.nucleus.commands.CommandInfo;
 import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
 import com.jcwhatever.nucleus.commands.exceptions.CommandException;
-import com.jcwhatever.nucleus.regions.selection.IRegionSelection;
+import com.jcwhatever.nucleus.providers.regionselect.IRegionSelection;
 import com.jcwhatever.storefront.stores.StoreManager;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.stores.IStore;

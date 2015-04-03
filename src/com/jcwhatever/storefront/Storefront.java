@@ -32,7 +32,7 @@ import com.jcwhatever.nucleus.scripting.IEvaluatedScript;
 import com.jcwhatever.nucleus.scripting.IScriptApi;
 import com.jcwhatever.nucleus.scripting.SimpleScriptApi;
 import com.jcwhatever.nucleus.scripting.SimpleScriptApi.IApiObjectCreator;
-import com.jcwhatever.nucleus.utils.Permissions;
+import com.jcwhatever.nucleus.providers.permissions.Permissions;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 import com.jcwhatever.storefront.category.CategoryManager;
 import com.jcwhatever.storefront.commands.StorefrontCommandDispatcher;

@@ -27,7 +27,7 @@ package com.jcwhatever.storefront.utils;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.data.SaleItem;
 import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.utils.Scheduler;
+import com.jcwhatever.nucleus.managed.scheduler.Scheduler;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.player.PlayerUtils;

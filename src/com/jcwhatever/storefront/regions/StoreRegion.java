@@ -11,7 +11,7 @@ import com.jcwhatever.nucleus.regions.IRegionEventHandler;
 import com.jcwhatever.nucleus.regions.ReadOnlyRegion;
 import com.jcwhatever.nucleus.regions.options.EnterRegionReason;
 import com.jcwhatever.nucleus.regions.options.LeaveRegionReason;
-import com.jcwhatever.nucleus.regions.selection.IRegionSelection;
+import com.jcwhatever.nucleus.providers.regionselect.IRegionSelection;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.DependencyRunner;
 import com.jcwhatever.nucleus.utils.DependencyRunner.DependencyStatus;
