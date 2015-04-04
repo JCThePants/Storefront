@@ -1,28 +1,29 @@
 package com.jcwhatever.storefront.regions;
 
-import com.jcwhatever.storefront.Msg;
-import com.jcwhatever.storefront.Storefront;
-import com.jcwhatever.storefront.stores.IStore;
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.mixins.IDisposable;
+import com.jcwhatever.nucleus.providers.regionselect.IRegionSelection;
 import com.jcwhatever.nucleus.regions.BasicRegion;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.regions.IRegionEventHandler;
 import com.jcwhatever.nucleus.regions.ReadOnlyRegion;
 import com.jcwhatever.nucleus.regions.options.EnterRegionReason;
 import com.jcwhatever.nucleus.regions.options.LeaveRegionReason;
-import com.jcwhatever.nucleus.providers.regionselect.IRegionSelection;
 import com.jcwhatever.nucleus.storage.IDataNode;
 import com.jcwhatever.nucleus.utils.DependencyRunner;
 import com.jcwhatever.nucleus.utils.DependencyRunner.DependencyStatus;
 import com.jcwhatever.nucleus.utils.DependencyRunner.IDependantRunnable;
 import com.jcwhatever.nucleus.utils.MetaKey;
 import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.storefront.Msg;
+import com.jcwhatever.storefront.Storefront;
+import com.jcwhatever.storefront.stores.IStore;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -64,6 +65,7 @@ public class StoreRegion implements IDisposable{
 
         final String pluginName = dataNode.getString("plugin");
         final String regionName = dataNode.getString("region");
+        final String regionClassName = dataNode.getString("clazz");
         if (pluginName != null && regionName != null) {
 
             // setup external region
@@ -79,7 +81,19 @@ public class StoreRegion implements IDisposable{
                     if (plugin == null)
                         return DependencyStatus.NOT_READY;
 
-                    region = Nucleus.getRegionManager().getRegion(plugin, regionName);
+                    List<IRegion> regions = Nucleus.getRegionManager().getRegions(plugin, regionName);
+                    if (regionClassName == null && !regions.isEmpty()) {
+                        region = regions.get(0);
+                    }
+                    else {
+                        for (IRegion element : regions) {
+                            if (region.getRegionClass().getName().equals(regionClassName)) {
+                                region = element;
+                                break;
+                            }
+                        }
+                    }
+
                     if (region == null)
                         return DependencyStatus.NOT_READY;
 
@@ -143,6 +157,7 @@ public class StoreRegion implements IDisposable{
         _dataNode.clear();
         _dataNode.set("plugin", region.getPlugin().getName());
         _dataNode.set("region", region.getName());
+        _dataNode.set("clazz", region.getRegionClass().getName());
         _dataNode.save();
     }
 
