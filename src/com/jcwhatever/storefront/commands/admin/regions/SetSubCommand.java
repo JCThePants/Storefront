@@ -55,14 +55,10 @@ public class SetSubCommand extends AbstractCommand implements IExecutableCommand
         StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.get(storeName);
-        if (store == null) {
-            tellError(sender, "A store with the name '{0}' was not found.", storeName);
-            return; // finished
-        }
-        
+        if (store == null)
+            throw new CommandException("A store with the name '{0}' was not found.", storeName);
+
         IRegionSelection selection = getRegionSelection((Player) sender);
-        if (selection == null)
-            return; // finished
 
         store.getStoreRegion().setCoords(selection);
 

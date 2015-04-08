@@ -26,7 +26,7 @@ package com.jcwhatever.storefront.commands.admin.categories;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.storefront.Storefront;
@@ -45,7 +45,7 @@ import org.bukkit.command.CommandSender;
 public class SetTitleSubCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws CommandException {
 
         String categoryName = args.getName("categoryName");
         String title = args.getString("title");
@@ -53,10 +53,8 @@ public class SetTitleSubCommand extends AbstractCommand implements IExecutableCo
         CategoryManager catManager = Storefront.getCategoryManager();
 
         Category category = catManager.get(categoryName);
-        if (category == null) {
-            tellError(sender, "An item category with the name '{0}' was not found.", categoryName);
-            return; // finished
-        }
+        if (category == null)
+            throw new CommandException("An item category with the name '{0}' was not found.", categoryName);
 
         category.setTitle(title);
 

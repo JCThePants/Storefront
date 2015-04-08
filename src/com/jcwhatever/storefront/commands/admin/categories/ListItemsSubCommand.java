@@ -26,14 +26,13 @@ package com.jcwhatever.storefront.commands.admin.categories;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.nucleus.managed.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
-import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.category.Category;
@@ -53,7 +52,7 @@ import java.util.Set;
 public class ListItemsSubCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws CommandException {
 
         int page = args.getInteger("page");
         String categoryName = args.getName("categoryName");
@@ -61,19 +60,14 @@ public class ListItemsSubCommand extends AbstractCommand implements IExecutableC
         CategoryManager manager = Storefront.getCategoryManager();
 
         Category category = manager.get(categoryName);
-        if (category == null) {
-            String message = Lang.get("An item category with the name '{0}' was not found.", categoryName);
-            tellError(sender, message);
-            return; // finished
-        }
+        if (category == null)
+            throw new CommandException("An item category with the name '{0}' was not found.", categoryName);
 
         Set<MatchableItem> wrappers = category.getFilterManager().getMatchable();
 
-        String paginTitle = Lang.get("Filtered Items in Category '{0}'", category.getName());
-        ChatPaginator pagin = Msg.getPaginator(paginTitle);
+        ChatPaginator pagin = Msg.getPaginator("Filtered Items in Category '{0}'", category.getName());
 
-        String filterLabel = Lang.get("FILTER MODE");
-        pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, filterLabel, category.getFilterManager().getPolicy().name());
+        pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, "FILTER MODE");
 
         for (MatchableItem wrapper : wrappers) {
 

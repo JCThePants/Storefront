@@ -26,7 +26,7 @@ package com.jcwhatever.storefront.commands.admin.categories;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.storefront.Storefront;
@@ -46,7 +46,7 @@ public class AddItemsSubCommand extends AbstractCommand implements IExecutableCo
 
     @Override
     public void execute (CommandSender sender, ICommandArguments args)
-            throws InvalidArgumentException {
+            throws CommandException {
 
         String categoryName = args.getName("categoryName");
         ItemStack[] items = args.getItemStack(sender, "items");
@@ -54,15 +54,11 @@ public class AddItemsSubCommand extends AbstractCommand implements IExecutableCo
         CategoryManager catManager = Storefront.getCategoryManager();
 
         Category category = catManager.get(categoryName);
-        if (category == null) {
-            tellError(sender, "An item category with the name '{0}' was not found.", categoryName);
-            return; // finished
-        }
+        if (category == null)
+            throw new CommandException("An item category with the name '{0}' was not found.", categoryName);
 
-        if (!category.getFilterManager().add(items)) {
-            tellError(sender, "Failed to add items to category.");
-            return; // finished
-        }
+        if (!category.getFilterManager().add(items))
+            throw new CommandException("Failed to add items to category.");
 
         tellSuccess(sender, "Filter items added to category '{0}'.", category.getName());
     }

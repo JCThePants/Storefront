@@ -26,7 +26,7 @@ package com.jcwhatever.storefront.commands.admin;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.storefront.Storefront;
@@ -44,7 +44,7 @@ import org.bukkit.command.CommandSender;
 public class AddCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws CommandException {
 
         String storeName = args.getName("storeName");
         StoreType type = args.getEnum("server|player_ownable", StoreType.class);
@@ -52,17 +52,13 @@ public class AddCommand extends AbstractCommand implements IExecutableCommand {
         StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.get(storeName);
-        if (store != null) {
-            tellError(sender, "A store with the name '{0}' already exists.", store.getName());
-            return; // finished
-        }
+        if (store != null)
+            throw new CommandException("A store with the name '{0}' already exists.", store.getName());
 
         store = storeManager.add(storeName, type);
 
-        if (store == null) {
-            tellError(sender, "Failed to create store.");
-            return; // finished
-        }
+        if (store == null)
+            throw new CommandException("Failed to create store.");
 
         tellSuccess(sender, "{0} store '{1}' added.", type.name(), store.getName());
     }

@@ -26,7 +26,7 @@ package com.jcwhatever.storefront.commands.admin;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.storefront.Storefront;
@@ -43,22 +43,18 @@ import org.bukkit.command.CommandSender;
 public class DelCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws CommandException {
 
         String storeName = args.getName("storeName");
 
         StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.get(storeName);
-        if (store == null) {
-            tellError(sender, "A store with the name '{0}' was not found.", storeName);
-            return; // finished
-        }
+        if (store == null)
+            throw new CommandException("A store with the name '{0}' was not found.", storeName);
 
-        if (!storeManager.remove(storeName)) {
-            tellError(sender, "Failed to remove store.");
-            return; // finished
-        }
+        if (!storeManager.remove(storeName))
+            throw new CommandException("Failed to remove store.");
 
         tellSuccess(sender, "Store '{0}' removed.", storeName);
     }

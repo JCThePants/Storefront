@@ -26,7 +26,7 @@ package com.jcwhatever.storefront.commands.user;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.storefront.Storefront;
@@ -49,7 +49,7 @@ import java.util.UUID;
 public class EntryMsgCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws CommandException {
 
         String storeName = args.getName("storeName");
         String message = args.getString("message");
@@ -57,10 +57,8 @@ public class EntryMsgCommand extends AbstractCommand implements IExecutableComma
         StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.get(storeName);
-        if (store == null) {
-            tellError(sender, "A store with the name '{0}' was not found.", storeName);
-            return; // finished
-        }
+        if (store == null)
+            throw new CommandException("A store with the name '{0}' was not found.", storeName);
 
         UUID playerId = null;
         
@@ -70,18 +68,15 @@ public class EntryMsgCommand extends AbstractCommand implements IExecutableComma
         
         if (store.getType() == StoreType.SERVER) {
             
-            if (!sender.hasPermission("storefront.store.server")) {
-                tellError(sender, "You don't have permission to change the entry message of a Server store.");
-                return; // finished
-            }
+            if (!sender.hasPermission("storefront.store.server"))
+                throw new CommandException("You don't have permission to change the entry " +
+                        "message of a Server store.");
         }
         else if (sender instanceof Player && (!store.hasOwner() || !store.getOwnerId().equals(playerId))) {
             
-            if (!sender.isOp()) {
-                tellError(sender, "You can only change the entry message of your own stores.");
-                return; // finished
-            }
-            
+            if (!sender.isOp())
+                throw new CommandException("You can only change the entry message of your own stores.");
+
             tell(sender, "Changing entry message as OP.");
         }
         

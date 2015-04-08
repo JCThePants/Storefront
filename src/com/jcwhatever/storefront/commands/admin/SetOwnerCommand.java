@@ -26,7 +26,7 @@ package com.jcwhatever.storefront.commands.admin;
 
 import com.jcwhatever.nucleus.managed.commands.CommandInfo;
 import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
-import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.exceptions.CommandException;
 import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
 import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.nucleus.utils.player.PlayerUtils;
@@ -47,7 +47,7 @@ import java.util.UUID;
 public class SetOwnerCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws CommandException {
 
         String storeName = args.getName("storeName");
         String ownerName = args.getName("ownerName");
@@ -55,21 +55,17 @@ public class SetOwnerCommand extends AbstractCommand implements IExecutableComma
         StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.get(storeName);
-        if (store == null) {
-            tellError(sender, "A store with the name '{0}' was not found.", storeName);
-            return; // finished
-        }
+        if (store == null)
+            throw new CommandException("A store with the name '{0}' was not found.", storeName);
 
-        if (store.getType() == StoreType.SERVER) {
-            tellError(sender, "The store named '{0}' is a Server store and cannot have an owner.", store.getName());
-            return; // finished
-        }
+        if (store.getType() == StoreType.SERVER)
+            throw new CommandException("The store named '{0}' is a Server store and " +
+                    "cannot have an owner.", store.getName());
 
         UUID ownerId = PlayerUtils.getPlayerId(ownerName);
-        if (ownerId == null) {
-            tellError(sender, "A player named '{0}' could not be found or has never logged into the server before.", ownerName);
-            return; // finished
-        }
+        if (ownerId == null)
+            throw new CommandException("A player named '{0}' could not be found or has never " +
+                    "logged into the server before.", ownerName);
 
         store.setOwnerId(ownerId);
 

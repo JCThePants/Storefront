@@ -66,58 +66,46 @@ public class SetExtSubCommand extends AbstractCommand implements IExecutableComm
         StoreManager storeManager = Storefront.getStoreManager();
 
         IStore store = storeManager.get(storeName);
-        if (store == null) {
-            tellError(sender, "A store with the name '{0}' was not found.", storeName);
-            return; // finished
-        }
-        
-        
+        if (store == null)
+            throw new CommandException("A store with the name '{0}' was not found.", storeName);
+
         List<IRegion> regions = Nucleus.getRegionManager().getRegions(p.getLocation());
         
-        if (regions.isEmpty()) {
-            tellError(sender, "No Nucleus region was found where you are standing.");
-            return; // finished
-        }
-        
+        if (regions.isEmpty())
+            throw new CommandException("No Nucleus region was found where you are standing.");
+
         if (regions.size() > 1 && regionName.isEmpty()) {
-            tellError(sender, "More than one region was found. Please specify with one of the following region names:");
-            
+
             List<String> regionNames = new ArrayList<String>(regions.size());
             for (IRegion region : regions) {
                 regionNames.add(region.getName() + '(' + region.getPlugin().getName() + ')');
             }
 
-            tell(sender, TextUtils.concat(regionNames, ", "));
-            return; // finished
+            throw new CommandException("More than one region was found. Please specify with " +
+                    "one of the following region names:\n{WHITE}{0}", TextUtils.concat(regionNames, ", "));
         }
-        
-        
+
         IRegion extRegion = null;
         
         for (IRegion region : regions) {
             
             if ((regions.size() == 1 && regionName.isEmpty()) ||
                     region.getName().equalsIgnoreCase(regionName)) {
-                
-            
+
                 extRegion = region;
                 break;
             }
         }
         
-        if (extRegion == null) {
-            tellError(sender, regionName.isEmpty()
+        if (extRegion == null)
+            throw new CommandException(regionName.isEmpty()
                     ? "Could not find a region."
                     : "Could not find a region where you are standing named '{0}'.", regionName);
-            
-            return; // finished
-        }
-        
+
         IStore extStore = extRegion.getMeta().get(StoreRegion.REGION_STORE);
-        if (extStore != null) {
-            tellError(sender, "Region '{0}' is already assigned to store named '{1}'.", extRegion.getName(), extStore.getName());
-            return; // finished
-        }
+        if (extStore != null)
+            throw new CommandException("Region '{0}' is already assigned to store named '{1}'.",
+                    extRegion.getName(), extStore.getName());
 
         store.setExternalRegion(extRegion);
         
