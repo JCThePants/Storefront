@@ -26,16 +26,24 @@ package com.jcwhatever.storefront;
 
 import com.jcwhatever.nucleus.Nucleus;
 import com.jcwhatever.nucleus.NucleusPlugin;
-import com.jcwhatever.nucleus.mixins.IDisposable;
-import com.jcwhatever.nucleus.providers.permissions.IPermission;
 import com.jcwhatever.nucleus.managed.scripting.IEvaluatedScript;
 import com.jcwhatever.nucleus.managed.scripting.IScriptApi;
 import com.jcwhatever.nucleus.managed.scripting.SimpleScriptApi;
 import com.jcwhatever.nucleus.managed.scripting.SimpleScriptApi.IApiObjectCreator;
+import com.jcwhatever.nucleus.mixins.IDisposable;
+import com.jcwhatever.nucleus.providers.permissions.IPermission;
 import com.jcwhatever.nucleus.providers.permissions.Permissions;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 import com.jcwhatever.storefront.category.CategoryManager;
-import com.jcwhatever.storefront.commands.StorefrontCommandDispatcher;
+import com.jcwhatever.storefront.commands.admin.AddCommand;
+import com.jcwhatever.storefront.commands.admin.DelCommand;
+import com.jcwhatever.storefront.commands.admin.ListCommand;
+import com.jcwhatever.storefront.commands.admin.SetOwnerCommand;
+import com.jcwhatever.storefront.commands.admin.categories.CategoriesCommand;
+import com.jcwhatever.storefront.commands.admin.regions.RegionsCommand;
+import com.jcwhatever.storefront.commands.user.EntryMsgCommand;
+import com.jcwhatever.storefront.commands.user.ExitMsgCommand;
+import com.jcwhatever.storefront.commands.user.SetTitleCommand;
 import com.jcwhatever.storefront.scripting.ScriptApiObject;
 import com.jcwhatever.storefront.stores.StoreManager;
 
@@ -105,7 +113,17 @@ public class Storefront extends NucleusPlugin {
 
         registerPermissions();
 
-        this.registerCommands(new StorefrontCommandDispatcher(this));
+        registerCommand(AddCommand.class);
+        registerCommand(DelCommand.class);
+        registerCommand(ListCommand.class);
+        registerCommand(SetOwnerCommand.class);
+        registerCommand(CategoriesCommand.class);
+        registerCommand(RegionsCommand.class);
+
+        registerCommand(SetTitleCommand.class);
+        registerCommand(EntryMsgCommand.class);
+        registerCommand(ExitMsgCommand.class);
+
         this.registerEventListeners(new BukkitListener());
     }
 

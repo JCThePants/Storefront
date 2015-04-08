@@ -24,14 +24,15 @@
 
 package com.jcwhatever.storefront.commands.admin;
 
-import com.jcwhatever.nucleus.commands.AbstractCommand;
-import com.jcwhatever.nucleus.commands.CommandInfo;
-import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
-import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
-import com.jcwhatever.storefront.stores.StoreManager;
-import com.jcwhatever.storefront.stores.StoreType;
+import com.jcwhatever.nucleus.managed.commands.CommandInfo;
+import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
+import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
+import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.stores.IStore;
+import com.jcwhatever.storefront.stores.StoreManager;
+import com.jcwhatever.storefront.stores.StoreType;
 
 import org.bukkit.command.CommandSender;
 
@@ -40,10 +41,10 @@ import org.bukkit.command.CommandSender;
         staticParams = { "storeName", "server|player_ownable" },
         description = "Add a store.")
 
-public class AddCommand extends AbstractCommand {
+public class AddCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
 
         String storeName = args.getName("storeName");
         StoreType type = args.getEnum("server|player_ownable", StoreType.class);

@@ -24,13 +24,14 @@
 
 package com.jcwhatever.storefront.commands.admin.categories;
 
-import com.jcwhatever.nucleus.commands.AbstractCommand;
-import com.jcwhatever.nucleus.commands.CommandInfo;
-import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
-import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.CommandInfo;
+import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
+import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
+import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
+import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.category.CategoryManager;
-import com.jcwhatever.storefront.Storefront;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -41,10 +42,10 @@ import org.bukkit.inventory.ItemStack;
         staticParams = { "categoryName", "items" },
         description = "Add filter items to a category.")
 
-public class AddItemsSubCommand extends AbstractCommand {
+public class AddItemsSubCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args)
+    public void execute (CommandSender sender, ICommandArguments args)
             throws InvalidArgumentException {
 
         String categoryName = args.getName("categoryName");

@@ -24,14 +24,15 @@
 
 package com.jcwhatever.storefront.commands.admin.categories;
 
-import com.jcwhatever.nucleus.commands.AbstractCommand;
-import com.jcwhatever.nucleus.commands.CommandInfo;
-import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
-import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.CommandInfo;
+import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
+import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
+import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.nucleus.utils.items.ItemFilter.FilterPolicy;
+import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.category.CategoryManager;
-import com.jcwhatever.storefront.Storefront;
 
 import org.bukkit.command.CommandSender;
 
@@ -41,10 +42,10 @@ import org.bukkit.command.CommandSender;
         staticParams = { "categoryName", "whitelist|blacklist" },
         description = "Set category title.")
 
-public class SetFilterSubCommand extends AbstractCommand {
+public class SetFilterSubCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
 
         String categoryName = args.getName("categoryName");
         FilterPolicy filter = args.getEnum("whitelist|blacklist", FilterPolicy.class);

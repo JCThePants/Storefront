@@ -24,15 +24,16 @@
 
 package com.jcwhatever.storefront.commands.admin;
 
-import com.jcwhatever.nucleus.commands.AbstractCommand;
-import com.jcwhatever.nucleus.commands.CommandInfo;
-import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
-import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.CommandInfo;
+import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
+import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
+import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.nucleus.utils.player.PlayerUtils;
-import com.jcwhatever.storefront.stores.StoreManager;
-import com.jcwhatever.storefront.stores.StoreType;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.stores.IStore;
+import com.jcwhatever.storefront.stores.StoreManager;
+import com.jcwhatever.storefront.stores.StoreType;
 
 import org.bukkit.command.CommandSender;
 
@@ -43,10 +44,10 @@ import java.util.UUID;
         staticParams = { "storeName", "ownerName" },
         description = "Set the owner of the store")
 
-public class SetOwnerCommand extends AbstractCommand {
+public class SetOwnerCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
 
         String storeName = args.getName("storeName");
         String ownerName = args.getName("ownerName");

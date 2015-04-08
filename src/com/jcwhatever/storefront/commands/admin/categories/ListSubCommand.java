@@ -24,17 +24,18 @@
 
 package com.jcwhatever.storefront.commands.admin.categories;
 
-import com.jcwhatever.storefront.category.Category;
-import com.jcwhatever.storefront.category.CategoryManager;
+import com.jcwhatever.nucleus.managed.commands.CommandInfo;
+import com.jcwhatever.nucleus.managed.commands.arguments.ICommandArguments;
+import com.jcwhatever.nucleus.managed.commands.exceptions.InvalidArgumentException;
+import com.jcwhatever.nucleus.managed.commands.mixins.IExecutableCommand;
+import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
+import com.jcwhatever.nucleus.managed.messaging.ChatPaginator;
+import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
-import com.jcwhatever.nucleus.commands.AbstractCommand;
-import com.jcwhatever.nucleus.commands.CommandInfo;
-import com.jcwhatever.nucleus.commands.arguments.CommandArguments;
-import com.jcwhatever.nucleus.commands.exceptions.InvalidArgumentException;
-import com.jcwhatever.nucleus.managed.messaging.ChatPaginator;
-import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
+import com.jcwhatever.storefront.category.Category;
+import com.jcwhatever.storefront.category.CategoryManager;
 
 import org.bukkit.command.CommandSender;
 
@@ -47,10 +48,10 @@ import java.util.Collection;
         floatingParams = { "search=" },
         description = "List item categories.")
 
-public class ListSubCommand extends AbstractCommand {
+public class ListSubCommand extends AbstractCommand implements IExecutableCommand {
 
     @Override
-    public void execute (CommandSender sender, CommandArguments args) throws InvalidArgumentException {
+    public void execute (CommandSender sender, ICommandArguments args) throws InvalidArgumentException {
 
         int page = args.getInteger("page");
 
