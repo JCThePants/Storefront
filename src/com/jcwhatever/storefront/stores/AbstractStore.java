@@ -24,18 +24,18 @@
 
 package com.jcwhatever.storefront.stores;
 
+import com.jcwhatever.nucleus.providers.bankitems.BankItems;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
+import com.jcwhatever.nucleus.providers.economy.Economy;
 import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.providers.bankitems.BankItems;
-import com.jcwhatever.nucleus.providers.economy.Economy;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent;
-import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent.Future;
-import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
-import com.jcwhatever.nucleus.utils.observer.result.Result;
+import com.jcwhatever.nucleus.utils.observer.future.FutureResultAgent;
+import com.jcwhatever.nucleus.utils.observer.future.FutureResultSubscriber;
+import com.jcwhatever.nucleus.utils.observer.future.IFutureResult;
+import com.jcwhatever.nucleus.utils.observer.future.Result;
 import com.jcwhatever.nucleus.utils.text.TextUtils;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
@@ -243,7 +243,7 @@ public abstract class AbstractStore implements IStore {
     }
 
     @Override
-    public Future<IEconomyTransaction> sellToStore(Player seller, ISaleItem stack, final int qty, double price) {
+    public IFutureResult<IEconomyTransaction> sellToStore(Player seller, ISaleItem stack, final int qty, double price) {
 
         if (getType() == StoreType.SERVER) {
             return new FutureResultAgent<IEconomyTransaction>()
@@ -270,7 +270,7 @@ public abstract class AbstractStore implements IStore {
 
 
         return Economy.transfer(getOwnerId(), seller.getUniqueId(), price)
-                .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                .onSuccess(new FutureResultSubscriber<IEconomyTransaction>() {
                     @Override
                     public void on(Result<IEconomyTransaction> result) {
                         InventoryUtils.removeAmount(
@@ -284,7 +284,7 @@ public abstract class AbstractStore implements IStore {
     }
 
     @Override
-    public Future<IEconomyTransaction> buySaleItem (
+    public IFutureResult<IEconomyTransaction> buySaleItem (
             final Player buyer, final ISaleItem stack, final int qty, double price) {
 
         SaleItem saleItem = getSaleItem(stack.getId());
@@ -309,7 +309,7 @@ public abstract class AbstractStore implements IStore {
         }
 
         return Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)
-                .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                .onSuccess(new FutureResultSubscriber<IEconomyTransaction>() {
                     @Override
                     public void on(Result<IEconomyTransaction> result) {
                         stack.increment(-qty);

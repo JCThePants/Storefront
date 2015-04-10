@@ -28,7 +28,7 @@ import com.jcwhatever.nucleus.mixins.INamedInsensitive;
 import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent.Future;
+import com.jcwhatever.nucleus.utils.observer.future.IFutureResult;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.data.ISaleItem;
 import com.jcwhatever.storefront.data.ISaleItemGetter;
@@ -204,7 +204,7 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty     The number of items to sell.
      * @param price   The total price of the transaction.
      */
-    Future<IEconomyTransaction> sellToStore(Player seller, ISaleItem stack, int qty, double price);
+    IFutureResult<IEconomyTransaction> sellToStore(Player seller, ISaleItem stack, int qty, double price);
 
     /**
      * Remove item from store and give to the specified buyer. Creates economy transaction
@@ -215,9 +215,9 @@ public interface IStore extends INamedInsensitive, ISaleItemGetter {
      * @param qty    The number of items to be purchased.
      * @param price  The total price of the transaction.
      *
-     * @return  A {@link Future} indicating the result.
+     * @return  A {@link IFutureResult} indicating the result.
      */
-    Future<IEconomyTransaction> buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
+    IFutureResult<IEconomyTransaction> buySaleItem (Player buyer, ISaleItem stack, int qty, double price);
 
     /**
      * Remove all sale items from the specified seller.

@@ -24,20 +24,20 @@
 
 package com.jcwhatever.storefront.stores;
 
+import com.jcwhatever.nucleus.managed.language.Localizable;
+import com.jcwhatever.nucleus.managed.scheduler.Scheduler;
+import com.jcwhatever.nucleus.providers.bankitems.BankItems;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
+import com.jcwhatever.nucleus.providers.economy.Economy;
 import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.providers.bankitems.BankItems;
-import com.jcwhatever.nucleus.providers.economy.Economy;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.Rand;
-import com.jcwhatever.nucleus.managed.scheduler.Scheduler;
 import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.managed.language.Localizable;
-import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent;
-import com.jcwhatever.nucleus.utils.observer.result.FutureResultAgent.Future;
-import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
-import com.jcwhatever.nucleus.utils.observer.result.Result;
+import com.jcwhatever.nucleus.utils.observer.future.FutureResultAgent;
+import com.jcwhatever.nucleus.utils.observer.future.FutureResultSubscriber;
+import com.jcwhatever.nucleus.utils.observer.future.IFutureResult;
+import com.jcwhatever.nucleus.utils.observer.future.Result;
 import com.jcwhatever.nucleus.views.ViewSession;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
@@ -269,7 +269,7 @@ public class ServerStore extends AbstractStore {
     }
 
     @Override
-    public Future<IEconomyTransaction> buySaleItem(
+    public IFutureResult<IEconomyTransaction> buySaleItem(
             final Player buyer, final ISaleItem stack, final int qty, double price) {
 
         SaleItem saleItem = getSaleItem(stack.getId());
@@ -304,7 +304,7 @@ public class ServerStore extends AbstractStore {
         }
 
         return Economy.transfer(buyer.getUniqueId(), saleItem.getSellerId(), price)
-                .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                .onSuccess(new FutureResultSubscriber<IEconomyTransaction>() {
                     @Override
                     public void on(Result<IEconomyTransaction> result) {
 

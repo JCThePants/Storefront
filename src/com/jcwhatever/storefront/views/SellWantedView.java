@@ -26,8 +26,8 @@ package com.jcwhatever.storefront.views;
 
 
 import com.jcwhatever.nucleus.providers.economy.IEconomyTransaction;
-import com.jcwhatever.nucleus.utils.observer.result.FutureSubscriber;
-import com.jcwhatever.nucleus.utils.observer.result.Result;
+import com.jcwhatever.nucleus.utils.observer.future.FutureResultSubscriber;
+import com.jcwhatever.nucleus.utils.observer.future.Result;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.data.ISaleItem;
@@ -162,13 +162,13 @@ public class SellWantedView extends AbstractMenuView {
             }
 
             getStore().sellToStore(getPlayer(), _selectedSaleItem, amount, totalCost)
-                    .onError(new FutureSubscriber<IEconomyTransaction>() {
+                    .onError(new FutureResultSubscriber<IEconomyTransaction>() {
                         @Override
                         public void on(Result<IEconomyTransaction> result) {
                             Msg.tell(getPlayer(), Lang.get(_SELL_FAILED));
                         }
                     })
-                    .onSuccess(new FutureSubscriber<IEconomyTransaction>() {
+                    .onSuccess(new FutureResultSubscriber<IEconomyTransaction>() {
                         @Override
                         public void on(Result<IEconomyTransaction> result) {
                             // remove quantity from wanted items
