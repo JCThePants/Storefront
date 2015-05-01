@@ -40,7 +40,7 @@ import com.jcwhatever.storefront.category.CategoryManager;
 
 import org.bukkit.command.CommandSender;
 
-import java.util.Set;
+import java.util.Collection;
 
 @CommandInfo(
         parent = "categories",
@@ -63,7 +63,7 @@ public class ListItemsSubCommand extends AbstractCommand implements IExecutableC
         if (category == null)
             throw new CommandException("An item category with the name '{0}' was not found.", categoryName);
 
-        Set<MatchableItem> wrappers = category.getFilterManager().getMatchable();
+        Collection<MatchableItem> wrappers = category.getFilterManager().getMatchable();
 
         ChatPaginator pagin = Msg.getPaginator("Filtered Items in Category '{0}'", category.getName());
 
