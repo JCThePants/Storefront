@@ -88,7 +88,7 @@ public class BukkitListener implements Listener {
         }
     }
     
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     private void onPlayerInteract (PlayerInteractEvent event) {
 
         if (!event.hasBlock() || event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -108,7 +108,5 @@ public class BukkitListener implements Listener {
                 break;
             }
         }
-
     }
-
 }
