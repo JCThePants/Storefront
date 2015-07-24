@@ -24,21 +24,20 @@
 
 package com.jcwhatever.storefront.stores;
 
-import com.jcwhatever.storefront.data.ISaleItem;
-import com.jcwhatever.storefront.regions.StoreRegion;
 import com.jcwhatever.nucleus.Nucleus;
+import com.jcwhatever.nucleus.providers.bankitems.BankItems;
 import com.jcwhatever.nucleus.providers.bankitems.IBankItemsAccount;
 import com.jcwhatever.nucleus.regions.IRegion;
 import com.jcwhatever.nucleus.storage.IDataNode;
-import com.jcwhatever.nucleus.providers.bankitems.BankItems;
 import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.managers.NamedInsensitiveDataManager;
 import com.jcwhatever.nucleus.utils.performance.EntryCache;
-
+import com.jcwhatever.storefront.data.ISaleItem;
+import com.jcwhatever.storefront.regions.StoreRegion;
 import org.bukkit.block.Block;
 
-import java.util.List;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Manages all stores.
@@ -66,6 +65,7 @@ public class StoreManager extends NamedInsensitiveDataManager<IStore> {
      */
     @Nullable
     public IStore get(Block block) {
+        PreCon.notNull(block);
 
         if (_blockCache.keyEquals(block))
             return _blockCache.getValue();

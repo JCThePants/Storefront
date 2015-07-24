@@ -24,6 +24,25 @@
 
 package com.jcwhatever.storefront.views;
 
+import com.jcwhatever.nucleus.managed.language.Localizable;
+import com.jcwhatever.nucleus.managed.scheduler.IScheduledTask;
+import com.jcwhatever.nucleus.managed.scheduler.Scheduler;
+import com.jcwhatever.nucleus.managed.scheduler.TaskHandler;
+import com.jcwhatever.nucleus.providers.permissions.Permissions;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
+import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
+import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
+import com.jcwhatever.nucleus.utils.items.MatchableItem;
+import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.ViewCloseReason;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.chest.ChestEventAction;
+import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
+import com.jcwhatever.nucleus.views.chest.ChestView;
+import com.jcwhatever.nucleus.views.chest.InventoryItemAction.InventoryPosition;
+import com.jcwhatever.nucleus.views.menu.MenuInventory;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
@@ -41,27 +60,9 @@ import com.jcwhatever.storefront.utils.ItemStackUtil;
 import com.jcwhatever.storefront.utils.ItemStackUtil.PriceType;
 import com.jcwhatever.storefront.utils.StoreInventoryUpdater;
 import com.jcwhatever.storefront.utils.StoreStackMatcher;
-import com.jcwhatever.nucleus.providers.permissions.Permissions;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.managed.scheduler.Scheduler;
-import com.jcwhatever.nucleus.utils.inventory.InventorySnapshot;
-import com.jcwhatever.nucleus.utils.inventory.InventoryUtils;
-import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
-import com.jcwhatever.nucleus.utils.items.MatchableItem;
-import com.jcwhatever.nucleus.managed.language.Localizable;
-import com.jcwhatever.nucleus.managed.scheduler.IScheduledTask;
-import com.jcwhatever.nucleus.managed.scheduler.TaskHandler;
-import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewCloseReason;
-import com.jcwhatever.nucleus.views.ViewOpenReason;
-import com.jcwhatever.nucleus.views.chest.ChestEventAction;
-import com.jcwhatever.nucleus.views.chest.ChestEventInfo;
-import com.jcwhatever.nucleus.views.chest.ChestView;
-import com.jcwhatever.nucleus.views.chest.InventoryItemAction.InventoryPosition;
-import com.jcwhatever.nucleus.views.menu.MenuInventory;
-import com.jcwhatever.nucleus.views.menu.PaginatorView;
-
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.Inventory;
@@ -410,7 +411,13 @@ public class SellView extends ChestView {
      */
     private boolean openPriceMenu (ItemStack item, boolean force) {
 
-        IStore store = Storefront.getStoreManager().get(getViewSession().getSessionBlock());
+        Block block = getViewSession().getSessionBlock();
+        if (block == null) {
+            Location location = getPlayer().getLocation();
+            block = location.getBlock();
+        }
+
+        IStore store = Storefront.getStoreManager().get(block);
         if (store == null)
             throw new IllegalStateException("Could not get store instance from source block.");
 
