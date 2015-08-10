@@ -231,7 +231,7 @@ public class WantedView extends AbstractMenuView {
             _qtyMap.set(selectedStack, 1);
         }
 
-        getViewSession().getMeta().set(ITEM_TASKED_MENU_ITEM, menuItem);
+        getViewSession().getMeta().setKey(ITEM_TASKED_MENU_ITEM, menuItem);
 
         Double price = _priceMap.get(itemStack);
         assert price != null;

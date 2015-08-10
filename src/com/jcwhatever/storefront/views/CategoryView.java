@@ -190,7 +190,7 @@ public class CategoryView extends AbstractMenuView {
         if (category == null)
             throw new AssertionError();
 
-        getViewSession().getMeta().set(SessionMetaKey.CATEGORY, category);
+        getViewSession().getMeta().setKey(SessionMetaKey.CATEGORY, category);
 
         if (_nextView != null)
             getViewSession().next(_nextView);

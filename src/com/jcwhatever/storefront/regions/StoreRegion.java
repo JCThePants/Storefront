@@ -103,7 +103,7 @@ public class StoreRegion implements IDisposable{
                 @Override
                 public void run() {
                     _region = region;
-                    _region.getMeta().set(REGION_STORE, _store);
+                    _region.getMeta().setKey(REGION_STORE, _store);
                     _region.addEventHandler(_messageHandler);
                 }
             });
@@ -114,8 +114,8 @@ public class StoreRegion implements IDisposable{
             BasicRegion region = new BasicRegion(Storefront.getPlugin(), _store.getName(),
                     dataNode);
             region.getMeta()
-                    .set(REGION, region)
-                    .set(REGION_STORE, _store);
+                    .setKey(REGION, region)
+                    .setKey(REGION_STORE, _store);
             region.addEventHandler(_messageHandler);
             _region = region;
             _hasOwnRegion = true;
@@ -152,7 +152,7 @@ public class StoreRegion implements IDisposable{
 
         _region = region;
         _region.addEventHandler(_messageHandler);
-        _region.getMeta().set(REGION_STORE, _store);
+        _region.getMeta().setKey(REGION_STORE, _store);
 
         _dataNode.clear();
         _dataNode.set("plugin", region.getPlugin().getName());
@@ -181,8 +181,8 @@ public class StoreRegion implements IDisposable{
                 _dataNode);
 
         region.getMeta()
-                .set(REGION, region)
-                .set(REGION_STORE, _store);
+                .setKey(REGION, region)
+                .setKey(REGION_STORE, _store);
 
         _region = new ReadOnlyRegion(region);
         _region.addEventHandler(_messageHandler);
@@ -235,7 +235,7 @@ public class StoreRegion implements IDisposable{
     @Override
     public void dispose() {
         _region.removeEventHandler(_messageHandler);
-        _region.getMeta().set(REGION_STORE, null);
+        _region.getMeta().setKey(REGION_STORE, null);
 
         BasicRegion internalRegion = _region.getMeta().get(REGION);
         if (internalRegion != null) {
