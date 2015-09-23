@@ -25,6 +25,15 @@
 package com.jcwhatever.storefront.views;
 
 
+import com.jcwhatever.nucleus.managed.language.Localizable;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.views.View;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.ViewSession;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
+import com.jcwhatever.nucleus.views.menu.PaginatorView;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.category.Category;
@@ -36,20 +45,11 @@ import com.jcwhatever.storefront.meta.ViewSessionTask;
 import com.jcwhatever.storefront.meta.ViewSessionTask.BasicTask;
 import com.jcwhatever.storefront.stores.IStore;
 import com.jcwhatever.storefront.utils.StoreStackMatcher;
-import com.jcwhatever.nucleus.utils.MetaKey;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.managed.language.Localizable;
-import com.jcwhatever.nucleus.views.View;
-import com.jcwhatever.nucleus.views.ViewOpenReason;
-import com.jcwhatever.nucleus.views.ViewSession;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
-import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
-import com.jcwhatever.nucleus.views.menu.PaginatorView;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
  * A menu view used to select an item category.
@@ -138,8 +138,8 @@ public class CategoryView extends AbstractMenuView {
         // set title
         ViewSessionTask taskMode = getSessionTask();
         return taskMode.getBasicTask() == BasicTask.BUY
-                ? taskMode.getChatColor() + Lang.get(_VIEW_TITLE_BUY)
-                : taskMode.getChatColor() + Lang.get(_VIEW_TITLE_SELL);
+                ? taskMode.getChatColor() + Lang.get(_VIEW_TITLE_BUY).toString()
+                : taskMode.getChatColor() + Lang.get(_VIEW_TITLE_SELL).toString();
     }
 
     @Override

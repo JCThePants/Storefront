@@ -32,11 +32,9 @@ import com.jcwhatever.nucleus.managed.commands.utils.AbstractCommand;
 import com.jcwhatever.nucleus.managed.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
 import com.jcwhatever.storefront.Lang;
-import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.category.CategoryManager;
-
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
@@ -59,8 +57,8 @@ public class ListSubCommand extends AbstractCommand implements IExecutableComman
 
         Collection<Category> categories = manager.getAll();
 
-        String paginTitle = Lang.get("Item Categories");
-        ChatPaginator pagin = Msg.getPaginator(paginTitle);
+        String paginTitle = Lang.get("Item Categories").toString();
+        ChatPaginator pagin = createPagin(args, 7, paginTitle);
 
         for (Category category : categories) {
 

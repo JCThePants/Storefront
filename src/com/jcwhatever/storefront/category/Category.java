@@ -47,7 +47,7 @@ public class Category implements INamedInsensitive {
     private String _name;
     private String _searchName;
     private String _title;
-    private String _description = Lang.get(_DESCRIPTION);
+    private String _description = Lang.get(_DESCRIPTION).toString();
 
     private IDataNode _categoryNode;
     private ItemFilter _filterManager;

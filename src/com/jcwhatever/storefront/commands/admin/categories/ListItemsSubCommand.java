@@ -33,11 +33,9 @@ import com.jcwhatever.nucleus.managed.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
-import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.category.Category;
 import com.jcwhatever.storefront.category.CategoryManager;
-
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
@@ -65,7 +63,7 @@ public class ListItemsSubCommand extends AbstractCommand implements IExecutableC
 
         Collection<MatchableItem> wrappers = category.getFilterManager().getMatchable();
 
-        ChatPaginator pagin = Msg.getPaginator("Filtered Items in Category '{0}'", category.getName());
+        ChatPaginator pagin = createPagin(args, 6, "Filtered Items in Category '{0}'", category.getName());
 
         pagin.addFormatted(FormatTemplate.CONSTANT_DEFINITION, "FILTER MODE");
 

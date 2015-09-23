@@ -24,25 +24,24 @@
 
 package com.jcwhatever.storefront.utils;
 
-import com.jcwhatever.storefront.Storefront;
-import com.jcwhatever.storefront.data.SaleItem;
-import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.managed.scheduler.Scheduler;
+import com.jcwhatever.nucleus.utils.PreCon;
 import com.jcwhatever.nucleus.utils.items.ItemStackUtils;
 import com.jcwhatever.nucleus.utils.items.MatchableItem;
 import com.jcwhatever.nucleus.utils.player.PlayerUtils;
-
+import com.jcwhatever.storefront.Storefront;
+import com.jcwhatever.storefront.data.SaleItem;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.annotation.Nullable;
 
 /**
  * Static {@link org.bukkit.inventory.ItemStack} utilities.
@@ -143,7 +142,7 @@ public class ItemStackUtil {
      * @param itemStack  The item stack to add the temp lore to.
      * @param text       The lore text to add.
      */
-    public static void addTempLore(ItemStack itemStack, String text) {
+    public static void addTempLore(ItemStack itemStack, CharSequence text) {
         PreCon.notNull(itemStack);
         PreCon.notNull(text);
 
@@ -171,7 +170,7 @@ public class ItemStackUtil {
      * @param itemStack  The item stack to add the temp lore to.
      * @param newLore    The new lore text to add.
      */
-    public static void addTempLore(ItemStack itemStack, List<String> newLore) {
+    public static void addTempLore(ItemStack itemStack, List<? extends CharSequence> newLore) {
         PreCon.notNull(itemStack);
         PreCon.notNull(newLore);
 

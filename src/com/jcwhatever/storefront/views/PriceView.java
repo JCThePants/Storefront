@@ -24,24 +24,23 @@
 
 package com.jcwhatever.storefront.views;
 
+import com.jcwhatever.nucleus.managed.language.Localizable;
+import com.jcwhatever.nucleus.utils.MetaKey;
+import com.jcwhatever.nucleus.utils.PreCon;
+import com.jcwhatever.nucleus.views.ViewOpenReason;
+import com.jcwhatever.nucleus.views.menu.MenuItem;
+import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
 import com.jcwhatever.storefront.Lang;
 import com.jcwhatever.storefront.meta.ViewSessionTask;
 import com.jcwhatever.storefront.stores.IStore;
 import com.jcwhatever.storefront.utils.ItemStackUtil;
 import com.jcwhatever.storefront.utils.ItemStackUtil.PriceType;
-import com.jcwhatever.nucleus.utils.MetaKey;
-import com.jcwhatever.nucleus.utils.PreCon;
-import com.jcwhatever.nucleus.managed.language.Localizable;
-import com.jcwhatever.nucleus.views.ViewOpenReason;
-import com.jcwhatever.nucleus.views.menu.MenuItem;
-import com.jcwhatever.nucleus.views.menu.MenuItemBuilder;
-
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Nullable;
 
 /**
  * A menu view used to select the price of an item.
@@ -150,7 +149,7 @@ public class PriceView extends AbstractMenuView {
     @Override
     public String getTitle() {
         ViewSessionTask task = getSessionTask();
-        return task.getChatColor() + Lang.get(_VIEW_TITLE);
+        return task.getChatColor() + Lang.get(_VIEW_TITLE).toString();
     }
 
     @Override

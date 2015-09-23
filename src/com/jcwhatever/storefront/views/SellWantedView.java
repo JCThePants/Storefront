@@ -103,7 +103,7 @@ public class SellWantedView extends AbstractMenuView {
 
     @Override
     public String getTitle() {
-        return Lang.get(_VIEW_TITLE);
+        return Lang.get(_VIEW_TITLE).toString();
     }
 
     @Override

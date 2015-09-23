@@ -33,11 +33,9 @@ import com.jcwhatever.nucleus.managed.language.Localizable;
 import com.jcwhatever.nucleus.managed.messaging.ChatPaginator;
 import com.jcwhatever.nucleus.utils.text.TextUtils.FormatTemplate;
 import com.jcwhatever.storefront.Lang;
-import com.jcwhatever.storefront.Msg;
 import com.jcwhatever.storefront.Storefront;
 import com.jcwhatever.storefront.stores.IStore;
 import com.jcwhatever.storefront.stores.StoreManager;
-
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
@@ -61,7 +59,7 @@ public class ListCommand extends AbstractCommand implements IExecutableCommand {
 
         Collection<IStore> stores = manager.getAll();
 
-        ChatPaginator pagin = Msg.getPaginator(Lang.get(_PAGINATOR_TITLE));
+        ChatPaginator pagin = createPagin(args, 7, Lang.get(_PAGINATOR_TITLE));
 
         for (IStore store : stores) {
 

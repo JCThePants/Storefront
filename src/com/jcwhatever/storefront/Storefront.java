@@ -55,7 +55,7 @@ import org.bukkit.plugin.Plugin;
  */
 public class Storefront extends NucleusPlugin {
 
-    private static final String CHAT_PREFIX = TextUtils.format("{WHITE}[{BLUE}Store{WHITE}] ");
+    private static final String CHAT_PREFIX = TextUtils.format("{WHITE}[{BLUE}Store{WHITE}] ").toString();
     private static Storefront _instance;
 
     /**

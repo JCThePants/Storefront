@@ -190,8 +190,8 @@ public class MainMenuView extends AbstractMenuView {
         MainMenuItemBuilder builder = (MainMenuItemBuilder)new MainMenuItemBuilder(Material.GOLD_BLOCK)
                 .title(Lang.get(_SELL_TITLE))
                 .description(getStore().hasOwner()
-                        ? Lang.get(_SELL_TO_DESCR)
-                        : Lang.get(_SELL_FROM_DESCR));
+                        ? Lang.get(_SELL_TO_DESCR).toString()
+                        : Lang.get(_SELL_FROM_DESCR).toString());
 
         switch (getStore().getType()) {
 
@@ -308,7 +308,7 @@ public class MainMenuView extends AbstractMenuView {
                         }
                     })
                     .title(Lang.get(_WANTED_TITLE))
-                    .description(Lang.get(_WANTED_DESCR));
+                    .description(Lang.get(_WANTED_DESCR).toString());
 
         }
         else {
@@ -323,7 +323,7 @@ public class MainMenuView extends AbstractMenuView {
                         }
                     })
                     .title(Lang.get(_BUY_TITLE))
-                    .description(Lang.get(_BUY_DESCR));
+                    .description(Lang.get(_BUY_DESCR).toString());
 
         }
         return builder.build(0);
